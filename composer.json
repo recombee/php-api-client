@@ -1,0 +1,26 @@
+{
+    "name": "recombee/php-api-client",
+    "description": "PHP client for easy use of the Recombee recommendation API.",
+    "homepage": "https://recombee.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ondřej Fiedler",
+            "email": "ondrej.fiedler@recombee.com"
+        }
+    ],
+    "require": {
+      "php": ">=5.4.0",
+      "rmccue/requests": ">=1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4",
+        "phpdocumentor/phpdocumentor": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Recombee\\": "src/",
+            "Recombee\\RecommApi\\Tests\\": "tests/"
+        }
+    }
+}
