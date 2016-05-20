@@ -6,22 +6,26 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class AddInteractionTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($user_id, $item_id, $timestamp, $optional = array());
+    abstract protected function createRequest($user_id, $item_id, $optional = array());
 
     public function testAddInteraction() {
         
         //does not fail with cascadeCreate
-        $req = $this->createRequest('u_id', 'i_id', 0, ['cascadeCreate' => True]);
+        $req = $this->createRequest('u_id', 'i_id', ['cascadeCreate' => True]);
+        $this->client->send($req);
+
+        //does not fail with valid timestamp
+        $req = $this->createRequest('u_id', 'i_id', ['cascadeCreate' => True, 'timestamp' => '2013-10-29T09:38:41.341Z']);
         $this->client->send($req);
 
         //does not fail with existing item and user
-        $req = $this->createRequest('entity_id', 'entity_id', 0);
+        $req = $this->createRequest('entity_id', 'entity_id');
         $this->client->send($req);
 
         //fails with nonexisting item id
         try {
             
-            $req = $this->createRequest('entity_id', 'notexisting_id', 0);
+            $req = $this->createRequest('entity_id', 'notexisting_id');
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -32,7 +36,7 @@ abstract class AddInteractionTestCase extends RecombeeTestCase {
 
         //fails with nonexisting user id
         try {
-            $req = $this->createRequest('notexisting_id', 'entity_id', 0);
+            $req = $this->createRequest('notexisting_id', 'entity_id');
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -43,7 +47,7 @@ abstract class AddInteractionTestCase extends RecombeeTestCase {
 
         //fails with invalid time
         try {
-            $req = $this->createRequest('entity_id', 'entity_id', -15);
+            $req = $this->createRequest('entity_id', 'entity_id', ['timestamp' => -15]);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -54,7 +58,7 @@ abstract class AddInteractionTestCase extends RecombeeTestCase {
 
         //really stores interaction to the system
         try {
-            $req = $this->createRequest('entity_id', 'entity_id', 0);
+            $req = $this->createRequest('u_id', 'i_id',  ['timestamp' => '2013-10-29T09:38:41.341Z']);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }

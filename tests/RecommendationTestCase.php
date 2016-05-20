@@ -27,7 +27,7 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
         foreach ($my_user_ids as $user_id) {
             foreach ($my_item_ids as $item_id) {
                 if(mt_rand() / mt_getrandmax() < $probability_purchased)
-                    array_push($my_purchases, new Reqs\AddPurchase($user_id, $item_id, 0));
+                    array_push($my_purchases, new Reqs\AddPurchase($user_id, $item_id));
             }
         }
 

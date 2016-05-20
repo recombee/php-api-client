@@ -4,8 +4,8 @@ use Recombee\RecommApi\Requests\AddCartAddition;
 
 class AddCartAdditionTest extends AddInteractionTestCase {
 
-    protected function createRequest($user_id, $item_id, $timestamp, $optional=array()) {
-        return new AddCartAddition($user_id, $item_id, $timestamp, $optional);
+    protected function createRequest($user_id, $item_id, $optional=array()) {
+        return new AddCartAddition($user_id, $item_id, $optional);
     }
 }
 ?>

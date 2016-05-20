@@ -14,11 +14,11 @@ class InteractionsTestCase extends RecombeeTestCase {
         $requests = new Reqs\Batch([
             new Reqs\AddUser('user'),
             new Reqs\AddItem('item'),
-            new Reqs\AddDetailView('user', 'item', 0),
-            new Reqs\AddPurchase('user', 'item', 0),
-            new Reqs\AddRating('user', 'item', 0, -1),
-            new Reqs\AddCartAddition('user', 'item', 0),
-            new Reqs\AddBookmark('user', 'item', 0)
+            new Reqs\AddDetailView('user', 'item', ['timestamp' => 0]),
+            new Reqs\AddPurchase('user', 'item', ['timestamp' => 0]),
+            new Reqs\AddRating('user', 'item', 1, ['timestamp' => 0]),
+            new Reqs\AddCartAddition('user', 'item', ['timestamp' => 0]),
+            new Reqs\AddBookmark('user', 'item', ['timestamp' => 0])
         ]);
 
         $client->send($requests);

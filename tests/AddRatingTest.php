@@ -12,17 +12,17 @@ class AddRatingTest extends RecombeeTestCase {
     public function testAddRating() {
         
         //does not fail with cascadeCreate
-        $req = new AddRating('u_id', 'i_id', 0, 1, ['cascadeCreate' => True]);
+        $req = new AddRating('u_id', 'i_id', 1, ['cascadeCreate' => True]);
         $this->client->send($req);
 
         //does not fail with existing item and user
-        $req = new AddRating('entity_id', 'entity_id', 0, 0);
+        $req = new AddRating('entity_id', 'entity_id', 0, ['timestamp' => 0]);
         $this->client->send($req);
 
         //fails with nonexisting item id
         try {
             
-            $req = new AddRating('entity_id', 'notexisting_id', 0, -1);
+            $req = new AddRating('entity_id', 'notexisting_id', -1);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -33,7 +33,7 @@ class AddRatingTest extends RecombeeTestCase {
 
         //fails with nonexisting user id
         try {
-            $req = new AddRating('notexisting_id', 'entity_id', 0, 0.5);
+            $req = new AddRating('notexisting_id', 'entity_id', 0.5);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -44,7 +44,7 @@ class AddRatingTest extends RecombeeTestCase {
 
         //fails with invalid time
         try {
-            $req = new AddRating('entity_id', 'entity_id', -15, 0);
+            $req = new AddRating('entity_id', 'entity_id', 0, ['timestamp' => -15]);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -55,7 +55,7 @@ class AddRatingTest extends RecombeeTestCase {
 
         //fails with invalid rating
         try {
-            $req = new AddRating('entity_id', 'entity_id', 0, -2);
+            $req = new AddRating('entity_id', 'entity_id', -2);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }
@@ -66,7 +66,7 @@ class AddRatingTest extends RecombeeTestCase {
 
         //really stores interaction to the system
         try {
-            $req = new AddRating('entity_id', 'entity_id', 0, 0);
+            $req = new AddRating('entity_id', 'entity_id', 0, ['timestamp' => 0]);
             $this->client->send($req);
             throw new \Exception('Exception was not thrown');
         }

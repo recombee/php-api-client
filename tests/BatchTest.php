@@ -25,8 +25,8 @@ class BatchTest extends RecombeeTestCase {
                     new Reqs\ListItems(['filter' => "'num' < 99"]),
                     new Reqs\DeleteItem('item1'),
                     new Reqs\ListItems(['filter' => "'num' >= 99"]),
-                    new Reqs\AddCartAddition('user', 'item2', 0),
-                    new Reqs\AddCartAddition('user', 'item2', 0, ['cascadeCreate' => true]),
+                    new Reqs\AddCartAddition('user', 'item2',  ['timestamp' => '2013-10-29T09:38:41.341Z']),
+                    new Reqs\AddCartAddition('user', 'item2', ['cascadeCreate' => true]),
                     new Reqs\ItemBasedRecommendation('item2', 30),
                     new Reqs\UserBasedRecommendation('user_id', 25, ['filter' => "'num'==68",
                                                                         'allowNonexistent' => true])

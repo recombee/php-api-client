@@ -23,7 +23,7 @@ class AddDetailView extends Request {
      */
     protected $item_id;
     /**
-     * @var string|float $timestamp Unix timestamp of the view. If you don't have the timestamp value available, you may use some artificial value, such as 0. It is preferable, however, to provide the timestamp whenever possible as the user's preferences may evolve over time.
+     * @var string|float $timestamp UTC timestamp of the view as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
      */
     protected $timestamp;
     /**
@@ -43,9 +43,11 @@ class AddDetailView extends Request {
      * Construct the request
      * @param string $user_id User who viewed the item
      * @param string $item_id Viewed item
-     * @param string|float $timestamp Unix timestamp of the view. If you don't have the timestamp value available, you may use some artificial value, such as 0. It is preferable, however, to provide the timestamp whenever possible as the user's preferences may evolve over time.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
+     *     - *timestamp*
+     *         - Type: string|float
+     *         - Description: UTC timestamp of the view as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
      *     - *duration*
      *         - Type: int
      *         - Description: Duration of the view
@@ -54,15 +56,15 @@ class AddDetailView extends Request {
      *         - Description: Sets whether the given user/item should be created if not present in the database.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
-    public function __construct($user_id, $item_id, $timestamp, $optional = array()) {
+    public function __construct($user_id, $item_id, $optional = array()) {
         $this->user_id = $user_id;
         $this->item_id = $item_id;
-        $this->timestamp = $timestamp;
+        $this->timestamp = isset($optional['timestamp']) ? $optional['timestamp'] : null;
         $this->duration = isset($optional['duration']) ? $optional['duration'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('duration','cascadeCreate');
+        $existing_optional = array('timestamp','duration','cascadeCreate');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -103,7 +105,8 @@ class AddDetailView extends Request {
         $p = array();
         $p['userId'] = $this->user_id;
         $p['itemId'] = $this->item_id;
-        $p['timestamp'] = $this->timestamp;
+        if (isset($this->optional['timestamp']))
+             $p['timestamp'] = $this-> optional['timestamp'];
         if (isset($this->optional['duration']))
              $p['duration'] = $this-> optional['duration'];
         if (isset($this->optional['cascadeCreate']))
