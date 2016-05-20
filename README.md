@@ -15,7 +15,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": ">=0.1"
+        "recombee/php-api-client": ">=1.1"
     }
 }
 ```
@@ -66,7 +66,7 @@ try
 
     echo "Send purchases\n";
     $purchase_requests = array_map(function($tuple)
-                        {return new Reqs\AddPurchase($tuple['user'], $tuple['item'], time());}, $my_purchases);
+                        {return new Reqs\AddPurchase($tuple['user'], $tuple['item']);}, $my_purchases);
     $client->send(new Reqs\Batch($purchase_requests));
 
     // Get 5 recommendations for user 'user-25'
@@ -132,7 +132,7 @@ for($i=0; $i<NUM; $i++)
     for($j=0; $j<NUM; $j++)
         if(mt_rand() / mt_getrandmax() < PROBABILITY_PURCHASED)
         {
-           $r = new Reqs\AddPurchase("user-{$i}", "computer-{$j}", time(), ['cascadeCreate' => true]);
+           $r = new Reqs\AddPurchase("user-{$i}", "computer-{$j}", ['cascadeCreate' => true]);
            array_push($requests, $r);
         }
         
