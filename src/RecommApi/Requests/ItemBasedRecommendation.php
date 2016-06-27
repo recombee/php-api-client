@@ -39,9 +39,17 @@ class ItemBasedRecommendation extends Request {
      */
     protected $booster;
     /**
-     * @var bool $allow_nonexistent If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error.
+     * @var bool $allow_nonexistent Instead of causing HTTP 404 error, returns some (non-personalized) recommendations if either item of given *itemId* or user of given *targetUserId* does not exist in the database. It creates neither of the missing entities in the database.
      */
     protected $allow_nonexistent;
+    /**
+     * @var bool $cascade_create If item of given *itemId* or user of given *targetUserId* doesn't exist in the database, it creates the missing enity/entities and returns some (non-personalized) recommendations. This allows for example rotations in the following recommendations for the user of given *targetUserId*, as the user will be already known to the system.
+     */
+    protected $cascade_create;
+    /**
+     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
+     */
+    protected $scenario;
     /**
      * @var float $diversity **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      */
@@ -83,7 +91,13 @@ class ItemBasedRecommendation extends Request {
      *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
      *     - *allowNonexistent*
      *         - Type: bool
-     *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error.
+     *         - Description: Instead of causing HTTP 404 error, returns some (non-personalized) recommendations if either item of given *itemId* or user of given *targetUserId* does not exist in the database. It creates neither of the missing entities in the database.
+     *     - *cascadeCreate*
+     *         - Type: bool
+     *         - Description: If item of given *itemId* or user of given *targetUserId* doesn't exist in the database, it creates the missing enity/entities and returns some (non-personalized) recommendations. This allows for example rotations in the following recommendations for the user of given *targetUserId*, as the user will be already known to the system.
+     *     - *scenario*
+     *         - Type: string
+     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      *     - *diversity*
      *         - Type: float
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
@@ -106,18 +120,21 @@ class ItemBasedRecommendation extends Request {
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->allow_nonexistent = isset($optional['allowNonexistent']) ? $optional['allowNonexistent'] : null;
+        $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
+        $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('targetUserId','userImpact','filter','booster','allowNonexistent','diversity','minRelevance','rotationRate','rotationTime');
+        $existing_optional = array('targetUserId','userImpact','filter','booster','allowNonexistent','cascadeCreate','scenario','diversity','minRelevance','rotationRate','rotationTime');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
         $this->timeout = 3000;
+        $this->ensure_https = false;
     }
 
     /**
@@ -153,6 +170,10 @@ class ItemBasedRecommendation extends Request {
             $params['booster'] = $this->optional['booster'];
         if (isset($this->optional['allowNonexistent']))
             $params['allowNonexistent'] = $this->optional['allowNonexistent'];
+        if (isset($this->optional['cascadeCreate']))
+            $params['cascadeCreate'] = $this->optional['cascadeCreate'];
+        if (isset($this->optional['scenario']))
+            $params['scenario'] = $this->optional['scenario'];
         if (isset($this->optional['diversity']))
             $params['diversity'] = $this->optional['diversity'];
         if (isset($this->optional['minRelevance']))

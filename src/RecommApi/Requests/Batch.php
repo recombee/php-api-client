@@ -32,6 +32,7 @@ class Batch extends Request {
     public function __construct($requests) {
         $this->requests = $requests;
         $this->timeout = null;
+        $this->ensure_https = true;
     }
 
     /**

@@ -50,6 +50,7 @@ class SetItemValues extends Request {
         $this->item_id = $item_id;
         $this->values = $values;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

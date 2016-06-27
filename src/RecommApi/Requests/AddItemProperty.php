@@ -32,6 +32,7 @@ class AddItemProperty extends Request {
         $this->property_name = $property_name;
         $this->type = $type;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

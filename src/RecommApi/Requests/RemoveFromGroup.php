@@ -38,6 +38,7 @@ class RemoveFromGroup extends Request {
         $this->item_type = $item_type;
         $this->item_id = $item_id;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

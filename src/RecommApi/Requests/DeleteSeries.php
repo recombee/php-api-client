@@ -27,6 +27,7 @@ class DeleteSeries extends Request {
     public function __construct($series_id) {
         $this->series_id = $series_id;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

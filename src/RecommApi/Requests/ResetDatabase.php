@@ -19,7 +19,8 @@ class ResetDatabase extends Request {
      * Construct the request
      */
     public function __construct() {
-        $this->timeout = 3000;
+        $this->timeout = 5000;
+        $this->ensure_https = false;
     }
 
     /**

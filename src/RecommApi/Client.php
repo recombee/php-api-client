@@ -19,20 +19,23 @@ class Client{
     protected $account;
     protected $token;
     protected $request;
+    protected $protocol;
 
     /**
      * @ignore
      */
-    const BASE_URI = 'https://rapi.recombee.com';
+    const BASE_URI = 'rapi.recombee.com';
 
     /**
      * Create the client
      * @param string $account Name of your account at Recombee
      * @param string $token Secret token
+     * @param string $protocol Default protocol for sending requests. Possible values: 'http', 'https'.
      */
-    public function __construct($account, $token) {
+    public function __construct($account, $token, $protocol = 'http') {
         $this->account = $account;
         $this->token = $token;
+        $this->protocol = $protocol;
     }
 
     /**
@@ -44,27 +47,30 @@ class Client{
     public function send(Requests\Request $request) {
         $this->request = $request;
         $path = Util::sliceDbName($request->getPath());
-        $uri =  $path . $this->paramsToStr($request->getQueryParameters());
+        $request_url =  $path . $this->paramsToStr($request->getQueryParameters());
+        $signed_url = $this->signUrl($request_url);
+        $protocol = ($request->getEnsureHttps()) ? 'https' : $this->protocol;
+        $uri = $protocol . '://' . Client::BASE_URI . $signed_url;
         $timeout = $request->getTimeout() / 1000;
         $result = null;
 
         try {
             switch ($request->getMethod()) {
                 case Requests\Request::HTTP_GET:
-                    $result = $this->hmacGet($uri, $timeout);
+                    $result = $this->get($uri, $timeout);
                     break;
 
                 case Requests\Request::HTTP_PUT:
-                    $result = $this->hmacPut($uri, $timeout);
+                    $result = $this->put($uri, $timeout);
                     break;
 
                 case Requests\Request::HTTP_DELETE:
-                    $result = $this->hmacDelete($uri, $timeout);
+                    $result = $this->delete($uri, $timeout);
                     break;
 
                 case Requests\Request::HTTP_POST:
                     $json = json_encode($request->getBodyParameters(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-                    $result = $this->hmacPost($uri, $timeout, $json);
+                    $result = $this->post($uri, $timeout, $json);
                     break;
             }
         }
@@ -80,31 +86,27 @@ class Client{
 
     /* ----------------------- Send requests -----------------------  */
     //TODO remove ceils when Requests 1.7 is released as it support timeout in milliseconds
-    protected function hmacPut($uri, $timeout) {
-        $signed_url = $this->signUrl($uri);
-        $response = \Requests::put($signed_url, array(), ['timeout' => ceil($timeout)]);
+    protected function put($uri, $timeout) {
+        $response = \Requests::put($uri, array(), ['timeout' => ceil($timeout)]);
         $this->checkErrors($response);
         return $response->body;
     }
 
-    protected function hmacGet($uri, $timeout) {
-        $signed_url = $this->signUrl($uri);
-        $response = \Requests::get($signed_url, array(), ['timeout' => ceil($timeout)]);
+    protected function get($uri, $timeout) {
+        $response = \Requests::get($uri, array(), ['timeout' => ceil($timeout)]);
         $this->checkErrors($response);
         return json_decode($response->body, true);
     }
 
-    protected function hmacDelete($uri, $timeout) {
-        $signed_url = $this->signUrl($uri);
-        $response = \Requests::delete($signed_url, array(), ['timeout' => ceil($timeout)]);
+    protected function delete($uri, $timeout) {
+        $response = \Requests::delete($uri, array(), ['timeout' => ceil($timeout)]);
         $this->checkErrors($response);
         return $response->body;
     }
 
-    protected function hmacPost($uri, $timeout, $body) {
-        $signed_url = $this->signUrl($uri);
+    protected function post($uri, $timeout, $body) {
         $headers = array('Content-Type' => 'application/json');
-        $response = \Requests::post($signed_url, $headers, $body, ['timeout' => ceil($timeout)]);
+        $response = \Requests::post($uri, $headers, $body, ['timeout' => ceil($timeout)]);
         $this->checkErrors($response);
 
         $json = json_decode($response->body, true);
@@ -126,7 +128,7 @@ class Client{
         $uri = '/' . $this->account . '/' . $uri;
         $time_str = $this->hmacTime($uri);
         $sign = $this->hmacSign($uri, $time_str);
-        return Client::BASE_URI . $uri . $time_str . '&hmac_sign=' . $sign;
+        return $uri . $time_str . '&hmac_sign=' . $sign;
     }
 
     protected function hmacTime($uri) {

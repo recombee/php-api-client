@@ -4,8 +4,8 @@ use Recombee\RecommApi\Requests\DeletePurchase;
 
 class DeletePurchaseTest extends DeleteInteractionTestCase {
 
-    protected function createRequest($user_id, $item_id, $timestamp) {
-        return new DeletePurchase($user_id, $item_id, $timestamp);
+    protected function createRequest($user_id, $item_id, $optional=array()) {
+        return new DeletePurchase($user_id, $item_id, $optional);
     }
 }
 ?>

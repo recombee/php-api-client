@@ -26,6 +26,7 @@ class ListUserDetailViews extends Request {
     public function __construct($user_id) {
         $this->user_id = $user_id;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

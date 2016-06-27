@@ -28,6 +28,7 @@ class DeleteItem extends Request {
     public function __construct($item_id) {
         $this->item_id = $item_id;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

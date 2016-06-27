@@ -74,6 +74,28 @@ abstract class Request {
     {
         $this->timeout = $timeout;
     }
+
+    /**
+     * @var bool Sets if the HTTPS must be chosen over HTTP for this request
+     */
+    protected $ensure_https;
+
+    /**
+     * Returns true if HTTPS must be chosen over HTTP for this request
+     * @return bool true if HTTPS must be chosen
+     */
+    public function getEnsureHttps()
+    {
+        return $this->ensure_https;
+    }
+    /**
+     * Sets if HTTPS must be chosen over HTTP for this request
+     * @param bool true if HTTPS must be chosen 
+     */
+    public function setEnsureHttps($ensure_https)
+    {
+        $this->ensure_https = $ensure_https;
+    }
 }
 
 ?>

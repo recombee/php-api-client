@@ -26,6 +26,7 @@ class GetItemPropertyInfo extends Request {
     public function __construct($property_name) {
         $this->property_name = $property_name;
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**

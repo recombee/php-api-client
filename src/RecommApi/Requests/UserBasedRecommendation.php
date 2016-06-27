@@ -31,9 +31,17 @@ class UserBasedRecommendation extends Request {
      */
     protected $booster;
     /**
-     * @var bool $allow_nonexistent If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error.
+     * @var bool $allow_nonexistent If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error. It doesn't create the user in the database.
      */
     protected $allow_nonexistent;
+    /**
+     * @var bool $cascade_create If the user does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
+     */
+    protected $cascade_create;
+    /**
+     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
+     */
+    protected $scenario;
     /**
      * @var float $diversity **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      */
@@ -69,7 +77,13 @@ class UserBasedRecommendation extends Request {
      *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
      *     - *allowNonexistent*
      *         - Type: bool
-     *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error.
+     *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error. It doesn't create the user in the database.
+     *     - *cascadeCreate*
+     *         - Type: bool
+     *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
+     *     - *scenario*
+     *         - Type: string
+     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      *     - *diversity*
      *         - Type: float
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
@@ -90,18 +104,21 @@ class UserBasedRecommendation extends Request {
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->allow_nonexistent = isset($optional['allowNonexistent']) ? $optional['allowNonexistent'] : null;
+        $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
+        $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('filter','booster','allowNonexistent','diversity','minRelevance','rotationRate','rotationTime');
+        $existing_optional = array('filter','booster','allowNonexistent','cascadeCreate','scenario','diversity','minRelevance','rotationRate','rotationTime');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
         $this->timeout = 3000;
+        $this->ensure_https = false;
     }
 
     /**
@@ -133,6 +150,10 @@ class UserBasedRecommendation extends Request {
             $params['booster'] = $this->optional['booster'];
         if (isset($this->optional['allowNonexistent']))
             $params['allowNonexistent'] = $this->optional['allowNonexistent'];
+        if (isset($this->optional['cascadeCreate']))
+            $params['cascadeCreate'] = $this->optional['cascadeCreate'];
+        if (isset($this->optional['scenario']))
+            $params['scenario'] = $this->optional['scenario'];
         if (isset($this->optional['diversity']))
             $params['diversity'] = $this->optional['diversity'];
         if (isset($this->optional['minRelevance']))

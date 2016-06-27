@@ -23,21 +23,38 @@ class DeleteBookmark extends Request {
      */
     protected $item_id;
     /**
-     * @var float $timestamp Unix timestamp of the bookmark.
+     * @var float $timestamp Unix timestamp of the bookmark. If the `timestamp` is omitted, then all the bookmarks with given `userId` and `itemId` are deleted.
      */
     protected $timestamp;
+    /**
+     * @var array Array containing values of optional parameters
+     */
+   protected $optional;
 
     /**
      * Construct the request
      * @param string $user_id ID of the user who made the bookmark.
      * @param string $item_id ID of the item of which was bookmarked.
-     * @param float $timestamp Unix timestamp of the bookmark.
+     * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
+     * - Allowed parameters:
+     *     - *timestamp*
+     *         - Type: float
+     *         - Description: Unix timestamp of the bookmark. If the `timestamp` is omitted, then all the bookmarks with given `userId` and `itemId` are deleted.
+     * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
-    public function __construct($user_id, $item_id, $timestamp) {
+    public function __construct($user_id, $item_id, $optional = array()) {
         $this->user_id = $user_id;
         $this->item_id = $item_id;
-        $this->timestamp = $timestamp;
+        $this->timestamp = isset($optional['timestamp']) ? $optional['timestamp'] : null;
+        $this->optional = $optional;
+
+        $existing_optional = array('timestamp');
+        foreach ($this->optional as $key => $value) {
+            if (!in_array($key, $existing_optional))
+                 throw new UnknownOptionalParameterException($key);
+         }
         $this->timeout = 1000;
+        $this->ensure_https = false;
     }
 
     /**
@@ -64,7 +81,8 @@ class DeleteBookmark extends Request {
         $params = array();
         $params['userId'] = $this->user_id;
         $params['itemId'] = $this->item_id;
-        $params['timestamp'] = $this->timestamp;
+        if (isset($this->optional['timestamp']))
+            $params['timestamp'] = $this->optional['timestamp'];
         return $params;
     }
 
