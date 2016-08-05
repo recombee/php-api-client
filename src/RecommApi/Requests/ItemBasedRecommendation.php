@@ -51,6 +51,48 @@ class ItemBasedRecommendation extends Request {
      */
     protected $scenario;
     /**
+     * @var bool $return_properties With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
+     * Example response:
+     * ```
+     *   [
+     *     {
+     *       "itemId": "tv-178",
+     *       "description": "4K TV with 3D feature",
+     *       "categories":   ["Electronics", "Televisions"],
+     *       "price": 342,
+     *       "url": "myshop.com/tv-178"
+     *     },
+     *     {
+     *       "itemId": "mixer-42",
+     *       "description": "Stainless Steel Mixer",
+     *       "categories":   ["Home & Kitchen"],
+     *       "price": 39,
+     *       "url": "myshop.com/mixer-42"
+     *     }
+     *   ]
+     * ```
+     */
+    protected $return_properties;
+    /**
+     * @var string $included_properties Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
+     * Example response for `includedProperties=description,price`:
+     * ```
+     *   [
+     *     {
+     *       "itemId": "tv-178",
+     *       "description": "4K TV with 3D feature",
+     *       "price": 342
+     *     },
+     *     {
+     *       "itemId": "mixer-42",
+     *       "description": "Stainless Steel Mixer",
+     *       "price": 39
+     *     }
+     *   ]
+     * ```
+     */
+    protected $included_properties;
+    /**
      * @var float $diversity **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      */
     protected $diversity;
@@ -63,7 +105,7 @@ class ItemBasedRecommendation extends Request {
      */
     protected $rotation_rate;
     /**
-     * @var float $rotation_time **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an item to fully recover from the penalization. By example, `rotationTime=7200.0` means that items recommended more than 2 hours ago are definitely not penalized anymore. Currently, the penalization is linear, so for `rotationTime=7200.0`, an item is still penalized by `0.5` to the user after 1 hour. |
+     * @var float $rotation_time **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an item to fully recover from the penalization. By example, `rotationTime=7200.0` means that items recommended more than 2 hours ago are definitely not penalized anymore. Currently, the penalization is linear, so for `rotationTime=7200.0`, an item is still penalized by `0.5` to the user after 1 hour.
      */
     protected $rotation_time;
     /**
@@ -98,6 +140,46 @@ class ItemBasedRecommendation extends Request {
      *     - *scenario*
      *         - Type: string
      *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
+     *     - *returnProperties*
+     *         - Type: bool
+     *         - Description: With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
+     * Example response:
+     * ```
+     *   [
+     *     {
+     *       "itemId": "tv-178",
+     *       "description": "4K TV with 3D feature",
+     *       "categories":   ["Electronics", "Televisions"],
+     *       "price": 342,
+     *       "url": "myshop.com/tv-178"
+     *     },
+     *     {
+     *       "itemId": "mixer-42",
+     *       "description": "Stainless Steel Mixer",
+     *       "categories":   ["Home & Kitchen"],
+     *       "price": 39,
+     *       "url": "myshop.com/mixer-42"
+     *     }
+     *   ]
+     * ```
+     *     - *includedProperties*
+     *         - Type: string
+     *         - Description: Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
+     * Example response for `includedProperties=description,price`:
+     * ```
+     *   [
+     *     {
+     *       "itemId": "tv-178",
+     *       "description": "4K TV with 3D feature",
+     *       "price": 342
+     *     },
+     *     {
+     *       "itemId": "mixer-42",
+     *       "description": "Stainless Steel Mixer",
+     *       "price": 39
+     *     }
+     *   ]
+     * ```
      *     - *diversity*
      *         - Type: float
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
@@ -109,7 +191,7 @@ class ItemBasedRecommendation extends Request {
      *         - Description: **Expert option** If your users browse the system in real-time, it may easily happen that you wish to offer them recommendations multiple times. Here comes the question: how much should the recommendations change? Should they remain the same, or should they rotate? Recombee API allows you to control this per-request in backward fashion. You may penalize an item for being recommended in the near past. For the specific user, `rotationRate=1` means maximal rotation, `rotationRate=0` means absolutely no rotation. You may also use, for example `rotationRate=0.2` for only slight rotation of recommended items.
      *     - *rotationTime*
      *         - Type: float
-     *         - Description: **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an item to fully recover from the penalization. By example, `rotationTime=7200.0` means that items recommended more than 2 hours ago are definitely not penalized anymore. Currently, the penalization is linear, so for `rotationTime=7200.0`, an item is still penalized by `0.5` to the user after 1 hour. |
+     *         - Description: **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an item to fully recover from the penalization. By example, `rotationTime=7200.0` means that items recommended more than 2 hours ago are definitely not penalized anymore. Currently, the penalization is linear, so for `rotationTime=7200.0`, an item is still penalized by `0.5` to the user after 1 hour.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($item_id, $count, $optional = array()) {
@@ -122,13 +204,15 @@ class ItemBasedRecommendation extends Request {
         $this->allow_nonexistent = isset($optional['allowNonexistent']) ? $optional['allowNonexistent'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
+        $this->return_properties = isset($optional['returnProperties']) ? $optional['returnProperties'] : null;
+        $this->included_properties = isset($optional['includedProperties']) ? $optional['includedProperties'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('targetUserId','userImpact','filter','booster','allowNonexistent','cascadeCreate','scenario','diversity','minRelevance','rotationRate','rotationTime');
+        $existing_optional = array('targetUserId','userImpact','filter','booster','allowNonexistent','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -174,6 +258,10 @@ class ItemBasedRecommendation extends Request {
             $params['cascadeCreate'] = $this->optional['cascadeCreate'];
         if (isset($this->optional['scenario']))
             $params['scenario'] = $this->optional['scenario'];
+        if (isset($this->optional['returnProperties']))
+            $params['returnProperties'] = $this->optional['returnProperties'];
+        if (isset($this->optional['includedProperties']))
+            $params['includedProperties'] = $this->optional['includedProperties'];
         if (isset($this->optional['diversity']))
             $params['diversity'] = $this->optional['diversity'];
         if (isset($this->optional['minRelevance']))

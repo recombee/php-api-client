@@ -20,6 +20,7 @@ class Client{
     protected $token;
     protected $request;
     protected $protocol;
+    protected $base_uri;
 
     /**
      * @ignore
@@ -36,6 +37,9 @@ class Client{
         $this->account = $account;
         $this->token = $token;
         $this->protocol = $protocol;
+        $this->base_uri = Client::BASE_URI;
+        if(getenv("RAPI_URI") !== false)
+            $this->base_uri = getenv("RAPI_URI");
     }
 
     /**
@@ -47,10 +51,10 @@ class Client{
     public function send(Requests\Request $request) {
         $this->request = $request;
         $path = Util::sliceDbName($request->getPath());
-        $request_url =  $path . $this->paramsToStr($request->getQueryParameters());
+        $request_url =  $path . $this->paramsToUrl($request->getQueryParameters());
         $signed_url = $this->signUrl($request_url);
         $protocol = ($request->getEnsureHttps()) ? 'https' : $this->protocol;
-        $uri = $protocol . '://' . Client::BASE_URI . $signed_url;
+        $uri = $protocol . '://' . $this->base_uri . $signed_url;
         $timeout = $request->getTimeout() / 1000;
         $result = null;
 
@@ -144,15 +148,22 @@ class Client{
 
     /* ----------------------- Util -----------------------  */
 
-    protected function paramsToStr($params) {
+    protected function paramsToUrl($params) {
         if (!$params) return '';
 
         $urlp = array();
         foreach ($params as $p => $val) {
-            array_push($urlp, urlencode($p) . '=' . urlencode($val));
+            array_push($urlp, urlencode($p) . '=' . urlencode($this->formatQueryParameterValue($val)));
         }
         $result = '?' . implode ('&' , $urlp);
         return $result;
     }
+
+    protected function formatQueryParameterValue($value) {
+        if (is_array($value))
+            return implode(',', $value);
+        else return $value;
+    }
+
 }
 ?>

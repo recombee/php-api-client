@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes an existing purchase uniquely specified by `userId`, `itemId`, and `timestamp`.
+ * Deletes an existing purchase uniquely specified by `userId`, `itemId`, and `timestamp` or all the purchases with given `userId` and `itemId` if `timestamp` is omitted.
  */
 class DeletePurchase extends Request {
 

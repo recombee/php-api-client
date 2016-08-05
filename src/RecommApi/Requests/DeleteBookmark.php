@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes a bookmark uniquely specified by `userId`, `itemId`, and `timestamp`.
+ * Deletes a bookmark uniquely specified by `userId`, `itemId`, and `timestamp` or all the bookmarks with given `userId` and `itemId` if `timestamp` is omitted.
  */
 class DeleteBookmark extends Request {
 

@@ -35,8 +35,9 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
 
         $user_requests = array_map(function($userId) {return new Reqs\AddUser($userId);}, $my_user_ids);
         $client->send(new Reqs\Batch($user_requests));
+        $client->send(new Reqs\Batch([new Reqs\AddItemProperty('answer', 'int'), new Reqs\AddItemProperty('id2', 'string'), new Reqs\AddItemProperty('empty', 'string')]));
 
-        $item_requests = array_map(function($itemId) {return new Reqs\AddItem($itemId);}, $my_item_ids);
+        $item_requests = array_map(function($itemId) {return new Reqs\SetItemValues($itemId, ['answer' => 42, 'id2' => $itemId, '!cascadeCreate' => true]);}, $my_item_ids);
         $client->send(new Reqs\Batch($item_requests));
         $client->send(new Reqs\Batch($my_purchases));
     }
@@ -69,6 +70,26 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
             array_push($reqs, $this->createRequest('entity_id', 9));
         }
         $this->client->send(new Reqs\Batch($reqs));
+    }
+
+    public function testReturningProperties() {
+        $req = $this->createRequest('entity_id', 9, ['returnProperties' => true, 'includedProperties'=>['answer', 'id2', 'empty']]);
+        $recommended = $this->client->send($req);
+        var_dump($recommended);
+        foreach ($recommended as $rec) {
+            $this->assertEquals($rec['id2'], $rec['itemId']);
+            $this->assertEquals(42, $rec['answer']);
+            $this->assertContains('empty', $rec);
+        }
+
+        $req = $this->createRequest('entity_id', 9, ['returnProperties' => true, 'includedProperties'=>'answer,id2']);
+        $recommended = $this->client->send($req);
+        var_dump($recommended);
+        foreach ($recommended as $rec) {
+            $this->assertEquals($rec['id2'], $rec['itemId']);
+            $this->assertEquals(42, $rec['answer']);
+            $this->assertNotContains('empty', $rec);
+        }
     }
 }
 ?>

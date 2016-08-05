@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * This file is auto-generated, do not edit
+ */
+
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
@@ -10,11 +14,13 @@ abstract class GetValuesTestCase extends RecombeeTestCase {
 
     public function testGetValues() {
 
-        //does not fail with existing property
-        $req = $this->createRequest('entity_id');
-        $resp = $this->client->send($req);
-        $this->assertCount(2, $resp);
-        $this->assertEquals(42, $resp['int_property']);
-        $this->assertEquals('hello', $resp['str_property']);
+         //it gets values
+         $req = $this->createRequest('entity_id');
+         $resp = $this->client->send($req);
+         $this->assertEquals(42,$resp['int_property']);
+         $this->assertEquals('hello',$resp['str_property']);
+
     }
 }
+
+?>

@@ -1,44 +1,50 @@
 <?php
 
+/*
+ * This file is auto-generated, do not edit
+ */
+
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class AddPropertyTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($property_name, $type);
+    abstract protected function createRequest($name,$type);
 
     public function testAddProperty() {
-        
-        //does not fail with valid name and type
-        $req = $this->createRequest('number', 'int');
-        $this->client->send($req);
-        $req = $this->createRequest('str', 'string');
-        $this->client->send($req);
-        
 
-        //fails with invalid type
-        try {
-            
-            $req = $this->createRequest('prop', 'integer');
-            $this->client->send($req);
-            throw new \Exception('Exception was not thrown');
-        }
-        catch(Exc\ResponseException $e)
-        {
+         //it does not fail with valid name and type
+         $req = $this->createRequest('number','int');
+         $resp = $this->client->send($req);
+         $req = $this->createRequest('str','string');
+         $resp = $this->client->send($req);
+
+         //it fails with invalid type
+         $req = $this->createRequest('prop','integer');
+         try {
+
+             $this->client->send($req);
+             throw new \Exception('Exception was not thrown');
+         }
+         catch(Exc\ResponseException $e)
+         {
             $this->assertEquals(400, $e->status_code);
-        }
+         }
 
-        //really stores property to the system
-        try {
-            $req = $this->createRequest('number', 'int');
-            $this->client->send($req);
-            throw new \Exception('Exception was not thrown');
-        }
-        catch(Exc\ResponseException $e)
-        {
+         //it really stores property to the system
+         $req = $this->createRequest('number2','int');
+         $resp = $this->client->send($req);
+         try {
+
+             $this->client->send($req);
+             throw new \Exception('Exception was not thrown');
+         }
+         catch(Exc\ResponseException $e)
+         {
             $this->assertEquals(409, $e->status_code);
-        }
+         }
+
     }
 }
 

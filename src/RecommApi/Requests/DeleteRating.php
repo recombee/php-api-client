@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes an existing rating specified by (`userId`, `itemId`, `timestamp`) from the database.
+ * Deletes an existing rating specified by (`userId`, `itemId`, `timestamp`) from the database or all the ratings with given `userId` and `itemId` if `timestamp` is omitted.
  */
 class DeleteRating extends Request {
 

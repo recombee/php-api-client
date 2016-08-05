@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Set/update (some) property values of a given item.
+ * Set/update (some) property values of a given item. The properties (columns) must be previously created by [Add item property](https://docs.recombee.com/api.html#add-item-property).
  */
 class SetItemValues extends Request {
 
@@ -23,8 +23,9 @@ class SetItemValues extends Request {
      * Example of body:
      * ```
      *   {
-     *     "string_property": "strvalue",
-     *     "integer_property": 42,
+     *     "product_description": "4K TV with 3D feature",
+     *     "categories":   ["Electronics", "Televisions"],
+     *     "price_usd": 342,
      *     "!cascadeCreate": true
      *   }
      * ```
@@ -39,8 +40,9 @@ class SetItemValues extends Request {
      * Example of body:
      * ```
      *   {
-     *     "string_property": "strvalue",
-     *     "integer_property": 42,
+     *     "product_description": "4K TV with 3D feature",
+     *     "categories":   ["Electronics", "Televisions"],
+     *     "price_usd": 342,
      *     "!cascadeCreate": true
      *   }
      * ```

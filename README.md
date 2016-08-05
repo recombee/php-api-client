@@ -2,6 +2,8 @@
 
 A PHP client for easy use of the [Recombee](https://www.recombee.com/) recommendation API.
 
+If you don't have an account at Recombee yet, you can create a free account [here](https://www.recombee.com/).
+
 Documentation of the API can be found at [docs.recombee.com](https://docs.recombee.com/).
 
 ## Installation

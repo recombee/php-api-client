@@ -1,42 +1,57 @@
 <?php
 
+/*
+ * This file is auto-generated, do not edit
+ */
+
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class DeletePropertyTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($property_name);
+    abstract protected function createRequest($name);
 
     public function testDeleteProperty() {
-        
-        //does not fail with existing property
-        $req = $this->createRequest('int_property');
-        $this->client->send($req);
 
-        //fails with invalid property
-        try {
-            
-            $req = $this->createRequest('not_valid_id-*.?!');
-            $this->client->send($req);
-            throw new \Exception('Exception was not thrown');
-        }
-        catch(Exc\ResponseException $e)
-        {
-            $this->assertEquals(400, $e->status_code);
-        }
+         //it does not fail with existing property
+         $req = $this->createRequest('int_property');
+         $resp = $this->client->send($req);
+         try {
 
-        //fails with non-existing property
-        try {
-            
-            $req = $this->createRequest('not_existing');
-            $this->client->send($req);
-            throw new \Exception('Exception was not thrown');
-        }
-        catch(Exc\ResponseException $e)
-        {
+             $this->client->send($req);
+             throw new \Exception('Exception was not thrown');
+         }
+         catch(Exc\ResponseException $e)
+         {
             $this->assertEquals(404, $e->status_code);
-        }
+         }
+
+         //it fails with invalid property
+         $req = $this->createRequest('not_valid_id-*.?!');
+         try {
+
+             $this->client->send($req);
+             throw new \Exception('Exception was not thrown');
+         }
+         catch(Exc\ResponseException $e)
+         {
+            $this->assertEquals(400, $e->status_code);
+         }
+
+         //it fails with non-existing property
+         $req = $this->createRequest('not_existing');
+         try {
+
+             $this->client->send($req);
+             throw new \Exception('Exception was not thrown');
+         }
+         catch(Exc\ResponseException $e)
+         {
+            $this->assertEquals(404, $e->status_code);
+         }
+
     }
 }
+
 ?>
