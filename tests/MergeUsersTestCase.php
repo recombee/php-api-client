@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class MergeUsersTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($target,$source,$optional);
+    abstract protected function createRequest($target_user_id,$source_user_id,$optional=array());
 
     public function testMergeUsers() {
 

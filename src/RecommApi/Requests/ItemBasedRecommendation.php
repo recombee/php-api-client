@@ -74,7 +74,7 @@ class ItemBasedRecommendation extends Request {
      */
     protected $return_properties;
     /**
-     * @var string $included_properties Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
+     * @var array $included_properties Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
      * Example response for `includedProperties=description,price`:
      * ```
      *   [
@@ -163,7 +163,7 @@ class ItemBasedRecommendation extends Request {
      *   ]
      * ```
      *     - *includedProperties*
-     *         - Type: string
+     *         - Type: array
      *         - Description: Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
      * Example response for `includedProperties=description,price`:
      * ```

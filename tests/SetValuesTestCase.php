@@ -10,12 +10,16 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class SetValuesTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($entity_id,$values);
+    abstract protected function createRequest($item_id,$values);
 
     public function testSetValues() {
 
          //it does not fail with existing entity and property
          $req = $this->createRequest('entity_id',['int_property' => 5]);
+         $resp = $this->client->send($req);
+
+         //it does not fail with non-ASCII string
+         $req = $this->createRequest('entity_id',['str_property' => 'šřžذ的‎']);
          $resp = $this->client->send($req);
 
          //it sets multiple properties

@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": ">=1.2"
+        "recombee/php-api-client": ">=1.2.3"
     }
 }
 ```
@@ -75,7 +75,7 @@ try
     $recommended = $client->send(new Reqs\UserBasedRecommendation('user-25', 5, ['rotationRate' => 0]));
     echo 'Recommended items: ' . implode(',',$recommended) . "\n";
 }
-catch(Ex\ApiTimeoutException $e)
+catch(Ex\ApiException $e)
 {
     //use fallback
 }

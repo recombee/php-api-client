@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class InsertToSeriesTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($set_id,$type,$entity_id,$time,$optional);
+    abstract protected function createRequest($series_id,$item_type,$item_id,$time,$optional=array());
 
     public function testInsertToSeries() {
 

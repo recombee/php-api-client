@@ -24,9 +24,13 @@ class MergeUsers extends Request {
      */
     protected $source_user_id;
     /**
-     * @var string $keep_source_user If true, the source user will not be deleted, but also kept in the database..
+     * @var string $keep_source_user If true, the source user will not be deleted, but also kept in the database.
      */
     protected $keep_source_user;
+    /**
+     * @var bool $cascade_create Sets whether the user *targetUserId* should be created if not present in the database.
+     */
+    protected $cascade_create;
     /**
      * @var array Array containing values of optional parameters
      */
@@ -40,16 +44,20 @@ class MergeUsers extends Request {
      * - Allowed parameters:
      *     - *keepSourceUser*
      *         - Type: string
-     *         - Description: If true, the source user will not be deleted, but also kept in the database..
+     *         - Description: If true, the source user will not be deleted, but also kept in the database.
+     *     - *cascadeCreate*
+     *         - Type: bool
+     *         - Description: Sets whether the user *targetUserId* should be created if not present in the database.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($target_user_id, $source_user_id, $optional = array()) {
         $this->target_user_id = $target_user_id;
         $this->source_user_id = $source_user_id;
         $this->keep_source_user = isset($optional['keepSourceUser']) ? $optional['keepSourceUser'] : null;
+        $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('keepSourceUser');
+        $existing_optional = array('keepSourceUser','cascadeCreate');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -82,6 +90,8 @@ class MergeUsers extends Request {
         $params = array();
         if (isset($this->optional['keepSourceUser']))
             $params['keepSourceUser'] = $this->optional['keepSourceUser'];
+        if (isset($this->optional['cascadeCreate']))
+            $params['cascadeCreate'] = $this->optional['cascadeCreate'];
         return $params;
     }
 

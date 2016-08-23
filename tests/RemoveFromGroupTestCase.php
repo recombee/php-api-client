@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class RemoveFromGroupTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($set_id,$type,$entity_id);
+    abstract protected function createRequest($group_id,$item_type,$item_id);
 
     public function testRemoveFromGroup() {
 

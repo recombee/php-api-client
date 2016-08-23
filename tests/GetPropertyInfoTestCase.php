@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class GetPropertyInfoTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($name);
+    abstract protected function createRequest($property_name);
 
     public function testGetPropertyInfo() {
 

@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class AddRatingTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($user_id,$item_id,$rating,$optional);
+    abstract protected function createRequest($user_id,$item_id,$rating,$optional=array());
 
     public function testAddRating() {
 

@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class ListUserInteractionsTestCase extends InteractionsTestCase {
 
-    abstract protected function createRequest($entity_id);
+    abstract protected function createRequest($user_id);
 
     public function testListUserInteractions() {
 

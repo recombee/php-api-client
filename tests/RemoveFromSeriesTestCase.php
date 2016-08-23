@@ -10,7 +10,7 @@ use Recombee\RecommApi\Exceptions as Exc;
 
 abstract class RemoveFromSeriesTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($set_id,$type,$entity_id,$time);
+    abstract protected function createRequest($series_id,$item_type,$item_id,$time);
 
     public function testRemoveFromSeries() {
 
