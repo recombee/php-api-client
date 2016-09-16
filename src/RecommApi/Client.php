@@ -81,7 +81,6 @@ class Client{
         catch(\Requests_Exception $e)
         {
             if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request);
-            echo "{$e->getMessage()}";
             throw $e;
         }
 
