@@ -32,7 +32,7 @@ class BatchTest extends RecombeeTestCase {
                                                                         'allowNonexistent' => true])
                 ];
 
-        $repl = $this->client->send(new Reqs\Batch($reqs));
+        $repl = $this->client->send(new Reqs\Batch($reqs, ['distinctRecomms' => true]));
 
         $codes = array();
         foreach ($repl as $r) {

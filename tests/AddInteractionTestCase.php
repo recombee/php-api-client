@@ -27,6 +27,18 @@ abstract class AddInteractionTestCase extends RecombeeTestCase {
          $resp = $this->client->send($req);
 
          //it fails with nonexisting item id
+         $req = $this->createRequest('entity_id','nonex_id');
+         try {
+
+             $this->client->send($req);
+             throw new \Exception('Exception was not thrown');
+         }
+         catch(Exc\ResponseException $e)
+         {
+            $this->assertEquals(404, $e->status_code);
+         }
+
+         //it fails with nonexisting user id
          $req = $this->createRequest('nonex_id','entity_id');
          try {
 
