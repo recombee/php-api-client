@@ -1,7 +1,4 @@
 <?php
-/*
- This file is auto-generated, do not edit
-*/
 
 /**
  * SetItemValues request
@@ -85,9 +82,17 @@ class SetItemValues extends Request {
      * @return array Values of body parameters (name of parameter => value of the parameter)
      */
     public function getBodyParameters() {
-        $p = array();
-        $p = array_merge($p, $this->values);
-        return $p;
+
+        $result = array();
+        foreach($this->values as $key => $value)
+        {
+            $result[$key] = $value;
+            if(is_object($value) && $value instanceof \DateTime)
+            {
+                $result[$key] = $value->format(\DateTime::ATOM);
+            }
+        }
+        return $result;
     }
 
 }
