@@ -7,6 +7,7 @@
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
+use Recombee\RecommApi\Requests as Reqs;
 
 abstract class InsertToGroupTestCase extends RecombeeTestCase {
 
@@ -15,7 +16,7 @@ abstract class InsertToGroupTestCase extends RecombeeTestCase {
     public function testInsertToGroup() {
 
          //it does not fail when inserting existing item into existing set
-         $req = new AddItem('new_item');
+         $req = new Reqs\AddItem('new_item');
          $resp = $this->client->send($req);
          $req = $this->createRequest('entity_id','item','new_item');
          $resp = $this->client->send($req);
@@ -25,7 +26,7 @@ abstract class InsertToGroupTestCase extends RecombeeTestCase {
          $resp = $this->client->send($req);
 
          //it really inserts item to the set
-         $req = new AddItem('new_item3');
+         $req = new Reqs\AddItem('new_item3');
          $resp = $this->client->send($req);
          $req = $this->createRequest('entity_id','item','new_item3');
          $resp = $this->client->send($req);

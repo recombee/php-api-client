@@ -7,10 +7,11 @@
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
+use Recombee\RecommApi\Requests as Reqs;
 
 abstract class SetValuesTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($item_id,$values);
+    abstract protected function createRequest($item_id,$values,$optional=array());
 
     public function testSetValues() {
 
@@ -28,6 +29,10 @@ abstract class SetValuesTestCase extends RecombeeTestCase {
 
          //it does not fail with !cascadeCreate
          $req = $this->createRequest('new_entity',['int_property' => 5,'str_property' => 'test','!cascadeCreate' => true]);
+         $resp = $this->client->send($req);
+
+         //it does not fail with cascadeCreate optional parameter
+         $req = $this->createRequest('new_entity2',['int_property' => 5,'str_property' => 'test'],['cascadeCreate' => true]);
          $resp = $this->client->send($req);
 
          //it fails with nonexisting entity

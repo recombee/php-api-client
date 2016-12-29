@@ -78,7 +78,7 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
         foreach ($recommended as $rec) {
             $this->assertEquals($rec['id2'], $rec['itemId']);
             $this->assertEquals(42, $rec['answer']);
-            $this->assertContains('empty', $rec);
+            $this->assertArrayHasKey('empty', $rec);
         }
 
         $req = $this->createRequest('entity_id', 9, ['returnProperties' => true, 'includedProperties'=>'answer,id2']);
@@ -86,7 +86,7 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
         foreach ($recommended as $rec) {
             $this->assertEquals($rec['id2'], $rec['itemId']);
             $this->assertEquals(42, $rec['answer']);
-            $this->assertNotContains('empty', $rec);
+            $this->assertArrayNotHasKey('empty', $rec);
         }
     }
 }

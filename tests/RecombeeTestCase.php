@@ -26,7 +26,11 @@ class RecombeeTestCase extends \PHPUnit_Framework_TestCase
             new Reqs\InsertToSeries('entity_id', 'item', 'entity_id', 1),
             new Reqs\AddItemProperty('int_property', 'int'),
             new Reqs\AddItemProperty('str_property', 'string'),
-            new Reqs\SetItemValues('entity_id', ['int_property' => 42, 'str_property' => 'hello'])
+            new Reqs\SetItemValues('entity_id', ['int_property' => 42, 'str_property' => 'hello']),
+            new Reqs\AddUserProperty('int_property', 'int'),
+            new Reqs\AddUserProperty('str_property', 'string'),
+            new Reqs\SetUserValues('entity_id', ['int_property' => 42, 'str_property' => 'hello'])
+
         ]);
 
         $client->send($requests);

@@ -7,6 +7,7 @@
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
+use Recombee\RecommApi\Requests as Reqs;
 
 abstract class GetValuesTestCase extends RecombeeTestCase {
 

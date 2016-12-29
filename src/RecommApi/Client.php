@@ -28,6 +28,11 @@ class Client{
     const BASE_URI = 'rapi.recombee.com';
 
     /**
+     * @ignore
+     */
+    const BATCH_MAX_SIZE = 10000; //Maximal number of requests within one batch request
+
+    /**
      * Create the client
      * @param string $account Name of your account at Recombee
      * @param string $token Secret token
@@ -49,6 +54,10 @@ class Client{
      * @throws Exceptions\ApiTimeoutException ApiTimeoutException if the request takes too long
      */
     public function send(Requests\Request $request) {
+        
+        if($request instanceof Requests\Batch && count($request->requests) > Client::BATCH_MAX_SIZE)
+            return $this->sendMultipartBatch($request);
+
         $this->request = $request;
         $path = Util::sliceDbName($request->getPath());
         $request_url =  $path . $this->paramsToUrl($request->getQueryParameters());
@@ -81,6 +90,7 @@ class Client{
         catch(\Requests_Exception $e)
         {
             if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request);
+            if(strpos($e->getMessage(), 'fsocket timed out') !== false) throw new ApiTimeoutException($request);
             throw $e;
         }
 
@@ -88,28 +98,27 @@ class Client{
     }
 
     /* ----------------------- Send requests -----------------------  */
-    //TODO remove ceils when Requests 1.7 is released as it support timeout in milliseconds
     protected function put($uri, $timeout) {
-        $response = \Requests::put($uri, array(), ['timeout' => ceil($timeout)]);
+        $response = \Requests::put($uri, array(), ['timeout' => $timeout]);
         $this->checkErrors($response);
         return $response->body;
     }
 
     protected function get($uri, $timeout) {
-        $response = \Requests::get($uri, array(), ['timeout' => ceil($timeout)]);
+        $response = \Requests::get($uri, array(), ['timeout' => $timeout]);
         $this->checkErrors($response);
         return json_decode($response->body, true);
     }
 
     protected function delete($uri, $timeout) {
-        $response = \Requests::delete($uri, array(), ['timeout' => ceil($timeout)]);
+        $response = \Requests::delete($uri, array(), ['timeout' => $timeout]);
         $this->checkErrors($response);
         return $response->body;
     }
 
     protected function post($uri, $timeout, $body) {
         $headers = array('Content-Type' => 'application/json');
-        $response = \Requests::post($uri, $headers, $body, ['timeout' => ceil($timeout)]);
+        $response = \Requests::post($uri, $headers, $body, ['timeout' => $timeout]);
         $this->checkErrors($response);
 
         $json = json_decode($response->body, true);
@@ -123,6 +132,15 @@ class Client{
         $status_code = $response->status_code;
         if($status_code == 200 || $status_code == 201) return;
         throw new ResponseException($this->request, $status_code, $response->body);
+    }
+
+    protected function sendMultipartBatch($request) {
+        $chunks = array_chunk($request->requests, Client::BATCH_MAX_SIZE);
+        $responses = array();
+        foreach ($chunks as $rqs) {
+            array_push($responses, $this->send(new Requests\Batch($rqs)));
+        }
+        return array_reduce($responses, 'array_merge', array());
     }
 
     /* ----------------------- HMAC -----------------------  */

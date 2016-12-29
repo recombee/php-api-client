@@ -2,14 +2,14 @@
 
 /**
  * SetItemValues request
+ * @author Ondrej Fiedler <ondrej.fiedler@recombee.com>
  */
 namespace Recombee\RecommApi\Requests;
-use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
  * Set/update (some) property values of a given item. The properties (columns) must be previously created by [Add item property](https://docs.recombee.com/api.html#add-item-property).
  */
-class SetItemValues extends Request {
+class SetItemValues extends SetValues {
 
     /**
      * @var string $item_id ID of the item which will be modified.
@@ -23,10 +23,8 @@ class SetItemValues extends Request {
      *     "product_description": "4K TV with 3D feature",
      *     "categories":   ["Electronics", "Televisions"],
      *     "price_usd": 342,
-     *     "!cascadeCreate": true
      *   }
      * ```
-     * Special parameter `!cascadeCreate` may be used. It indicates that the item of the given itemId should be created if it does not exist in the database, as if the corresponding PUT method was used. Note the exclamation mark (!) at the beginning of the parameter's name to distinguish it from item property names.
      */
     protected $values;
 
@@ -40,24 +38,18 @@ class SetItemValues extends Request {
      *     "product_description": "4K TV with 3D feature",
      *     "categories":   ["Electronics", "Televisions"],
      *     "price_usd": 342,
-     *     "!cascadeCreate": true
      *   }
      * ```
-     * Special parameter `!cascadeCreate` may be used. It indicates that the item of the given itemId should be created if it does not exist in the database, as if the corresponding PUT method was used. Note the exclamation mark (!) at the beginning of the parameter's name to distinguish it from item property names.
+     * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
+     * - Allowed parameters:
+     *     - *cascadeCreate*
+     *         - Type: bool
+     *         - Description: Sets whether the given entity should be created if not present in the database.
+     *
      */
-    public function __construct($item_id, $values) {
+    public function __construct($item_id, $values, $optional=array()) {
         $this->item_id = $item_id;
-        $this->values = $values;
-        $this->timeout = 1000;
-        $this->ensure_https = false;
-    }
-
-    /**
-     * Get used HTTP method
-     * @return static Used HTTP method
-     */
-    public function getMethod() {
-        return Request::HTTP_POST;
+        parent::__construct($values, $optional);
     }
 
     /**
@@ -67,33 +59,5 @@ class SetItemValues extends Request {
     public function getPath() {
         return "/{databaseId}/items/{$this->item_id}";
     }
-
-    /**
-     * Get query parameters
-     * @return array Values of query parameters (name of parameter => value of the parameter)
-     */
-    public function getQueryParameters() {
-        $params = array();
-        return $params;
-    }
-
-    /**
-     * Get body parameters
-     * @return array Values of body parameters (name of parameter => value of the parameter)
-     */
-    public function getBodyParameters() {
-
-        $result = array();
-        foreach($this->values as $key => $value)
-        {
-            $result[$key] = $value;
-            if(is_object($value) && $value instanceof \DateTime)
-            {
-                $result[$key] = $value->format(\DateTime::ATOM);
-            }
-        }
-        return $result;
-    }
-
 }
 ?>

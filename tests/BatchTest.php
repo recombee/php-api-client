@@ -49,6 +49,22 @@ class BatchTest extends RecombeeTestCase {
         $this->assertEquals(['item2'], $repl[13]['json']);
 
     }
+
+
+    public function testLargeBatch() {
+        $NUM = 23654;
+        $reqs = array();
+
+        for($i=0; $i < $NUM; $i++)
+            array_push($reqs, new Reqs\AddItem("item-{$i}"));
+
+        $repl = $this->client->send(new Reqs\Batch($reqs));
+
+        $this->assertCount($NUM, $repl);
+
+        foreach ($repl as $r)
+            $this->assertEquals(201, $r['code']);
+    }
 }
 
 ?>

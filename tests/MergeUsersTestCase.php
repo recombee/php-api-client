@@ -7,6 +7,7 @@
 namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Exceptions as Exc;
+use Recombee\RecommApi\Requests as Reqs;
 
 abstract class MergeUsersTestCase extends RecombeeTestCase {
 
@@ -15,7 +16,7 @@ abstract class MergeUsersTestCase extends RecombeeTestCase {
     public function testMergeUsers() {
 
          //it does not fail with existing users
-         $req = new AddUser('target');
+         $req = new Reqs\AddUser('target');
          $resp = $this->client->send($req);
          $req = $this->createRequest('target','entity_id');
          $resp = $this->client->send($req);
