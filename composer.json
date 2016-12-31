@@ -19,7 +19,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Recombee\\": "src/",
+            "Recombee\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Recombee\\RecommApi\\Tests\\": "tests/"
         }
     }
