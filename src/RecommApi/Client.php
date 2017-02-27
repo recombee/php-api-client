@@ -90,7 +90,10 @@ class Client{
         catch(\Requests_Exception $e)
         {
             if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request);
+            if((strpos($e->getMessage(), 'cURL error 7') !== false) && (strpos($e->getMessage(), 'timed out') !== false))
+                throw new ApiTimeoutException($request);
             if(strpos($e->getMessage(), 'fsocket timed out') !== false) throw new ApiTimeoutException($request);
+
             throw $e;
         }
 

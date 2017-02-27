@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^1.3"
+        "recombee/php-api-client": "^1.3.1"
     }
 }
 ```
@@ -59,7 +59,7 @@ try
 
     echo 'Recommended items: ' . implode(',',$recommended) . "\n";
 }
-catch(Ex\ApiTimeoutException $e)
+catch(Ex\ApiException $e)
 {
     //use fallback
 }

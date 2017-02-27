@@ -26,7 +26,9 @@ class ItemBasedRecommendation extends Request {
      * @var string $target_user_id ID of the user who will see the recommendations.
      * Specifying the *targetUserId* is beneficial because:
      * * It makes the recommendations personalized
-     * * Allows calculations of Actions and Conversions in the graphical user interface, as Recombee can pair the user who got recommendations and who afterwards viewed/purchased an item.
+     * * Allows the calculation of Actions and Conversions in the graphical user interface,
+     *   as Recombee can pair the user who got recommendations and who afterwards viewed/purchased an item.
+     * For the above reasons, we encourage you to set the *targetUserId* even for anonymous/unregistered users (i.e. use their session ID).
      */
     protected $target_user_id;
     /**
@@ -50,7 +52,7 @@ class ItemBasedRecommendation extends Request {
      */
     protected $cascade_create;
     /**
-     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
+     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing". You can see each scenario in the UI separately, so you can check how well each application performs. The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      */
     protected $scenario;
     /**
@@ -127,7 +129,9 @@ class ItemBasedRecommendation extends Request {
      *         - Description: ID of the user who will see the recommendations.
      * Specifying the *targetUserId* is beneficial because:
      * * It makes the recommendations personalized
-     * * Allows calculations of Actions and Conversions in the graphical user interface, as Recombee can pair the user who got recommendations and who afterwards viewed/purchased an item.
+     * * Allows the calculation of Actions and Conversions in the graphical user interface,
+     *   as Recombee can pair the user who got recommendations and who afterwards viewed/purchased an item.
+     * For the above reasons, we encourage you to set the *targetUserId* even for anonymous/unregistered users (i.e. use their session ID).
      *     - *userImpact*
      *         - Type: float
      *         - Description: If *targetUserId* parameter is present, the recommendations are biased towards the user given. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get user-based recommendation. The default value is `0.1`
@@ -145,7 +149,7 @@ class ItemBasedRecommendation extends Request {
      *         - Description: If item of given *itemId* or user of given *targetUserId* doesn't exist in the database, it creates the missing enity/entities and returns some (non-personalized) recommendations. This allows for example rotations in the following recommendations for the user of given *targetUserId*, as the user will be already known to the system.
      *     - *scenario*
      *         - Type: string
-     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage" or "cart". The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
+     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing". You can see each scenario in the UI separately, so you can check how well each application performs. The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      *     - *returnProperties*
      *         - Type: bool
      *         - Description: With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
