@@ -19,7 +19,7 @@ class ListGroups extends Request {
      * Construct the request
      */
     public function __construct() {
-        $this->timeout = 30000;
+        $this->timeout = 239000;
         $this->ensure_https = false;
     }
 

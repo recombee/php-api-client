@@ -5,17 +5,13 @@ namespace Recombee\RecommApi\Tests;
 use Recombee\RecommApi\Client;
 use Recombee\RecommApi\Requests as Reqs;
 
-class RecombeeTestCase extends \PHPUnit_Framework_TestCase
+class RecombeeTestCase extends \PHPUnit\Framework\TestCase
 {
     protected $client;
 
-    public function __construct() {
-        $this->client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
-    }
-
     protected function setUp() {
         
-        $client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
+        $this->client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
         $requests = new Reqs\Batch([
             new Reqs\ResetDatabase,
             new Reqs\AddItem('entity_id'),
@@ -33,7 +29,7 @@ class RecombeeTestCase extends \PHPUnit_Framework_TestCase
 
         ]);
 
-        $client->send($requests);
+        $this->client->send($requests);
     }
  }
 

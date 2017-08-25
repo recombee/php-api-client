@@ -54,7 +54,7 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
         $recommended1 = $this->client->send($req);
         $this->assertCount(9, $recommended1);
 
-        $req = $this->createRequest('entity_id', 9, ['rotationRate' => 1]);
+        $req = $this->createRequest('entity_id', 9, ['rotationTime' => 10000, 'rotationRate' => 1]);
         $recommended2 = $this->client->send($req);
         $this->assertCount(9, $recommended2);
 
@@ -67,9 +67,12 @@ abstract class RecommendationTestCase extends RecombeeTestCase {
         $num = 25;
         $reqs = array();
         for($i=0; $i<$num; $i++) {
-            array_push($reqs, $this->createRequest('entity_id', 9));
+            array_push($reqs, $this->createRequest("entity_{$i}", 9, ['cascadeCreate' => true]));
         }
-        $this->client->send(new Reqs\Batch($reqs));
+        $recommendations = $this->client->send(new Reqs\Batch($reqs));
+        foreach ($recommendations as $recommendation) {
+            $this->assertCount(9, $recommendation['json']);
+        }
     }
 
     public function testReturningProperties() {

@@ -11,11 +11,12 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
  * Recommends set of items that are somehow related to one given item, *X*. Typical scenario for using item-based recommendation is when user *A* is viewing *X*. Then you may display items to the user that he might be also interested in. Item-recommendation request gives you Top-N such items, optionally taking the target user *A* into account.
+ *  It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
  */
 class ItemBasedRecommendation extends Request {
 
     /**
-     * @var string $item_id ID of the item recommendations for which are to be generated.
+     * @var string $item_id ID of the item for which the recommendations are to be generated.
      */
     protected $item_id;
     /**
@@ -32,7 +33,7 @@ class ItemBasedRecommendation extends Request {
      */
     protected $target_user_id;
     /**
-     * @var float $user_impact If *targetUserId* parameter is present, the recommendations are biased towards the user given. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get user-based recommendation. The default value is `0.1`
+     * @var float $user_impact If *targetUserId* parameter is present, the recommendations are biased towards the user given. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get user-based recommendation. The default value is `0`.
      */
     protected $user_impact;
     /**
@@ -110,9 +111,13 @@ class ItemBasedRecommendation extends Request {
      */
     protected $rotation_rate;
     /**
-     * @var float $rotation_time **Expert option** If the *targetUserId* is provided: Taking *rotationRate* into account, specifies how long time it takes to an item to fully recover from the penalization. For example, `rotationTime=7200.0` means that items recommended more than 2 hours ago are definitely not penalized anymore. Currently, the penalization is linear, so for `rotationTime=7200.0`, an item is still penalized by `0.5` to the user after 1 hour.
+     * @var float $rotation_time **Expert option** If the *targetUserId* is provided: Taking *rotationRate* into account, specifies how long time it takes to an item to recover from the penalization. For example, `rotationTime=7200.0` means that items recommended less than 2 hours ago are penalized.
      */
     protected $rotation_time;
+    /**
+     * @var  $expert_settings Dictionary of custom options.
+     */
+    protected $expert_settings;
     /**
      * @var array Array containing values of optional parameters
      */
@@ -120,7 +125,7 @@ class ItemBasedRecommendation extends Request {
 
     /**
      * Construct the request
-     * @param string $item_id ID of the item recommendations for which are to be generated.
+     * @param string $item_id ID of the item for which the recommendations are to be generated.
      * @param int $count Number of items to be recommended (N for the top-N recommendation).
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
@@ -134,7 +139,7 @@ class ItemBasedRecommendation extends Request {
      * For the above reasons, we encourage you to set the *targetUserId* even for anonymous/unregistered users (i.e. use their session ID).
      *     - *userImpact*
      *         - Type: float
-     *         - Description: If *targetUserId* parameter is present, the recommendations are biased towards the user given. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get user-based recommendation. The default value is `0.1`
+     *         - Description: If *targetUserId* parameter is present, the recommendations are biased towards the user given. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get user-based recommendation. The default value is `0`.
      *     - *filter*
      *         - Type: string
      *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to filter recommended items based on the values of their attributes.
@@ -201,7 +206,10 @@ class ItemBasedRecommendation extends Request {
      *         - Description: **Expert option** If the *targetUserId* is provided: If your users browse the system in real-time, it may easily happen that you wish to offer them recommendations multiple times. Here comes the question: how much should the recommendations change? Should they remain the same, or should they rotate? Recombee API allows you to control this per-request in backward fashion. You may penalize an item for being recommended in the near past. For the specific user, `rotationRate=1` means maximal rotation, `rotationRate=0` means absolutely no rotation. You may also use, for example `rotationRate=0.2` for only slight rotation of recommended items.
      *     - *rotationTime*
      *         - Type: float
-     *         - Description: **Expert option** If the *targetUserId* is provided: Taking *rotationRate* into account, specifies how long time it takes to an item to fully recover from the penalization. For example, `rotationTime=7200.0` means that items recommended more than 2 hours ago are definitely not penalized anymore. Currently, the penalization is linear, so for `rotationTime=7200.0`, an item is still penalized by `0.5` to the user after 1 hour.
+     *         - Description: **Expert option** If the *targetUserId* is provided: Taking *rotationRate* into account, specifies how long time it takes to an item to recover from the penalization. For example, `rotationTime=7200.0` means that items recommended less than 2 hours ago are penalized.
+     *     - *expertSettings*
+     *         - Type: 
+     *         - Description: Dictionary of custom options.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($item_id, $count, $optional = array()) {
@@ -220,9 +228,10 @@ class ItemBasedRecommendation extends Request {
         $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
+        $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('targetUserId','userImpact','filter','booster','allowNonexistent','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime');
+        $existing_optional = array('targetUserId','userImpact','filter','booster','allowNonexistent','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -236,7 +245,7 @@ class ItemBasedRecommendation extends Request {
      * @return static Used HTTP method
      */
     public function getMethod() {
-        return Request::HTTP_GET;
+        return Request::HTTP_POST;
     }
 
     /**
@@ -253,33 +262,6 @@ class ItemBasedRecommendation extends Request {
      */
     public function getQueryParameters() {
         $params = array();
-        $params['count'] = $this->count;
-        if (isset($this->optional['targetUserId']))
-            $params['targetUserId'] = $this->optional['targetUserId'];
-        if (isset($this->optional['userImpact']))
-            $params['userImpact'] = $this->optional['userImpact'];
-        if (isset($this->optional['filter']))
-            $params['filter'] = $this->optional['filter'];
-        if (isset($this->optional['booster']))
-            $params['booster'] = $this->optional['booster'];
-        if (isset($this->optional['allowNonexistent']))
-            $params['allowNonexistent'] = $this->optional['allowNonexistent'];
-        if (isset($this->optional['cascadeCreate']))
-            $params['cascadeCreate'] = $this->optional['cascadeCreate'];
-        if (isset($this->optional['scenario']))
-            $params['scenario'] = $this->optional['scenario'];
-        if (isset($this->optional['returnProperties']))
-            $params['returnProperties'] = $this->optional['returnProperties'];
-        if (isset($this->optional['includedProperties']))
-            $params['includedProperties'] = $this->optional['includedProperties'];
-        if (isset($this->optional['diversity']))
-            $params['diversity'] = $this->optional['diversity'];
-        if (isset($this->optional['minRelevance']))
-            $params['minRelevance'] = $this->optional['minRelevance'];
-        if (isset($this->optional['rotationRate']))
-            $params['rotationRate'] = $this->optional['rotationRate'];
-        if (isset($this->optional['rotationTime']))
-            $params['rotationTime'] = $this->optional['rotationTime'];
         return $params;
     }
 
@@ -289,6 +271,35 @@ class ItemBasedRecommendation extends Request {
      */
     public function getBodyParameters() {
         $p = array();
+        $p['count'] = $this->count;
+        if (isset($this->optional['targetUserId']))
+             $p['targetUserId'] = $this-> optional['targetUserId'];
+        if (isset($this->optional['userImpact']))
+             $p['userImpact'] = $this-> optional['userImpact'];
+        if (isset($this->optional['filter']))
+             $p['filter'] = $this-> optional['filter'];
+        if (isset($this->optional['booster']))
+             $p['booster'] = $this-> optional['booster'];
+        if (isset($this->optional['allowNonexistent']))
+             $p['allowNonexistent'] = $this-> optional['allowNonexistent'];
+        if (isset($this->optional['cascadeCreate']))
+             $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
+        if (isset($this->optional['scenario']))
+             $p['scenario'] = $this-> optional['scenario'];
+        if (isset($this->optional['returnProperties']))
+             $p['returnProperties'] = $this-> optional['returnProperties'];
+        if (isset($this->optional['includedProperties']))
+             $p['includedProperties'] = $this-> optional['includedProperties'];
+        if (isset($this->optional['diversity']))
+             $p['diversity'] = $this-> optional['diversity'];
+        if (isset($this->optional['minRelevance']))
+             $p['minRelevance'] = $this-> optional['minRelevance'];
+        if (isset($this->optional['rotationRate']))
+             $p['rotationRate'] = $this-> optional['rotationRate'];
+        if (isset($this->optional['rotationTime']))
+             $p['rotationTime'] = $this-> optional['rotationTime'];
+        if (isset($this->optional['expertSettings']))
+             $p['expertSettings'] = $this-> optional['expertSettings'];
         return $p;
     }
 

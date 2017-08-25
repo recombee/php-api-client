@@ -21,6 +21,7 @@ class Client{
     protected $request;
     protected $protocol;
     protected $base_uri;
+    protected $options;
 
     /**
      * @ignore
@@ -37,14 +38,16 @@ class Client{
      * @param string $account Name of your account at Recombee
      * @param string $token Secret token
      * @param string $protocol Default protocol for sending requests. Possible values: 'http', 'https'.
+     * @param array  $options Other custom options
      */
-    public function __construct($account, $token, $protocol = 'http') {
+    public function __construct($account, $token, $protocol = 'http', $options= array()) {
         $this->account = $account;
         $this->token = $token;
         $this->protocol = $protocol;
         $this->base_uri = Client::BASE_URI;
         if(getenv("RAPI_URI") !== false)
             $this->base_uri = getenv("RAPI_URI");
+        $this->options = $options;
     }
 
     /**
@@ -74,7 +77,8 @@ class Client{
                     break;
 
                 case Requests\Request::HTTP_PUT:
-                    $result = $this->put($uri, $timeout);
+                    $json = json_encode($request->getBodyParameters(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    $result = $this->put($uri, $timeout, $json);
                     break;
 
                 case Requests\Request::HTTP_DELETE:
@@ -101,27 +105,53 @@ class Client{
     }
 
     /* ----------------------- Send requests -----------------------  */
-    protected function put($uri, $timeout) {
-        $response = \Requests::put($uri, array(), ['timeout' => $timeout]);
+    protected function getOptionalHttpHeaders() {
+        if (isset($this->options['requestsHeaders']))
+            return $this->options['requestsHeaders'];
+        return array();
+    }
+
+    protected function getHttpHeaders() {
+        return array_merge(array('User-Agent' => 'recombee-php-api-client/1.4.0'), $this->getOptionalHttpHeaders()); 
+    }
+
+    protected function getOptionalRequestOptions() {
+        if (isset($this->options['requestsOptions']))
+            return $this->options['requestsOptions'];
+        return array();
+    }
+
+    protected function put($uri, $timeout, $body) {
+        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
+
+        $response = \Requests::put($uri, $headers, $body, $options);
         $this->checkErrors($response);
         return $response->body;
     }
 
     protected function get($uri, $timeout) {
-        $response = \Requests::get($uri, array(), ['timeout' => $timeout]);
+        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $headers = $this->getHttpHeaders();
+
+        $response = \Requests::get($uri, $headers, $options);
         $this->checkErrors($response);
         return json_decode($response->body, true);
     }
 
     protected function delete($uri, $timeout) {
-        $response = \Requests::delete($uri, array(), ['timeout' => $timeout]);
+        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $headers = $this->getHttpHeaders();
+
+        $response = \Requests::delete($uri, $headers, $options);
         $this->checkErrors($response);
         return $response->body;
     }
 
     protected function post($uri, $timeout, $body) {
-        $headers = array('Content-Type' => 'application/json');
-        $response = \Requests::post($uri, $headers, $body, ['timeout' => $timeout]);
+        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
+        $response = \Requests::post($uri, $headers, $body, $options);
         $this->checkErrors($response);
 
         $json = json_decode($response->body, true);

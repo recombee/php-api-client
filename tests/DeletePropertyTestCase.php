@@ -29,7 +29,7 @@ abstract class DeletePropertyTestCase extends RecombeeTestCase {
          }
 
          //it fails with invalid property
-         $req = $this->createRequest('not_valid_id-*.?!');
+         $req = $this->createRequest('...not_valid...');
          try {
 
              $this->client->send($req);

@@ -24,10 +24,6 @@ class MergeUsers extends Request {
      */
     protected $source_user_id;
     /**
-     * @var string $keep_source_user If true, the source user will not be deleted, but also kept in the database.
-     */
-    protected $keep_source_user;
-    /**
      * @var bool $cascade_create Sets whether the user *targetUserId* should be created if not present in the database.
      */
     protected $cascade_create;
@@ -42,9 +38,6 @@ class MergeUsers extends Request {
      * @param string $source_user_id ID of the target user.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
-     *     - *keepSourceUser*
-     *         - Type: string
-     *         - Description: If true, the source user will not be deleted, but also kept in the database.
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: Sets whether the user *targetUserId* should be created if not present in the database.
@@ -53,16 +46,15 @@ class MergeUsers extends Request {
     public function __construct($target_user_id, $source_user_id, $optional = array()) {
         $this->target_user_id = $target_user_id;
         $this->source_user_id = $source_user_id;
-        $this->keep_source_user = isset($optional['keepSourceUser']) ? $optional['keepSourceUser'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('keepSourceUser','cascadeCreate');
+        $existing_optional = array('cascadeCreate');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
-        $this->timeout = 1000;
+        $this->timeout = 10000;
         $this->ensure_https = false;
     }
 
@@ -88,8 +80,6 @@ class MergeUsers extends Request {
      */
     public function getQueryParameters() {
         $params = array();
-        if (isset($this->optional['keepSourceUser']))
-            $params['keepSourceUser'] = $this->optional['keepSourceUser'];
         if (isset($this->optional['cascadeCreate']))
             $params['cascadeCreate'] = $this->optional['cascadeCreate'];
         return $params;
