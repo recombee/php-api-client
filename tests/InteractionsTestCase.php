@@ -18,7 +18,8 @@ class InteractionsTestCase extends RecombeeTestCase {
             new Reqs\AddPurchase('user', 'item', ['timestamp' => 0]),
             new Reqs\AddRating('user', 'item', 1, ['timestamp' => 0]),
             new Reqs\AddCartAddition('user', 'item', ['timestamp' => 0]),
-            new Reqs\AddBookmark('user', 'item', ['timestamp' => 0])
+            new Reqs\AddBookmark('user', 'item', ['timestamp' => 0]),
+            new Reqs\SetViewPortion('user', 'item', 1, ['timestamp' => 0])
         ]);
 
         $client->send($requests);

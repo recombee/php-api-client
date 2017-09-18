@@ -112,7 +112,7 @@ class Client{
     }
 
     protected function getHttpHeaders() {
-        return array_merge(array('User-Agent' => 'recombee-php-api-client/1.4.0'), $this->getOptionalHttpHeaders()); 
+        return array_merge(array('User-Agent' => 'recombee-php-api-client/1.5.0'), $this->getOptionalHttpHeaders()); 
     }
 
     protected function getOptionalRequestOptions() {
