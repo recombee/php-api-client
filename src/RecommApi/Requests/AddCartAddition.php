@@ -31,6 +31,14 @@ class AddCartAddition extends Request {
      */
     protected $cascade_create;
     /**
+     * @var float $amount Amount (number) added to cart. The default is 1. For example if `user-x` adds two `item-y` during a single order (session...), the `amount` should equal to 2.
+     */
+    protected $amount;
+    /**
+     * @var float $price Price of the added item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     */
+    protected $price;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -47,6 +55,12 @@ class AddCartAddition extends Request {
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: Sets whether the given user/item should be created if not present in the database.
+     *     - *amount*
+     *         - Type: float
+     *         - Description: Amount (number) added to cart. The default is 1. For example if `user-x` adds two `item-y` during a single order (session...), the `amount` should equal to 2.
+     *     - *price*
+     *         - Type: float
+     *         - Description: Price of the added item. If `amount` is greater than 1, sum of prices of all the items should be given.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -54,9 +68,11 @@ class AddCartAddition extends Request {
         $this->item_id = $item_id;
         $this->timestamp = isset($optional['timestamp']) ? $optional['timestamp'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
+        $this->amount = isset($optional['amount']) ? $optional['amount'] : null;
+        $this->price = isset($optional['price']) ? $optional['price'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','cascadeCreate');
+        $existing_optional = array('timestamp','cascadeCreate','amount','price');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -102,6 +118,10 @@ class AddCartAddition extends Request {
              $p['timestamp'] = $this-> optional['timestamp'];
         if (isset($this->optional['cascadeCreate']))
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
+        if (isset($this->optional['amount']))
+             $p['amount'] = $this-> optional['amount'];
+        if (isset($this->optional['price']))
+             $p['price'] = $this-> optional['price'];
         return $p;
     }
 

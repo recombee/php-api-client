@@ -25,6 +25,10 @@ class SetViewPortion extends Request {
      */
     protected $item_id;
     /**
+     * @var float $portion Viewed portion of the item (number between 0.0 (viewed nothing) and 1.0 (viewed full item) ).
+     */
+    protected $portion;
+    /**
      * @var string $session_id Id of session in which the user viewed the item
      */
     protected $session_id;
@@ -32,10 +36,6 @@ class SetViewPortion extends Request {
      * @var string|float $timestamp UTC timestamp of the rating as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
      */
     protected $timestamp;
-    /**
-     * @var float $portion Viewed portion of the item (number between 0.0 (viewed nothing) and 1.0 (viewed full item) ).
-     */
-    protected $portion;
     /**
      * @var bool $cascade_create Sets whether the given user/item should be created if not present in the database.
      */

@@ -141,7 +141,7 @@ class ListItems extends Request {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
-        $this->timeout = 600000;
+        $this->timeout = 100000;
         $this->ensure_https = false;
     }
 

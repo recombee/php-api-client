@@ -31,6 +31,18 @@ class AddPurchase extends Request {
      */
     protected $cascade_create;
     /**
+     * @var float $amount Amount (number) of purchased items. The default is 1. For example if `user-x` purchases two `item-y` during a single order (session...), the `amount` should equal to 2.
+     */
+    protected $amount;
+    /**
+     * @var float $price Price paid by the user for the item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     */
+    protected $price;
+    /**
+     * @var float $profit Your profit from the purchased item. The profit is natural in e-commerce domain (for example if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30), but is applicable also in other domains (for example at a news company it may be income from displayed advertisement on article page). If `amount` is greater than 1, sum of profit of all the items should be given.
+     */
+    protected $profit;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -47,6 +59,15 @@ class AddPurchase extends Request {
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: Sets whether the given user/item should be created if not present in the database.
+     *     - *amount*
+     *         - Type: float
+     *         - Description: Amount (number) of purchased items. The default is 1. For example if `user-x` purchases two `item-y` during a single order (session...), the `amount` should equal to 2.
+     *     - *price*
+     *         - Type: float
+     *         - Description: Price paid by the user for the item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     *     - *profit*
+     *         - Type: float
+     *         - Description: Your profit from the purchased item. The profit is natural in e-commerce domain (for example if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30), but is applicable also in other domains (for example at a news company it may be income from displayed advertisement on article page). If `amount` is greater than 1, sum of profit of all the items should be given.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -54,9 +75,12 @@ class AddPurchase extends Request {
         $this->item_id = $item_id;
         $this->timestamp = isset($optional['timestamp']) ? $optional['timestamp'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
+        $this->amount = isset($optional['amount']) ? $optional['amount'] : null;
+        $this->price = isset($optional['price']) ? $optional['price'] : null;
+        $this->profit = isset($optional['profit']) ? $optional['profit'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','cascadeCreate');
+        $existing_optional = array('timestamp','cascadeCreate','amount','price','profit');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -102,6 +126,12 @@ class AddPurchase extends Request {
              $p['timestamp'] = $this-> optional['timestamp'];
         if (isset($this->optional['cascadeCreate']))
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
+        if (isset($this->optional['amount']))
+             $p['amount'] = $this-> optional['amount'];
+        if (isset($this->optional['price']))
+             $p['price'] = $this-> optional['price'];
+        if (isset($this->optional['profit']))
+             $p['profit'] = $this-> optional['profit'];
         return $p;
     }
 

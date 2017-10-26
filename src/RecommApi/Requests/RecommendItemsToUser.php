@@ -4,19 +4,20 @@
 */
 
 /**
- * UserBasedRecommendation request
+ * RecommendItemsToUser request
  */
 namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
+ * This feature is currently in beta.
  * Based on user's past interactions (purchases, ratings, etc.) with the items, recommends top-N items that are most likely to be of high value for a given user.
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
  */
-class UserBasedRecommendation extends Request {
+class RecommendItemsToUser extends Request {
 
     /**
-     * @var string $user_id ID of the user for which the personalized recommendations are to be generated.
+     * @var string $user_id ID of the user for which personalized recommendations are to be generated.
      */
     protected $user_id;
     /**
@@ -32,10 +33,6 @@ class UserBasedRecommendation extends Request {
      */
     protected $booster;
     /**
-     * @var bool $allow_nonexistent If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error. It doesn't create the user in the database.
-     */
-    protected $allow_nonexistent;
-    /**
      * @var bool $cascade_create If the user does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
      */
     protected $cascade_create;
@@ -47,22 +44,30 @@ class UserBasedRecommendation extends Request {
      * @var bool $return_properties With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
      * Example response:
      * ```
-     *   [
-     *     {
-     *       "itemId": "tv-178",
-     *       "description": "4K TV with 3D feature",
-     *       "categories":   ["Electronics", "Televisions"],
-     *       "price": 342,
-     *       "url": "myshop.com/tv-178"
-     *     },
-     *     {
-     *       "itemId": "mixer-42",
-     *       "description": "Stainless Steel Mixer",
-     *       "categories":   ["Home & Kitchen"],
-     *       "price": 39,
-     *       "url": "myshop.com/mixer-42"
-     *     }
-     *   ]
+     *   {
+     *     "recommId": "1644e7b31759a08480da5f3b0a13045b",
+     *     "recomms": 
+     *       [
+     *         {
+     *           "id": "tv-178",
+     *           "values": {
+     *             "description": "4K TV with 3D feature",
+     *             "categories":   ["Electronics", "Televisions"],
+     *             "price": 342,
+     *             "url": "myshop.com/tv-178"
+     *           }
+     *         },
+     *         {
+     *           "id": "mixer-42",
+     *           "values": {
+     *             "description": "Stainless Steel Mixer",
+     *             "categories":   ["Home & Kitchen"],
+     *             "price": 39,
+     *             "url": "myshop.com/mixer-42"
+     *           }
+     *         }
+     *       ]
+     *   }
      * ```
      */
     protected $return_properties;
@@ -70,18 +75,26 @@ class UserBasedRecommendation extends Request {
      * @var array $included_properties Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
      * Example response for `includedProperties=description,price`:
      * ```
-     *   [
-     *     {
-     *       "itemId": "tv-178",
-     *       "description": "4K TV with 3D feature",
-     *       "price": 342
-     *     },
-     *     {
-     *       "itemId": "mixer-42",
-     *       "description": "Stainless Steel Mixer",
-     *       "price": 39
-     *     }
-     *   ]
+     *   {
+     *     "recommId": "e3ba43af1a4e59dd08a00adced1729a7",
+     *     "recomms":
+     *       [
+     *         {
+     *           "id": "tv-178",
+     *           "values": {
+     *             "description": "4K TV with 3D feature",
+     *             "price": 342
+     *           }
+     *         },
+     *         {
+     *           "id": "mixer-42",
+     *           "values": {
+     *             "description": "Stainless Steel Mixer",
+     *             "price": 39
+     *           }
+     *         }
+     *       ]
+     *   }
      * ```
      */
     protected $included_properties;
@@ -90,7 +103,7 @@ class UserBasedRecommendation extends Request {
      */
     protected $diversity;
     /**
-     * @var string $min_relevance **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested qualit, and may return less than *count* items when there is not enough data to fulfill it.
+     * @var string $min_relevance **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevancy, and may return less than *count* items when there is not enough data to fulfill it.
      */
     protected $min_relevance;
     /**
@@ -112,7 +125,7 @@ class UserBasedRecommendation extends Request {
 
     /**
      * Construct the request
-     * @param string $user_id ID of the user for which the personalized recommendations are to be generated.
+     * @param string $user_id ID of the user for which personalized recommendations are to be generated.
      * @param int $count Number of items to be recommended (N for the top-N recommendation).
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
@@ -122,9 +135,6 @@ class UserBasedRecommendation extends Request {
      *     - *booster*
      *         - Type: string
      *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
-     *     - *allowNonexistent*
-     *         - Type: bool
-     *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations instead of causing HTTP 404 error. It doesn't create the user in the database.
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
@@ -136,47 +146,63 @@ class UserBasedRecommendation extends Request {
      *         - Description: With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
      * Example response:
      * ```
-     *   [
-     *     {
-     *       "itemId": "tv-178",
-     *       "description": "4K TV with 3D feature",
-     *       "categories":   ["Electronics", "Televisions"],
-     *       "price": 342,
-     *       "url": "myshop.com/tv-178"
-     *     },
-     *     {
-     *       "itemId": "mixer-42",
-     *       "description": "Stainless Steel Mixer",
-     *       "categories":   ["Home & Kitchen"],
-     *       "price": 39,
-     *       "url": "myshop.com/mixer-42"
-     *     }
-     *   ]
+     *   {
+     *     "recommId": "1644e7b31759a08480da5f3b0a13045b",
+     *     "recomms": 
+     *       [
+     *         {
+     *           "id": "tv-178",
+     *           "values": {
+     *             "description": "4K TV with 3D feature",
+     *             "categories":   ["Electronics", "Televisions"],
+     *             "price": 342,
+     *             "url": "myshop.com/tv-178"
+     *           }
+     *         },
+     *         {
+     *           "id": "mixer-42",
+     *           "values": {
+     *             "description": "Stainless Steel Mixer",
+     *             "categories":   ["Home & Kitchen"],
+     *             "price": 39,
+     *             "url": "myshop.com/mixer-42"
+     *           }
+     *         }
+     *       ]
+     *   }
      * ```
      *     - *includedProperties*
      *         - Type: array
      *         - Description: Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
      * Example response for `includedProperties=description,price`:
      * ```
-     *   [
-     *     {
-     *       "itemId": "tv-178",
-     *       "description": "4K TV with 3D feature",
-     *       "price": 342
-     *     },
-     *     {
-     *       "itemId": "mixer-42",
-     *       "description": "Stainless Steel Mixer",
-     *       "price": 39
-     *     }
-     *   ]
+     *   {
+     *     "recommId": "e3ba43af1a4e59dd08a00adced1729a7",
+     *     "recomms":
+     *       [
+     *         {
+     *           "id": "tv-178",
+     *           "values": {
+     *             "description": "4K TV with 3D feature",
+     *             "price": 342
+     *           }
+     *         },
+     *         {
+     *           "id": "mixer-42",
+     *           "values": {
+     *             "description": "Stainless Steel Mixer",
+     *             "price": 39
+     *           }
+     *         }
+     *       ]
+     *   }
      * ```
      *     - *diversity*
      *         - Type: float
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      *     - *minRelevance*
      *         - Type: string
-     *         - Description: **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested qualit, and may return less than *count* items when there is not enough data to fulfill it.
+     *         - Description: **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevancy, and may return less than *count* items when there is not enough data to fulfill it.
      *     - *rotationRate*
      *         - Type: float
      *         - Description: **Expert option** If your users browse the system in real-time, it may easily happen that you wish to offer them recommendations multiple times. Here comes the question: how much should the recommendations change? Should they remain the same, or should they rotate? Recombee API allows you to control this per-request in backward fashion. You may penalize an item for being recommended in the near past. For the specific user, `rotationRate=1` means maximal rotation, `rotationRate=0` means absolutely no rotation. You may also use, for example `rotationRate=0.2` for only slight rotation of recommended items.
@@ -193,7 +219,6 @@ class UserBasedRecommendation extends Request {
         $this->count = $count;
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
-        $this->allow_nonexistent = isset($optional['allowNonexistent']) ? $optional['allowNonexistent'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
         $this->return_properties = isset($optional['returnProperties']) ? $optional['returnProperties'] : null;
@@ -205,7 +230,7 @@ class UserBasedRecommendation extends Request {
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('filter','booster','allowNonexistent','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings');
+        $existing_optional = array('filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -227,7 +252,7 @@ class UserBasedRecommendation extends Request {
      * @return string URI to the endpoint
      */
     public function getPath() {
-        return "/{databaseId}/users/{$this->user_id}/recomms/";
+        return "/{databaseId}/recomms/users/{$this->user_id}/items/";
     }
 
     /**
@@ -250,8 +275,6 @@ class UserBasedRecommendation extends Request {
              $p['filter'] = $this-> optional['filter'];
         if (isset($this->optional['booster']))
              $p['booster'] = $this-> optional['booster'];
-        if (isset($this->optional['allowNonexistent']))
-             $p['allowNonexistent'] = $this-> optional['allowNonexistent'];
         if (isset($this->optional['cascadeCreate']))
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
         if (isset($this->optional['scenario']))
