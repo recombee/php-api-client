@@ -45,7 +45,7 @@ class RecommendItemsToUser extends Request {
      * Example response:
      * ```
      *   {
-     *     "recommId": "1644e7b31759a08480da5f3b0a13045b",
+     *     "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
      *     "recomms": 
      *       [
      *         {
@@ -76,7 +76,7 @@ class RecommendItemsToUser extends Request {
      * Example response for `includedProperties=description,price`:
      * ```
      *   {
-     *     "recommId": "e3ba43af1a4e59dd08a00adced1729a7",
+     *     "recommId": "a86ee8d5-cd8e-46d1-886c-8b3771d0520b",
      *     "recomms":
      *       [
      *         {
@@ -147,7 +147,7 @@ class RecommendItemsToUser extends Request {
      * Example response:
      * ```
      *   {
-     *     "recommId": "1644e7b31759a08480da5f3b0a13045b",
+     *     "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
      *     "recomms": 
      *       [
      *         {
@@ -177,7 +177,7 @@ class RecommendItemsToUser extends Request {
      * Example response for `includedProperties=description,price`:
      * ```
      *   {
-     *     "recommId": "e3ba43af1a4e59dd08a00adced1729a7",
+     *     "recommId": "a86ee8d5-cd8e-46d1-886c-8b3771d0520b",
      *     "recomms":
      *       [
      *         {

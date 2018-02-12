@@ -112,7 +112,7 @@ class Client{
     }
 
     protected function getHttpHeaders() {
-        return array_merge(array('User-Agent' => 'recombee-php-api-client/1.6.0'), $this->getOptionalHttpHeaders()); 
+        return array_merge(array('User-Agent' => 'recombee-php-api-client/1.6.1'), $this->getOptionalHttpHeaders()); 
     }
 
     protected function getOptionalRequestOptions() {
@@ -212,6 +212,9 @@ class Client{
     protected function formatQueryParameterValue($value) {
         if (is_array($value))
             return implode(',', $value);
+        if (is_bool($value))
+            return ($value) ? 'true' : 'false';
+
         else return $value;
     }
 

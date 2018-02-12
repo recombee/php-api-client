@@ -29,7 +29,7 @@ abstract class DeleteEntityTestCase extends RecombeeTestCase {
          }
 
          //it fails with invalid entity id
-         $req = $this->createRequest('...not_valid...');
+         $req = $this->createRequest('$$$not_valid$$$');
          try {
 
              $this->client->send($req);

@@ -65,7 +65,7 @@ class RecommendItemsToItem extends Request {
      * Example response:
      * ```
      *   {
-     *     "recommId": "8ac80708afe9148130528757ebf6aaba",
+     *     "recommId": "0c6189e7-dc1a-429a-b613-192696309361",
      *     "recomms":
      *       [
      *         {
@@ -96,7 +96,7 @@ class RecommendItemsToItem extends Request {
      * Example response for `includedProperties=description,price`:
      * ```
      *   {
-     *     "recommId": "c7dbfc503d262b80b77b4949ee9855fb",
+     *     "recommId": "6842c725-a79f-4537-a02c-f34d668a3f80",
      *     "recomms": 
      *       [
      *         {
@@ -183,7 +183,7 @@ class RecommendItemsToItem extends Request {
      * Example response:
      * ```
      *   {
-     *     "recommId": "8ac80708afe9148130528757ebf6aaba",
+     *     "recommId": "0c6189e7-dc1a-429a-b613-192696309361",
      *     "recomms":
      *       [
      *         {
@@ -213,7 +213,7 @@ class RecommendItemsToItem extends Request {
      * Example response for `includedProperties=description,price`:
      * ```
      *   {
-     *     "recommId": "c7dbfc503d262b80b77b4949ee9855fb",
+     *     "recommId": "6842c725-a79f-4537-a02c-f34d668a3f80",
      *     "recomms": 
      *       [
      *         {
