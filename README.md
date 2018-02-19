@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^1.6.1"
+        "recombee/php-api-client": "^2.0.0"
     }
 }
 ```
@@ -30,7 +30,7 @@ use Recombee\RecommApi\Client;
 use Recombee\RecommApi\Requests as Reqs;
 use Recombee\RecommApi\Exceptions as Ex;
 
-$client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
+$client = new Client('--my-database-id--', '--my-secret-token--');
 
 const NUM = 100;
 const PROBABILITY_PURCHASED = 0.1;
@@ -55,9 +55,9 @@ try
     $res = $client->send(new Reqs\Batch($purchase_requests)); //Use Batch for faster processing of larger data
 
     // Get 5 recommendations for user 'user-25'
-    $recommended = $client->send(new Reqs\UserBasedRecommendation('user-25', 5));
+    $recommended = $client->send(new Reqs\RecommendItemsToUser('user-25', 5));
 
-    echo 'Recommended items: ' . implode(',',$recommended) . "\n";
+    echo 'Recommended items: ' . json_encode($recommended, JSON_PRETTY_PRINT) . "\n";
 }
 catch(Ex\ApiException $e)
 {
@@ -74,7 +74,7 @@ use Recombee\RecommApi\Exceptions as Ex;
 const NUM = 100;
 const PROBABILITY_PURCHASED = 0.1;
 
-$client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
+$client = new Client('--my-database-id--', '--my-secret-token--');
 $client->send(new Reqs\ResetDatabase()); //Clear everything from the database
 
 /*
@@ -130,21 +130,21 @@ for($i=0; $i<NUM; $i++)
 $client->send(new Reqs\Batch($requests));
 
 // Get 5 items related to item computer-6. Personalize them for user-42, who is currently viewing that item.
-$recommended = $client->send(new Reqs\ItemBasedRecommendation('computer-6', 5, ['targetUserId' => 'user-42']));
-echo 'Recommended items: ' . implode(',',$recommended) . "\n";
+$recommended = $client->send(new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5));
+echo 'Recommended items: ' . json_encode($recommended, JSON_PRETTY_PRINT)  . "\n";
 
 // Recommend only computers that have at least 3 cores
 $recommended = $client->send(
-  new Reqs\ItemBasedRecommendation('computer-6', 5, ['targetUserId' => 'user-42', 'filter' => "'num-cores'>=3"])
+  new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5, ['filter' => "'num-cores'>=3"])
   );
-echo 'Recommended items with at least 3 processor cores: ' . implode(',',$recommended) . "\n";
+echo 'Recommended items with at least 3 processor cores: ' . json_encode($recommended, JSON_PRETTY_PRINT) . "\n";
 
 // Recommend only items that are more expensive then currently viewed item computer-6 (up-sell)
 $recommended = $client->send(
-  new Reqs\ItemBasedRecommendation('computer-6', 5,
-    ['targetUserId' => 'user-42', 'filter' => "'price' > context_item[\"price\"]"])
+  new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5,
+    ['filter' => "'price' > context_item[\"price\"]"])
   );
-echo 'Recommended up-sell items: ' . implode(',',$recommended) . "\n"
+echo 'Recommended up-sell items: ' . json_encode($recommended, JSON_PRETTY_PRINT) . "\n"
 ```
 
 ### Exception handling
@@ -162,8 +162,8 @@ use Recombee\RecommApi\Exceptions as Ex;
 try
 {
     $recommended = $client->send(
-      new Reqs\ItemBasedRecommendation('computer-6', 5,
-        ['targetUserId' => 'user-42', 'filter' => "'price' > context_item[\"price\"]"])
+      new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5,
+        ['filter' => "'price' > context_item[\"price\"]"])
     );
 }
 catch(Ex\ApiTimeoutException $e)
