@@ -155,7 +155,8 @@ class Client{
         $this->checkErrors($response);
 
         $json = json_decode($response->body, true);
-        if($json)
+
+        if($json !== null && json_last_error() == JSON_ERROR_NONE)
             return $json;
         else
             return $response->body;
