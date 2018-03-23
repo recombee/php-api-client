@@ -16,11 +16,11 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class MergeUsers extends Request {
 
     /**
-     * @var string $target_user_id ID of the source user.
+     * @var string $target_user_id ID of the targer user.
      */
     protected $target_user_id;
     /**
-     * @var string $source_user_id ID of the target user.
+     * @var string $source_user_id ID of the source user.
      */
     protected $source_user_id;
     /**
@@ -34,8 +34,8 @@ class MergeUsers extends Request {
 
     /**
      * Construct the request
-     * @param string $target_user_id ID of the source user.
-     * @param string $source_user_id ID of the target user.
+     * @param string $target_user_id ID of the targer user.
+     * @param string $source_user_id ID of the source user.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
      *     - *cascadeCreate*

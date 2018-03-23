@@ -112,7 +112,7 @@ class Client{
     }
 
     protected function getHttpHeaders() {
-        return array_merge(array('User-Agent' => 'recombee-php-api-client/2.0.0'), $this->getOptionalHttpHeaders()); 
+        return array_merge(array('User-Agent' => 'recombee-php-api-client/2.0.1'), $this->getOptionalHttpHeaders()); 
     }
 
     protected function getOptionalRequestOptions() {
@@ -155,7 +155,6 @@ class Client{
         $this->checkErrors($response);
 
         $json = json_decode($response->body, true);
-
         if($json !== null && json_last_error() == JSON_ERROR_NONE)
             return $json;
         else
