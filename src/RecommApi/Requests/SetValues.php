@@ -5,6 +5,7 @@
  * @author Ondrej Fiedler <ondrej.fiedler@recombee.com>
  */
 namespace Recombee\RecommApi\Requests;
+use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
  * Set/update (some) property values of an entity.
