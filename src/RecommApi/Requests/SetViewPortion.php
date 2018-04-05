@@ -10,7 +10,6 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * The view portions feature is currently experimental.
  * Sets viewed portion of an item (for example a video or article) by a user (at a session).
  * If you send new request with the same (`userId`, `itemId`, `sessionId`), the portion gets updated.
  */
@@ -25,11 +24,11 @@ class SetViewPortion extends Request {
      */
     protected $item_id;
     /**
-     * @var float $portion Viewed portion of the item (number between 0.0 (viewed nothing) and 1.0 (viewed full item) ).
+     * @var float $portion Viewed portion of the item (number between 0.0 (viewed nothing) and 1.0 (viewed full item) ). It should be the really viewed part of the item, no matter seeking, so for example if the user seeked immediately to half of the item and then viewed 10% of the item, the `portion` should still be `0.1`.
      */
     protected $portion;
     /**
-     * @var string $session_id Id of session in which the user viewed the item
+     * @var string $session_id ID of session in which the user viewed the item. Default is `null` (`None`, `nil`, `NULL` etc. depending on language).
      */
     protected $session_id;
     /**
@@ -49,12 +48,12 @@ class SetViewPortion extends Request {
      * Construct the request
      * @param string $user_id User who viewed a portion of the item
      * @param string $item_id Viewed item
-     * @param float $portion Viewed portion of the item (number between 0.0 (viewed nothing) and 1.0 (viewed full item) ).
+     * @param float $portion Viewed portion of the item (number between 0.0 (viewed nothing) and 1.0 (viewed full item) ). It should be the really viewed part of the item, no matter seeking, so for example if the user seeked immediately to half of the item and then viewed 10% of the item, the `portion` should still be `0.1`.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
      *     - *sessionId*
      *         - Type: string
-     *         - Description: Id of session in which the user viewed the item
+     *         - Description: ID of session in which the user viewed the item. Default is `null` (`None`, `nil`, `NULL` etc. depending on language).
      *     - *timestamp*
      *         - Type: string|float
      *         - Description: UTC timestamp of the rating as ISO8601-1 pattern or UTC epoch time. The default value is the current time.

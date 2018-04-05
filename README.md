@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^2.0.1"
+        "recombee/php-api-client": "^2.1.0"
     }
 }
 ```
@@ -79,10 +79,12 @@ $client->send(new Reqs\ResetDatabase()); //Clear everything from the database
 
 /*
 We will use computers as items in this example
-Computers have three properties 
+Computers have five properties 
   - price (floating point number)
   - number of processor cores (integer number)
   - description (string)
+  - date from which it is in stock (timestamp)
+  - image (url of computer's photo)
 */
 
 // Add properties of items
@@ -90,19 +92,22 @@ $client->send(new Reqs\AddItemProperty('price', 'double'));
 $client->send(new Reqs\AddItemProperty('num-cores', 'int'));
 $client->send(new Reqs\AddItemProperty('description', 'string'));
 $client->send(new Reqs\AddItemProperty('in_stock_from', 'timestamp'));
+$client->send(new Reqs\AddItemProperty('image', 'image'));
 
 # Prepare requests for setting a catalog of computers
 $requests = array();
 for($i=0; $i<NUM; $i++)
 {
+    $itemId = "computer-{$i}";
     $r = new Reqs\SetItemValues(
-      "computer-{$i}", //itemId
+      $itemId,
       //values:
       [ 
         'price' => rand(15000, 25000),
         'num-cores' => rand(1, 8),
         'description' => 'Great computer',
-        'in_stock_from' => new DateTime('NOW')
+        'in_stock_from' => new DateTime('NOW'),
+        'image' => "http://examplesite.com/products/{$itemId}.jpg"
       ],
       //optional parameters:
       ['cascadeCreate' => true] // Use cascadeCreate for creating item

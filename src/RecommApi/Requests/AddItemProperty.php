@@ -19,14 +19,14 @@ class AddItemProperty extends Request {
      */
     protected $property_name;
     /**
-     * @var string $type Value type of the item property to be created. One of: `int`, `double`, `string`, `boolean`, `timestamp`, `set`
+     * @var string $type Value type of the item property to be created. One of: `int`, `double`, `string`, `boolean`, `timestamp`, `set`, `image` or `imageList`.
      */
     protected $type;
 
     /**
      * Construct the request
      * @param string $property_name Name of the item property to be created. Currently, the following names are reserved:`id`, `itemid`, case insensitively. Also, the length of the property name must not exceed 63 characters.
-     * @param string $type Value type of the item property to be created. One of: `int`, `double`, `string`, `boolean`, `timestamp`, `set`
+     * @param string $type Value type of the item property to be created. One of: `int`, `double`, `string`, `boolean`, `timestamp`, `set`, `image` or `imageList`.
      */
     public function __construct($property_name, $type) {
         $this->property_name = $property_name;

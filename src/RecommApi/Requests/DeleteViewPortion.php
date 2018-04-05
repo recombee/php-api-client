@@ -10,7 +10,6 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * The view portions feature is currently experimental.
  * Deletes an existing view portion specified by (`userId`, `itemId`, `sessionId`) from the database.
  */
 class DeleteViewPortion extends Request {
