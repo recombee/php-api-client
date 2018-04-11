@@ -112,7 +112,7 @@ class Batch extends Request {
                'path' => $path  ];
         $params = $req->getQueryParameters();
         if ($req->getBodyParameters())
-            $params = array_merge($params, $req->getBodyParameters());
+            $params = $params + $req->getBodyParameters();
         if($params)
             $bh['params'] = $params;
         return $bh;
