@@ -48,7 +48,16 @@ class Client{
         if(getenv("RAPI_URI") !== false)
             $this->base_uri = getenv("RAPI_URI");
         $this->options = $options;
+        $this->user_agent = $this->getUserAgent();
     }
+
+    protected function getUserAgent() {
+        $user_agent = 'recombee-php-api-client/2.1.1';
+        if (isset($this->options['serviceName']))
+            $user_agent .= ' '.($this->options['serviceName']);
+        return $user_agent;
+    }
+
 
     /**
      * Send a request to the Recombee API
@@ -94,9 +103,7 @@ class Client{
         catch(\Requests_Exception $e)
         {
             if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request);
-            if((strpos($e->getMessage(), 'cURL error 7') !== false) && (strpos($e->getMessage(), 'timed out') !== false))
-                throw new ApiTimeoutException($request);
-            if(strpos($e->getMessage(), 'fsocket timed out') !== false) throw new ApiTimeoutException($request);
+            if(strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request);
 
             throw $e;
         }
@@ -112,7 +119,7 @@ class Client{
     }
 
     protected function getHttpHeaders() {
-        return array_merge(array('User-Agent' => 'recombee-php-api-client/2.1.0'), $this->getOptionalHttpHeaders()); 
+        return array_merge(array('User-Agent' => $this->user_agent), $this->getOptionalHttpHeaders()); 
     }
 
     protected function getOptionalRequestOptions() {
