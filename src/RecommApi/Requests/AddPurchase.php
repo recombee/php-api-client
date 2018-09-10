@@ -43,6 +43,10 @@ class AddPurchase extends Request {
      */
     protected $profit;
     /**
+     * @var string $recomm_id If this purchase is based on a recommendation request, `recommId` is the id of the clicked recommendation.
+     */
+    protected $recomm_id;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -68,6 +72,9 @@ class AddPurchase extends Request {
      *     - *profit*
      *         - Type: float
      *         - Description: Your profit from the purchased item. The profit is natural in e-commerce domain (for example if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30), but is applicable also in other domains (for example at a news company it may be income from displayed advertisement on article page). If `amount` is greater than 1, sum of profit of all the items should be given.
+     *     - *recommId*
+     *         - Type: string
+     *         - Description: If this purchase is based on a recommendation request, `recommId` is the id of the clicked recommendation.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -78,9 +85,10 @@ class AddPurchase extends Request {
         $this->amount = isset($optional['amount']) ? $optional['amount'] : null;
         $this->price = isset($optional['price']) ? $optional['price'] : null;
         $this->profit = isset($optional['profit']) ? $optional['profit'] : null;
+        $this->recomm_id = isset($optional['recommId']) ? $optional['recommId'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','cascadeCreate','amount','price','profit');
+        $existing_optional = array('timestamp','cascadeCreate','amount','price','profit','recommId');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -132,6 +140,8 @@ class AddPurchase extends Request {
              $p['price'] = $this-> optional['price'];
         if (isset($this->optional['profit']))
              $p['profit'] = $this-> optional['profit'];
+        if (isset($this->optional['recommId']))
+             $p['recommId'] = $this-> optional['recommId'];
         return $p;
     }
 

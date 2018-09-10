@@ -39,6 +39,10 @@ class AddCartAddition extends Request {
      */
     protected $price;
     /**
+     * @var string $recomm_id If this cart addition is based on a recommendation request, `recommId` is the id of the clicked recommendation.
+     */
+    protected $recomm_id;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -61,6 +65,9 @@ class AddCartAddition extends Request {
      *     - *price*
      *         - Type: float
      *         - Description: Price of the added item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     *     - *recommId*
+     *         - Type: string
+     *         - Description: If this cart addition is based on a recommendation request, `recommId` is the id of the clicked recommendation.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -70,9 +77,10 @@ class AddCartAddition extends Request {
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->amount = isset($optional['amount']) ? $optional['amount'] : null;
         $this->price = isset($optional['price']) ? $optional['price'] : null;
+        $this->recomm_id = isset($optional['recommId']) ? $optional['recommId'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','cascadeCreate','amount','price');
+        $existing_optional = array('timestamp','cascadeCreate','amount','price','recommId');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -122,6 +130,8 @@ class AddCartAddition extends Request {
              $p['amount'] = $this-> optional['amount'];
         if (isset($this->optional['price']))
              $p['price'] = $this-> optional['price'];
+        if (isset($this->optional['recommId']))
+             $p['recommId'] = $this-> optional['recommId'];
         return $p;
     }
 

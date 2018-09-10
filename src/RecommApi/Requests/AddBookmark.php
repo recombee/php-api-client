@@ -31,6 +31,10 @@ class AddBookmark extends Request {
      */
     protected $cascade_create;
     /**
+     * @var string $recomm_id If this bookmark is based on a recommendation request, `recommId` is the id of the clicked recommendation.
+     */
+    protected $recomm_id;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -47,6 +51,9 @@ class AddBookmark extends Request {
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: Sets whether the given user/item should be created if not present in the database.
+     *     - *recommId*
+     *         - Type: string
+     *         - Description: If this bookmark is based on a recommendation request, `recommId` is the id of the clicked recommendation.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -54,9 +61,10 @@ class AddBookmark extends Request {
         $this->item_id = $item_id;
         $this->timestamp = isset($optional['timestamp']) ? $optional['timestamp'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
+        $this->recomm_id = isset($optional['recommId']) ? $optional['recommId'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','cascadeCreate');
+        $existing_optional = array('timestamp','cascadeCreate','recommId');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -102,6 +110,8 @@ class AddBookmark extends Request {
              $p['timestamp'] = $this-> optional['timestamp'];
         if (isset($this->optional['cascadeCreate']))
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
+        if (isset($this->optional['recommId']))
+             $p['recommId'] = $this-> optional['recommId'];
         return $p;
     }
 
