@@ -12,6 +12,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 /**
  * Recommends set of items that are somehow related to one given item, *X*. Typical scenario  is when user *A* is viewing *X*. Then you may display items to the user that he might be also interested in. Recommend items to item request gives you Top-N such items, optionally taking the target user *A* into account.
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
+ * The returned items are sorted by relevancy (first item being the most relevant).
  */
 class RecommendItemsToItem extends Request {
 
@@ -138,6 +139,10 @@ class RecommendItemsToItem extends Request {
      */
     protected $expert_settings;
     /**
+     * @var bool $return_ab_group If there is a custom AB-testing running, return name of group to which the request belongs.
+     */
+    protected $return_ab_group;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -247,6 +252,9 @@ class RecommendItemsToItem extends Request {
      *     - *expertSettings*
      *         - Type: 
      *         - Description: Dictionary of custom options.
+     *     - *returnAbGroup*
+     *         - Type: bool
+     *         - Description: If there is a custom AB-testing running, return name of group to which the request belongs.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($item_id, $target_user_id, $count, $optional = array()) {
@@ -265,9 +273,10 @@ class RecommendItemsToItem extends Request {
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
+        $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('userImpact','filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings');
+        $existing_optional = array('userImpact','filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -333,6 +342,8 @@ class RecommendItemsToItem extends Request {
              $p['rotationTime'] = $this-> optional['rotationTime'];
         if (isset($this->optional['expertSettings']))
              $p['expertSettings'] = $this-> optional['expertSettings'];
+        if (isset($this->optional['returnAbGroup']))
+             $p['returnAbGroup'] = $this-> optional['returnAbGroup'];
         return $p;
     }
 

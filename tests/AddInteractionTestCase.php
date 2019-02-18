@@ -16,7 +16,7 @@ abstract class AddInteractionTestCase extends RecombeeTestCase {
     public function testAddInteraction() {
 
          //it does not fail with cascadeCreate
-         $req = $this->createRequest('u_id','i_id',['cascadeCreate' => true]);
+         $req = $this->createRequest('u_id','i_id',['cascadeCreate' => true,'additionalData' => ['answer' => 42]]);
          $resp = $this->client->send($req);
 
          //it does not fail with existing item and user

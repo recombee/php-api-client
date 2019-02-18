@@ -12,6 +12,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 /**
  * Get similar users as some given user, based on the user's past interactions (purchases, ratings, etc.) and values of properties.
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
+ * The returned users are sorted by similarity (first user being the most similar).
  */
 class RecommendUsersToUser extends Request {
 
@@ -112,6 +113,10 @@ class RecommendUsersToUser extends Request {
      */
     protected $expert_settings;
     /**
+     * @var bool $return_ab_group If there is a custom AB-testing running, return name of group to which the request belongs.
+     */
+    protected $return_ab_group;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -199,6 +204,9 @@ class RecommendUsersToUser extends Request {
      *     - *expertSettings*
      *         - Type: 
      *         - Description: Dictionary of custom options.
+     *     - *returnAbGroup*
+     *         - Type: bool
+     *         - Description: If there is a custom AB-testing running, return name of group to which the request belongs.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $count, $optional = array()) {
@@ -215,9 +223,10 @@ class RecommendUsersToUser extends Request {
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
+        $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings');
+        $existing_optional = array('filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -280,6 +289,8 @@ class RecommendUsersToUser extends Request {
              $p['rotationTime'] = $this-> optional['rotationTime'];
         if (isset($this->optional['expertSettings']))
              $p['expertSettings'] = $this-> optional['expertSettings'];
+        if (isset($this->optional['returnAbGroup']))
+             $p['returnAbGroup'] = $this-> optional['returnAbGroup'];
         return $p;
     }
 

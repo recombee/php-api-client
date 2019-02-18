@@ -35,6 +35,10 @@ class AddBookmark extends Request {
      */
     protected $recomm_id;
     /**
+     * @var  $additional_data A dictionary of additional data for the interaction.
+     */
+    protected $additional_data;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -54,6 +58,9 @@ class AddBookmark extends Request {
      *     - *recommId*
      *         - Type: string
      *         - Description: If this bookmark is based on a recommendation request, `recommId` is the id of the clicked recommendation.
+     *     - *additionalData*
+     *         - Type: 
+     *         - Description: A dictionary of additional data for the interaction.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -62,9 +69,10 @@ class AddBookmark extends Request {
         $this->timestamp = isset($optional['timestamp']) ? $optional['timestamp'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->recomm_id = isset($optional['recommId']) ? $optional['recommId'] : null;
+        $this->additional_data = isset($optional['additionalData']) ? $optional['additionalData'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','cascadeCreate','recommId');
+        $existing_optional = array('timestamp','cascadeCreate','recommId','additionalData');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -112,6 +120,8 @@ class AddBookmark extends Request {
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
         if (isset($this->optional['recommId']))
              $p['recommId'] = $this-> optional['recommId'];
+        if (isset($this->optional['additionalData']))
+             $p['additionalData'] = $this-> optional['additionalData'];
         return $p;
     }
 

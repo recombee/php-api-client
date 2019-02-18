@@ -12,6 +12,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 /**
  * Recommend users that are likely to be interested in a given item.
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
+ * The returned users are sorted by predicted interest in the item (first user being the most interested).
  */
 class RecommendUsersToItem extends Request {
 
@@ -100,6 +101,10 @@ class RecommendUsersToItem extends Request {
      */
     protected $expert_settings;
     /**
+     * @var bool $return_ab_group If there is a custom AB-testing running, return name of group to which the request belongs.
+     */
+    protected $return_ab_group;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -178,6 +183,9 @@ class RecommendUsersToItem extends Request {
      *     - *expertSettings*
      *         - Type: 
      *         - Description: Dictionary of custom options.
+     *     - *returnAbGroup*
+     *         - Type: bool
+     *         - Description: If there is a custom AB-testing running, return name of group to which the request belongs.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($item_id, $count, $optional = array()) {
@@ -191,9 +199,10 @@ class RecommendUsersToItem extends Request {
         $this->included_properties = isset($optional['includedProperties']) ? $optional['includedProperties'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
+        $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','expertSettings');
+        $existing_optional = array('filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -250,6 +259,8 @@ class RecommendUsersToItem extends Request {
              $p['diversity'] = $this-> optional['diversity'];
         if (isset($this->optional['expertSettings']))
              $p['expertSettings'] = $this-> optional['expertSettings'];
+        if (isset($this->optional['returnAbGroup']))
+             $p['returnAbGroup'] = $this-> optional['returnAbGroup'];
         return $p;
     }
 

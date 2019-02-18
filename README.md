@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^2.2.0"
+        "recombee/php-api-client": "^2.3.0"
     }
 }
 ```
@@ -30,7 +30,7 @@ use Recombee\RecommApi\Client;
 use Recombee\RecommApi\Requests as Reqs;
 use Recombee\RecommApi\Exceptions as Ex;
 
-$client = new Client('--my-database-id--', '--my-secret-token--');
+$client = new Client('--my-database-id--', '--db-private-token--');
 
 const NUM = 100;
 const PROBABILITY_PURCHASED = 0.1;
@@ -74,7 +74,7 @@ use Recombee\RecommApi\Exceptions as Ex;
 const NUM = 100;
 const PROBABILITY_PURCHASED = 0.1;
 
-$client = new Client('--my-database-id--', '--my-secret-token--');
+$client = new Client('--my-database-id--', '--db-private-token--');
 $client->send(new Reqs\ResetDatabase()); //Clear everything from the database
 
 /*

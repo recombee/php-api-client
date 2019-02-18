@@ -16,7 +16,7 @@ abstract class SetViewPortionTestCase extends RecombeeTestCase {
     public function testSetViewPortion() {
 
          //it does not fail with cascadeCreate
-         $req = $this->createRequest('u_id','i_id',1,['cascadeCreate' => true]);
+         $req = $this->createRequest('u_id','i_id',1,['cascadeCreate' => true,'additionalData' => ['answer' => 42]]);
          $resp = $this->client->send($req);
 
          //it does not fail with existing item and user
