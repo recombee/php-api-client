@@ -40,7 +40,7 @@ class Client{
      * @param string $protocol Default protocol for sending requests. Possible values: 'http', 'https'.
      * @param array  $options Other custom options
      */
-    public function __construct($account, $token, $protocol = 'http', $options= array()) {
+    public function __construct($account, $token, $protocol = 'https', $options= array()) {
         $this->account = $account;
         $this->token = $token;
         $this->protocol = $protocol;
@@ -52,7 +52,7 @@ class Client{
     }
 
     protected function getUserAgent() {
-        $user_agent = 'recombee-php-api-client/2.3.0';
+        $user_agent = 'recombee-php-api-client/2.4.0';
         if (isset($this->options['serviceName']))
             $user_agent .= ' '.($this->options['serviceName']);
         return $user_agent;

@@ -41,6 +41,12 @@ class RecommendUsersToUser extends Request {
      */
     protected $scenario;
     /**
+     * @var string| $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain (e-commerce, multimedia, fashion ...) and use case.
+     * See [this section](https://docs.recombee.com/recommendation_logic.html) for list of available logics and other details.
+     * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
+     */
+    protected $logic;
+    /**
      * @var bool $return_properties With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying the recommended users. 
      * Example response:
      * ```
@@ -139,6 +145,11 @@ class RecommendUsersToUser extends Request {
      *     - *scenario*
      *         - Type: string
      *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing". You can see each scenario in the UI separately, so you can check how well each application performs. The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
+     *     - *logic*
+     *         - Type: string|
+     *         - Description: Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain (e-commerce, multimedia, fashion ...) and use case.
+     * See [this section](https://docs.recombee.com/recommendation_logic.html) for list of available logics and other details.
+     * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      *     - *returnProperties*
      *         - Type: bool
      *         - Description: With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying the recommended users. 
@@ -216,6 +227,7 @@ class RecommendUsersToUser extends Request {
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
+        $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
         $this->return_properties = isset($optional['returnProperties']) ? $optional['returnProperties'] : null;
         $this->included_properties = isset($optional['includedProperties']) ? $optional['includedProperties'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
@@ -226,7 +238,7 @@ class RecommendUsersToUser extends Request {
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('filter','booster','cascadeCreate','scenario','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
+        $existing_optional = array('filter','booster','cascadeCreate','scenario','logic','returnProperties','includedProperties','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -275,6 +287,8 @@ class RecommendUsersToUser extends Request {
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
         if (isset($this->optional['scenario']))
              $p['scenario'] = $this-> optional['scenario'];
+        if (isset($this->optional['logic']))
+             $p['logic'] = $this-> optional['logic'];
         if (isset($this->optional['returnProperties']))
              $p['returnProperties'] = $this-> optional['returnProperties'];
         if (isset($this->optional['includedProperties']))
