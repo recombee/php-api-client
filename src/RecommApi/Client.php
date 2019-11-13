@@ -44,9 +44,7 @@ class Client{
         $this->account = $account;
         $this->token = $token;
         $this->protocol = $protocol;
-        $this->base_uri = Client::BASE_URI;
-        if(getenv("RAPI_URI") !== false)
-            $this->base_uri = getenv("RAPI_URI");
+        $this->base_uri = isset($_SERVER['RAPI_URI']) ? $_SERVER['RAPI_URI'] : (isset($_ENV['RAPI_URI']) ? $_ENV['RAPI_URI'] : (getenv('RAPI_URI') ? getenv('RAPI_URI') : Client::BASE_URI));
         $this->options = $options;
         $this->user_agent = $this->getUserAgent();
     }
