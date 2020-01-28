@@ -17,7 +17,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class UserBasedRecommendation extends Request {
 
     /**
-     * @var string $user_id ID of the user for which the personalized recommendations are to be generated.
+     * @var string $user_id ID of the user for whom the personalized recommendations are to be generated.
      */
     protected $user_id;
     /**
@@ -113,7 +113,7 @@ class UserBasedRecommendation extends Request {
 
     /**
      * Construct the request
-     * @param string $user_id ID of the user for which the personalized recommendations are to be generated.
+     * @param string $user_id ID of the user for whom the personalized recommendations are to be generated.
      * @param int $count Number of items to be recommended (N for the top-N recommendation).
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:

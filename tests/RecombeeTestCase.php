@@ -4,6 +4,7 @@ namespace Recombee\RecommApi\Tests;
 
 use Recombee\RecommApi\Client;
 use Recombee\RecommApi\Requests as Reqs;
+use Recombee\RecommApi\Exceptions as Ex;
 
 class RecombeeTestCase extends \PHPUnit\Framework\TestCase
 {
@@ -12,8 +13,22 @@ class RecombeeTestCase extends \PHPUnit\Framework\TestCase
     protected function setUp() {
         
         $this->client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
+
+        $this->client->send(new Reqs\ResetDatabase());
+        while (true) {
+            try
+            {
+                $this->client->send(new Reqs\ListItems());
+            }
+            catch(Ex\ResponseException $e)
+            {
+                // Wait until DB is erased
+                continue;
+            }
+            break;
+        }
+
         $requests = new Reqs\Batch([
-            new Reqs\ResetDatabase,
             new Reqs\AddItem('entity_id'),
             new Reqs\AddUser('entity_id'),
             new Reqs\AddSeries('entity_id'),

@@ -4,81 +4,93 @@
 */
 
 /**
- * RecommendUsersToUser request
+ * SearchItems request
  */
 namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Get similar users as some given user, based on the user's past interactions (purchases, ratings, etc.) and values of properties.
+ * Full-text personalized search. The results are based on the provided `searchQuery` and also on the user's past interactions (purchases, ratings, etc.) with the items (items more suitable for the user are preferred in the results).
+ * All the string and set item properties are indexed by the search engine.
+ * This endpoint should be used in a search box at your website/app. It can be called multiple times as the user is typing the query in order to get the most viable suggestions based on current state of the query, or once after submitting the whole query. 
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
- * The returned users are sorted by similarity (first user being the most similar).
+ * The returned items are sorted by relevancy (first item being the most relevant).
  */
-class RecommendUsersToUser extends Request {
+class SearchItems extends Request {
 
     /**
-     * @var string $user_id User to whom we find similar users
+     * @var string $user_id ID of the user for whom personalized search will be performed.
      */
     protected $user_id;
     /**
-     * @var int $count Number of users to be recommended (N for the top-N recommendation).
+     * @var string $search_query Search query provided by the user. It is used for the full-text search.
+     */
+    protected $search_query;
+    /**
+     * @var int $count Number of items to be returned (N for the top-N results).
      */
     protected $count;
     /**
-     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing".
-     * You can set various settings to the [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com). You can also see performance of each scenario in the Admin UI separately, so you can check how well each application performs.
+     * @var string $scenario Scenario defines a particular search field in your user interface.
+     * You can set various settings to the [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com). You can also see performance of each scenario in the Admin UI separately, so you can check how well each field performs.
      * The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      */
     protected $scenario;
     /**
-     * @var bool $cascade_create If the user does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
+     * @var bool $cascade_create If the user does not exist in the database, returns a list of non-personalized search results and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
      */
     protected $cascade_create;
     /**
-     * @var bool $return_properties With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying the recommended users. 
+     * @var bool $return_properties With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
      * Example response:
      * ```
      *   {
-     *     "recommId": "9cb9c55d-50ba-4478-84fd-ab456136156e",
+     *     "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
      *     "recomms": 
      *       [
      *         {
-     *           "id": "user-17",
+     *           "id": "tv-178",
      *           "values": {
-     *             "country": "US",
-     *             "sex": "F"
+     *             "description": "4K TV with 3D feature",
+     *             "categories":   ["Electronics", "Televisions"],
+     *             "price": 342,
+     *             "url": "myshop.com/tv-178"
      *           }
      *         },
      *         {
-     *           "id": "user-2",
+     *           "id": "mixer-42",
      *           "values": {
-     *             "country": "CAN",
-     *             "sex": "M"
+     *             "description": "Stainless Steel Mixer",
+     *             "categories":   ["Home & Kitchen"],
+     *             "price": 39,
+     *             "url": "myshop.com/mixer-42"
      *           }
      *         }
      *       ]
-     *     }
+     *   }
      * ```
      */
     protected $return_properties;
     /**
      * @var array $included_properties Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
-     * Example response for `includedProperties=country`:
+     * Example response for `includedProperties=description,price`:
      * ```
      *   {
-     *     "recommId": "b326d82d-5d57-4b45-b362-c9d6f0895855",
+     *     "recommId": "a86ee8d5-cd8e-46d1-886c-8b3771d0520b",
      *     "recomms":
      *       [
      *         {
-     *           "id": "user-17",
+     *           "id": "tv-178",
      *           "values": {
-     *             "country": "US"
+     *             "description": "4K TV with 3D feature",
+     *             "price": 342
      *           }
      *         },
      *         {
-     *           "id": "user-2",
+     *           "id": "mixer-42",
      *           "values": {
-     *             "country": "CAN"
+     *             "description": "Stainless Steel Mixer",
+     *             "price": 39
      *           }
      *         }
      *       ]
@@ -104,22 +116,6 @@ class RecommendUsersToUser extends Request {
      */
     protected $logic;
     /**
-     * @var float $diversity **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended users be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
-     */
-    protected $diversity;
-    /**
-     * @var string $min_relevance **Expert option** Specifies the threshold of how much relevant must the recommended users be. Possible values one of: "low", "medium", "high".
-     */
-    protected $min_relevance;
-    /**
-     * @var float $rotation_rate **Expert option** If your users browse the system in real-time, it may easily happen that you wish to offer them recommendations multiple times. Here comes the question: how much should the recommendations change? Should they remain the same, or should they rotate? Recombee API allows you to control this per-request in backward fashion. You may penalize an user for being recommended in the near past. For the specific user, `rotationRate=1` means maximal rotation, `rotationRate=0` means absolutely no rotation. You may also use, for example `rotationRate=0.2` for only slight rotation of recommended users.
-     */
-    protected $rotation_rate;
-    /**
-     * @var float $rotation_time **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an user to recover from the penalization. For example, `rotationTime=7200.0` means that users recommended less than 2 hours ago are penalized.
-     */
-    protected $rotation_time;
-    /**
      * @var  $expert_settings Dictionary of custom options.
      */
     protected $expert_settings;
@@ -134,63 +130,70 @@ class RecommendUsersToUser extends Request {
 
     /**
      * Construct the request
-     * @param string $user_id User to whom we find similar users
-     * @param int $count Number of users to be recommended (N for the top-N recommendation).
+     * @param string $user_id ID of the user for whom personalized search will be performed.
+     * @param string $search_query Search query provided by the user. It is used for the full-text search.
+     * @param int $count Number of items to be returned (N for the top-N results).
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
      *     - *scenario*
      *         - Type: string
-     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing".
-     * You can set various settings to the [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com). You can also see performance of each scenario in the Admin UI separately, so you can check how well each application performs.
+     *         - Description: Scenario defines a particular search field in your user interface.
+     * You can set various settings to the [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com). You can also see performance of each scenario in the Admin UI separately, so you can check how well each field performs.
      * The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      *     - *cascadeCreate*
      *         - Type: bool
-     *         - Description: If the user does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
+     *         - Description: If the user does not exist in the database, returns a list of non-personalized search results and creates the user in the database. This allows for example rotations in the following recommendations for that user, as the user will be already known to the system.
      *     - *returnProperties*
      *         - Type: bool
-     *         - Description: With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying the recommended users. 
+     *         - Description: With `returnProperties=true`, property values of the recommended items are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying of the recommended items to the user. 
      * Example response:
      * ```
      *   {
-     *     "recommId": "9cb9c55d-50ba-4478-84fd-ab456136156e",
+     *     "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
      *     "recomms": 
      *       [
      *         {
-     *           "id": "user-17",
+     *           "id": "tv-178",
      *           "values": {
-     *             "country": "US",
-     *             "sex": "F"
+     *             "description": "4K TV with 3D feature",
+     *             "categories":   ["Electronics", "Televisions"],
+     *             "price": 342,
+     *             "url": "myshop.com/tv-178"
      *           }
      *         },
      *         {
-     *           "id": "user-2",
+     *           "id": "mixer-42",
      *           "values": {
-     *             "country": "CAN",
-     *             "sex": "M"
+     *             "description": "Stainless Steel Mixer",
+     *             "categories":   ["Home & Kitchen"],
+     *             "price": 39,
+     *             "url": "myshop.com/mixer-42"
      *           }
      *         }
      *       ]
-     *     }
+     *   }
      * ```
      *     - *includedProperties*
      *         - Type: array
      *         - Description: Allows to specify, which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list. 
-     * Example response for `includedProperties=country`:
+     * Example response for `includedProperties=description,price`:
      * ```
      *   {
-     *     "recommId": "b326d82d-5d57-4b45-b362-c9d6f0895855",
+     *     "recommId": "a86ee8d5-cd8e-46d1-886c-8b3771d0520b",
      *     "recomms":
      *       [
      *         {
-     *           "id": "user-17",
+     *           "id": "tv-178",
      *           "values": {
-     *             "country": "US"
+     *             "description": "4K TV with 3D feature",
+     *             "price": 342
      *           }
      *         },
      *         {
-     *           "id": "user-2",
+     *           "id": "mixer-42",
      *           "values": {
-     *             "country": "CAN"
+     *             "description": "Stainless Steel Mixer",
+     *             "price": 39
      *           }
      *         }
      *       ]
@@ -210,18 +213,6 @@ class RecommendUsersToUser extends Request {
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
-     *     - *diversity*
-     *         - Type: float
-     *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended users be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
-     *     - *minRelevance*
-     *         - Type: string
-     *         - Description: **Expert option** Specifies the threshold of how much relevant must the recommended users be. Possible values one of: "low", "medium", "high".
-     *     - *rotationRate*
-     *         - Type: float
-     *         - Description: **Expert option** If your users browse the system in real-time, it may easily happen that you wish to offer them recommendations multiple times. Here comes the question: how much should the recommendations change? Should they remain the same, or should they rotate? Recombee API allows you to control this per-request in backward fashion. You may penalize an user for being recommended in the near past. For the specific user, `rotationRate=1` means maximal rotation, `rotationRate=0` means absolutely no rotation. You may also use, for example `rotationRate=0.2` for only slight rotation of recommended users.
-     *     - *rotationTime*
-     *         - Type: float
-     *         - Description: **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an user to recover from the penalization. For example, `rotationTime=7200.0` means that users recommended less than 2 hours ago are penalized.
      *     - *expertSettings*
      *         - Type: 
      *         - Description: Dictionary of custom options.
@@ -230,8 +221,9 @@ class RecommendUsersToUser extends Request {
      *         - Description: If there is a custom AB-testing running, return name of group to which the request belongs.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
-    public function __construct($user_id, $count, $optional = array()) {
+    public function __construct($user_id, $search_query, $count, $optional = array()) {
         $this->user_id = $user_id;
+        $this->search_query = $search_query;
         $this->count = $count;
         $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
@@ -240,20 +232,16 @@ class RecommendUsersToUser extends Request {
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
-        $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
-        $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
-        $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
-        $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
+        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
-        $this->timeout = 50000;
+        $this->timeout = 3000;
         $this->ensure_https = false;
     }
 
@@ -270,7 +258,7 @@ class RecommendUsersToUser extends Request {
      * @return string URI to the endpoint
      */
     public function getPath() {
-        return "/{databaseId}/recomms/users/{$this->user_id}/users/";
+        return "/{databaseId}/search/users/{$this->user_id}/items/";
     }
 
     /**
@@ -288,6 +276,7 @@ class RecommendUsersToUser extends Request {
      */
     public function getBodyParameters() {
         $p = array();
+        $p['searchQuery'] = $this->search_query;
         $p['count'] = $this->count;
         if (isset($this->optional['scenario']))
              $p['scenario'] = $this-> optional['scenario'];
@@ -303,14 +292,6 @@ class RecommendUsersToUser extends Request {
              $p['booster'] = $this-> optional['booster'];
         if (isset($this->optional['logic']))
              $p['logic'] = $this-> optional['logic'];
-        if (isset($this->optional['diversity']))
-             $p['diversity'] = $this-> optional['diversity'];
-        if (isset($this->optional['minRelevance']))
-             $p['minRelevance'] = $this-> optional['minRelevance'];
-        if (isset($this->optional['rotationRate']))
-             $p['rotationRate'] = $this-> optional['rotationRate'];
-        if (isset($this->optional['rotationTime']))
-             $p['rotationTime'] = $this-> optional['rotationTime'];
         if (isset($this->optional['expertSettings']))
              $p['expertSettings'] = $this-> optional['expertSettings'];
         if (isset($this->optional['returnAbGroup']))

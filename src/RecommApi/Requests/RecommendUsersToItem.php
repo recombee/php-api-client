@@ -25,27 +25,15 @@ class RecommendUsersToItem extends Request {
      */
     protected $count;
     /**
-     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to filter recommended items based on the values of their attributes.
+     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing".
+     * You can set various settings to the [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com). You can also see performance of each scenario in the Admin UI separately, so you can check how well each application performs.
+     * The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      */
-    protected $filter;
-    /**
-     * @var string $booster Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
-     */
-    protected $booster;
+    protected $scenario;
     /**
      * @var bool $cascade_create If item of given *itemId* doesn't exist in the database, it creates the missing item.
      */
     protected $cascade_create;
-    /**
-     * @var string $scenario Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing". You can see each scenario in the UI separately, so you can check how well each application performs. The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
-     */
-    protected $scenario;
-    /**
-     * @var string| $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain (e-commerce, multimedia, fashion ...) and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logic.html) for list of available logics and other details.
-     * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
-     */
-    protected $logic;
     /**
      * @var bool $return_properties With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying the recommended users. 
      * Example response:
@@ -99,6 +87,23 @@ class RecommendUsersToItem extends Request {
      */
     protected $included_properties;
     /**
+     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to filter recommended items based on the values of their attributes.
+     * Filters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
+     */
+    protected $filter;
+    /**
+     * @var string $booster Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
+     * Boosters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
+     */
+    protected $booster;
+    /**
+     * @var string| $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
+     * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
+     * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
+     * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
+     */
+    protected $logic;
+    /**
      * @var float $diversity **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      */
     protected $diversity;
@@ -121,23 +126,14 @@ class RecommendUsersToItem extends Request {
      * @param int $count Number of items to be recommended (N for the top-N recommendation).
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
-     *     - *filter*
+     *     - *scenario*
      *         - Type: string
-     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to filter recommended items based on the values of their attributes.
-     *     - *booster*
-     *         - Type: string
-     *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
+     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing".
+     * You can set various settings to the [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com). You can also see performance of each scenario in the Admin UI separately, so you can check how well each application performs.
+     * The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: If item of given *itemId* doesn't exist in the database, it creates the missing item.
-     *     - *scenario*
-     *         - Type: string
-     *         - Description: Scenario defines a particular application of recommendations. It can be for example "homepage", "cart" or "emailing". You can see each scenario in the UI separately, so you can check how well each application performs. The AI which optimizes models in order to get the best results may optimize different scenarios separately, or even use different models in each of the scenarios.
-     *     - *logic*
-     *         - Type: string|
-     *         - Description: Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain (e-commerce, multimedia, fashion ...) and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logic.html) for list of available logics and other details.
-     * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      *     - *returnProperties*
      *         - Type: bool
      *         - Description: With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used for easy displaying the recommended users. 
@@ -188,6 +184,20 @@ class RecommendUsersToItem extends Request {
      *       ]
      *   }
      * ```
+     *     - *filter*
+     *         - Type: string
+     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to filter recommended items based on the values of their attributes.
+     * Filters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
+     *     - *booster*
+     *         - Type: string
+     *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
+     * Boosters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
+     *     - *logic*
+     *         - Type: string|
+     *         - Description: Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
+     * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
+     * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
+     * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
      *     - *diversity*
      *         - Type: float
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
@@ -202,19 +212,19 @@ class RecommendUsersToItem extends Request {
     public function __construct($item_id, $count, $optional = array()) {
         $this->item_id = $item_id;
         $this->count = $count;
-        $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
-        $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
-        $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->scenario = isset($optional['scenario']) ? $optional['scenario'] : null;
-        $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
+        $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->return_properties = isset($optional['returnProperties']) ? $optional['returnProperties'] : null;
         $this->included_properties = isset($optional['includedProperties']) ? $optional['includedProperties'] : null;
+        $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
+        $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
+        $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('filter','booster','cascadeCreate','scenario','logic','returnProperties','includedProperties','diversity','expertSettings','returnAbGroup');
+        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','diversity','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -255,20 +265,20 @@ class RecommendUsersToItem extends Request {
     public function getBodyParameters() {
         $p = array();
         $p['count'] = $this->count;
-        if (isset($this->optional['filter']))
-             $p['filter'] = $this-> optional['filter'];
-        if (isset($this->optional['booster']))
-             $p['booster'] = $this-> optional['booster'];
-        if (isset($this->optional['cascadeCreate']))
-             $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
         if (isset($this->optional['scenario']))
              $p['scenario'] = $this-> optional['scenario'];
-        if (isset($this->optional['logic']))
-             $p['logic'] = $this-> optional['logic'];
+        if (isset($this->optional['cascadeCreate']))
+             $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
         if (isset($this->optional['returnProperties']))
              $p['returnProperties'] = $this-> optional['returnProperties'];
         if (isset($this->optional['includedProperties']))
              $p['includedProperties'] = $this-> optional['includedProperties'];
+        if (isset($this->optional['filter']))
+             $p['filter'] = $this-> optional['filter'];
+        if (isset($this->optional['booster']))
+             $p['booster'] = $this-> optional['booster'];
+        if (isset($this->optional['logic']))
+             $p['logic'] = $this-> optional['logic'];
         if (isset($this->optional['diversity']))
              $p['diversity'] = $this-> optional['diversity'];
         if (isset($this->optional['expertSettings']))

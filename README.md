@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^2.4.0"
+        "recombee/php-api-client": "^3.0.0"
     }
 }
 ```
@@ -75,7 +75,7 @@ const NUM = 100;
 const PROBABILITY_PURCHASED = 0.1;
 
 $client = new Client('--my-database-id--', '--db-private-token--');
-$client->send(new Reqs\ResetDatabase()); //Clear everything from the database
+$client->send(new Reqs\ResetDatabase()); // Clear everything from the database
 
 /*
 We will use computers as items in this example
@@ -135,9 +135,6 @@ for($i=0; $i<NUM; $i++)
 $client->send(new Reqs\Batch($requests));
 
 // Get 5 items related to item computer-6. Personalize them for user-42, who is currently viewing that item.
-$recommended = $client->send(new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5));
-echo 'Recommended items: ' . json_encode($recommended, JSON_PRETTY_PRINT)  . "\n";
-
 // Recommend only computers that have at least 3 cores
 $recommended = $client->send(
   new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5, ['filter' => "'num-cores'>=3"])
@@ -149,7 +146,21 @@ $recommended = $client->send(
   new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5,
     ['filter' => "'price' > context_item[\"price\"]"])
   );
-echo 'Recommended up-sell items: ' . json_encode($recommended, JSON_PRETTY_PRINT) . "\n"
+echo 'Recommended up-sell items: ' . json_encode($recommended, JSON_PRETTY_PRINT) . "\n";
+
+
+// Filters, boosters and other settings can be set also in the Admin UI (admin.recombee.com)
+// when scenario is specified
+$recommended = $client->send(
+  new Reqs\RecommendItemsToItem('computer-6', 'user-42', 5, ['scenario' => 'product_detail'])
+  );
+
+// Perform personalized full-text search with a user's search query (e.g. 'computers')
+$matches = $client->send(
+  new Reqs\SearchItems('user-42', 'computers', 5)
+  );
+echo 'Matched items: ' . json_encode($matches, JSON_PRETTY_PRINT) . "\n";
+
 ```
 
 ### Exception handling

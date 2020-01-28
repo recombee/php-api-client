@@ -45,14 +45,17 @@ class Client{
         $this->token = $token;
         $this->protocol = $protocol;
         $this->base_uri = Client::BASE_URI;
-        if(getenv("RAPI_URI") !== false)
-            $this->base_uri = getenv("RAPI_URI");
         $this->options = $options;
+
+        if(getenv('RAPI_URI') !== false)
+            $this->base_uri = getenv('RAPI_URI');
+        else if (isset($this->options['baseUri']))
+            $this->base_uri = $this->options['baseUri'];
         $this->user_agent = $this->getUserAgent();
     }
 
     protected function getUserAgent() {
-        $user_agent = 'recombee-php-api-client/2.4.0';
+        $user_agent = 'recombee-php-api-client/3.0.0';
         if (isset($this->options['serviceName']))
             $user_agent .= ' '.($this->options['serviceName']);
         return $user_agent;
