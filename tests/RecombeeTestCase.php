@@ -10,7 +10,7 @@ class RecombeeTestCase extends \PHPUnit\Framework\TestCase
 {
     protected $client;
 
-    protected function setUp() {
+    protected function setUp(): void {
         
         $this->client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
 

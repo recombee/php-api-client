@@ -116,7 +116,7 @@ class ItemBasedRecommendation extends Request {
      */
     protected $rotation_time;
     /**
-     * @var  $expert_settings Dictionary of custom options.
+     * @var array $expert_settings Dictionary of custom options.
      */
     protected $expert_settings;
     /**
@@ -209,7 +209,7 @@ class ItemBasedRecommendation extends Request {
      *         - Type: float
      *         - Description: **Expert option** If the *targetUserId* is provided: Taking *rotationRate* into account, specifies how long time it takes to an item to recover from the penalization. For example, `rotationTime=7200.0` means that items recommended less than 2 hours ago are penalized. Default: `7200.0`.
      *     - *expertSettings*
-     *         - Type: 
+     *         - Type: array
      *         - Description: Dictionary of custom options.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */

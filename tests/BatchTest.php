@@ -10,7 +10,6 @@ class BatchTest extends RecombeeTestCase {
 
     public function testBatch() {
         $reqs = [
-                    new Reqs\ResetDatabase,
                     new Reqs\AddItemProperty('num', 'int'),
                     new Reqs\AddItemProperty('time', 'timestamp'),
                     new Reqs\SetItemValues('item1', [
@@ -39,12 +38,12 @@ class BatchTest extends RecombeeTestCase {
             array_push($codes, $r['code']);
         }
 
-        $this->assertEquals([200, 201, 201, 200, 409, 200, 200, 200, 200, 200, 404, 200, 200, 200], $codes);
-        sort($repl[6]['json']);
+        $this->assertEquals([201, 201, 200, 409, 200, 200, 200, 200, 200, 404, 200, 200, 200], $codes);
+        sort($repl[5]['json']);
         $this->assertEquals(['item1', 'item2'], $repl[6]['json']);
-        sort($repl[7]['json']);
+        sort($repl[6]['json']);
         $this->assertEquals(['item2'], $repl[7]['json']);
-        sort($repl[9]['json']);
+        sort($repl[8]['json']);
         $this->assertEquals(array(), $repl[9]['json']);
         $this->assertEquals(['item2'], $repl[13]['json']);
 

@@ -9,7 +9,7 @@ namespace Recombee\RecommApi\Tests;
 use Recombee\RecommApi\Exceptions as Exc;
 use Recombee\RecommApi\Requests as Reqs;
 
-abstract class SearchTestCase extends RecombeeTestCase {
+abstract class SearchTestCase extends RecommendationDataTestCase {
 
     abstract protected function createRequest($user_id,$search_query,$count,$optional=array());
 

@@ -12,8 +12,11 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 /**
  * Based on user's past interactions (purchases, ratings, etc.) with the items, recommends top-N items that are most likely to be of high value for a given user.
  * The most typical use cases are recommendations at homepage, in some "Picked just for you" section or in email.
+ * The returned items are sorted by relevance (first item being the most relevant).
+ * Besides the recommended items, also a unique `recommId` is returned in the response. It can be used to:
+ * - Let Recombee know that this recommendation was successful (e.g. user clicked one of the recommended items). See [Reported metrics](https://docs.recombee.com/admin_ui.html#reported-metrics).
+ * - Get subsequent recommended items when the user scrolls down (*infinite scroll*) or goes to the next page. See [Recommend Next Items](https://docs.recombee.com/api.html#recommend-next-items).
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
- * The returned items are sorted by relevancy (first item being the most relevant).
  */
 class RecommendItemsToUser extends Request {
 
@@ -61,7 +64,8 @@ class RecommendItemsToUser extends Request {
      *             "url": "myshop.com/mixer-42"
      *           }
      *         }
-     *       ]
+     *       ],
+     *      "numberNextRecommsCalls": 0
      *   }
      * ```
      */
@@ -88,7 +92,8 @@ class RecommendItemsToUser extends Request {
      *             "price": 39
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      */
@@ -104,7 +109,7 @@ class RecommendItemsToUser extends Request {
      */
     protected $booster;
     /**
-     * @var string| $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
+     * @var string|array $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
@@ -115,7 +120,7 @@ class RecommendItemsToUser extends Request {
      */
     protected $diversity;
     /**
-     * @var string $min_relevance **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevancy, and may return less than *count* items when there is not enough data to fulfill it.
+     * @var string $min_relevance **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevance, and may return less than *count* items when there is not enough data to fulfill it.
      */
     protected $min_relevance;
     /**
@@ -127,7 +132,7 @@ class RecommendItemsToUser extends Request {
      */
     protected $rotation_time;
     /**
-     * @var  $expert_settings Dictionary of custom options.
+     * @var array $expert_settings Dictionary of custom options.
      */
     protected $expert_settings;
     /**
@@ -180,7 +185,8 @@ class RecommendItemsToUser extends Request {
      *             "url": "myshop.com/mixer-42"
      *           }
      *         }
-     *       ]
+     *       ],
+     *      "numberNextRecommsCalls": 0
      *   }
      * ```
      *     - *includedProperties*
@@ -206,7 +212,8 @@ class RecommendItemsToUser extends Request {
      *             "price": 39
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      *     - *filter*
@@ -218,7 +225,7 @@ class RecommendItemsToUser extends Request {
      *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
      * Boosters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
      *     - *logic*
-     *         - Type: string|
+     *         - Type: string|array
      *         - Description: Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
@@ -228,7 +235,7 @@ class RecommendItemsToUser extends Request {
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      *     - *minRelevance*
      *         - Type: string
-     *         - Description: **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevancy, and may return less than *count* items when there is not enough data to fulfill it.
+     *         - Description: **Expert option** Specifies the threshold of how much relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend number of items equal to *count* at any cost. If there are not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations to be appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevance, and may return less than *count* items when there is not enough data to fulfill it.
      *     - *rotationRate*
      *         - Type: float
      *         - Description: **Expert option** If your users browse the system in real-time, it may easily happen that you wish to offer them recommendations multiple times. Here comes the question: how much should the recommendations change? Should they remain the same, or should they rotate? Recombee API allows you to control this per-request in backward fashion. You may penalize an item for being recommended in the near past. For the specific user, `rotationRate=1` means maximal rotation, `rotationRate=0` means absolutely no rotation. You may also use, for example `rotationRate=0.2` for only slight rotation of recommended items. Default: `0.1`.
@@ -236,7 +243,7 @@ class RecommendItemsToUser extends Request {
      *         - Type: float
      *         - Description: **Expert option** Taking *rotationRate* into account, specifies how long time it takes to an item to recover from the penalization. For example, `rotationTime=7200.0` means that items recommended less than 2 hours ago are penalized. Default: `7200.0`.
      *     - *expertSettings*
-     *         - Type: 
+     *         - Type: array
      *         - Description: Dictionary of custom options.
      *     - *returnAbGroup*
      *         - Type: bool

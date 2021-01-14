@@ -13,8 +13,11 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
  * Full-text personalized search. The results are based on the provided `searchQuery` and also on the user's past interactions (purchases, ratings, etc.) with the items (items more suitable for the user are preferred in the results).
  * All the string and set item properties are indexed by the search engine.
  * This endpoint should be used in a search box at your website/app. It can be called multiple times as the user is typing the query in order to get the most viable suggestions based on current state of the query, or once after submitting the whole query. 
+ * The returned items are sorted by relevance (first item being the most relevant).
+ * Besides the recommended items, also a unique `recommId` is returned in the response. It can be used to:
+ * - Let Recombee know that this search was successful (e.g. user clicked one of the recommended items). See [Reported metrics](https://docs.recombee.com/admin_ui.html#reported-metrics).
+ * - Get subsequent search results when the user scrolls down or goes to the next page. See [Recommend Next Items](https://docs.recombee.com/api.html#recommend-next-items).
  * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
- * The returned items are sorted by relevancy (first item being the most relevant).
  */
 class SearchItems extends Request {
 
@@ -66,7 +69,8 @@ class SearchItems extends Request {
      *             "url": "myshop.com/mixer-42"
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      */
@@ -93,7 +97,8 @@ class SearchItems extends Request {
      *             "price": 39
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      */
@@ -109,14 +114,14 @@ class SearchItems extends Request {
      */
     protected $booster;
     /**
-     * @var string| $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
+     * @var string|array $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
      */
     protected $logic;
     /**
-     * @var  $expert_settings Dictionary of custom options.
+     * @var array $expert_settings Dictionary of custom options.
      */
     protected $expert_settings;
     /**
@@ -170,7 +175,8 @@ class SearchItems extends Request {
      *             "url": "myshop.com/mixer-42"
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      *     - *includedProperties*
@@ -196,7 +202,8 @@ class SearchItems extends Request {
      *             "price": 39
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      *     - *filter*
@@ -208,13 +215,13 @@ class SearchItems extends Request {
      *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
      * Boosters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
      *     - *logic*
-     *         - Type: string|
+     *         - Type: string|array
      *         - Description: Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
      *     - *expertSettings*
-     *         - Type: 
+     *         - Type: array
      *         - Description: Dictionary of custom options.
      *     - *returnAbGroup*
      *         - Type: bool

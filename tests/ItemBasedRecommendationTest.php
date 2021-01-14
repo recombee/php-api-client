@@ -2,7 +2,7 @@
 namespace Recombee\RecommApi\Tests;
 use Recombee\RecommApi\Requests\ItemBasedRecommendation;
 
-class ItemBasedRecommendationTest extends RecommendationTestCase {
+class ItemBasedRecommendationTest extends RecommendationDeprecatedTestCase {
 
     protected function createRequest($item_id, $count, $optional=array()) {
     	$optional = array_merge($optional, ['targetUserId' => 'entity_id']);

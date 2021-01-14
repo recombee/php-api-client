@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^3.0.0"
+        "recombee/php-api-client": "^3.1.0"
     }
 }
 ```
@@ -55,9 +55,12 @@ try
     $res = $client->send(new Reqs\Batch($purchase_requests)); //Use Batch for faster processing of larger data
 
     // Get 5 recommendations for user 'user-25'
-    $recommended = $client->send(new Reqs\RecommendItemsToUser('user-25', 5));
+    $response = $client->send(new Reqs\RecommendItemsToUser('user-25', 5));
+    echo 'Recommended items: ' . json_encode($response, JSON_PRETTY_PRINT) . "\n";
 
-    echo 'Recommended items: ' . json_encode($recommended, JSON_PRETTY_PRINT) . "\n";
+    // User scrolled down - get next 3 recommended items
+    $response = $client->send(new Reqs\RecommendNextItems($response['recommId'], 3));
+    echo 'Next recommended items: ' . json_encode($response, JSON_PRETTY_PRINT) . "\n";
 }
 catch(Ex\ApiException $e)
 {
@@ -157,7 +160,7 @@ $recommended = $client->send(
 
 // Perform personalized full-text search with a user's search query (e.g. 'computers')
 $matches = $client->send(
-  new Reqs\SearchItems('user-42', 'computers', 5)
+  new Reqs\SearchItems('user-42', 'computers', 5, ['scenario' => 'search_top'])
   );
 echo 'Matched items: ' . json_encode($matches, JSON_PRETTY_PRINT) . "\n";
 

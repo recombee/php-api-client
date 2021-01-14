@@ -20,7 +20,7 @@ abstract class AddEntityTestCase extends RecombeeTestCase {
          $resp = $this->client->send($req);
 
          //it fails with invalid entity id
-         $req = $this->createRequest('$$$not_valid$$$');
+         $req = $this->createRequest('***not_valid$$$');
          try {
 
              $this->client->send($req);

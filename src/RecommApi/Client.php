@@ -22,6 +22,7 @@ class Client{
     protected $protocol;
     protected $base_uri;
     protected $options;
+    protected $guzzle_client;
 
     /**
      * @ignore
@@ -52,10 +53,12 @@ class Client{
         else if (isset($this->options['baseUri']))
             $this->base_uri = $this->options['baseUri'];
         $this->user_agent = $this->getUserAgent();
+
+        $this->guzzle_client = new \GuzzleHttp\Client();
     }
 
     protected function getUserAgent() {
-        $user_agent = 'recombee-php-api-client/3.0.0';
+        $user_agent = 'recombee-php-api-client/3.1.0';
         if (isset($this->options['serviceName']))
             $user_agent .= ' '.($this->options['serviceName']);
         return $user_agent;
@@ -103,7 +106,11 @@ class Client{
                     break;
             }
         }
-        catch(\Requests_Exception $e)
+        catch(\GuzzleHttp\Exception\ConnectException $e)
+        {
+            throw new ApiTimeoutException($request);
+        }
+        catch(\GuzzleHttp\Exception\GuzzleException $e)
         {
             if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request);
             if(strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request);
@@ -125,56 +132,58 @@ class Client{
         return array_merge(array('User-Agent' => $this->user_agent), $this->getOptionalHttpHeaders()); 
     }
 
-    protected function getOptionalRequestOptions() {
+    protected function getRequestOptions() {
+        $options = array('http_errors' => false);
         if (isset($this->options['requestsOptions']))
-            return $this->options['requestsOptions'];
-        return array();
+            $options = array_merge($options, $this->options['requestsOptions']);
+        return $options;
     }
 
-    protected function put($uri, $timeout, $body) {
-        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
-        $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
 
-        $response = \Requests::put($uri, $headers, $body, $options);
+    protected function put($uri, $timeout, $body) {
+        $options = array_merge(array('timeout' => $timeout), $this->getRequestOptions());
+        $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
+        $response = $this->guzzle_client->request('PUT', $uri, array_merge($options, ['body' => $body, 'headers' => $headers]));
         $this->checkErrors($response);
-        return $response->body;
+        return (string) $response->getBody();
     }
 
     protected function get($uri, $timeout) {
-        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $options = array_merge(array('timeout' => $timeout), $this->getRequestOptions());
         $headers = $this->getHttpHeaders();
 
-        $response = \Requests::get($uri, $headers, $options);
+        $response = $this->guzzle_client->request('GET', $uri, array_merge($options, ['headers' => $headers]));
         $this->checkErrors($response);
-        return json_decode($response->body, true);
+        return json_decode($response->getBody(), true);
     }
 
     protected function delete($uri, $timeout) {
-        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $options = array_merge(array('timeout' => $timeout), $this->getRequestOptions());
         $headers = $this->getHttpHeaders();
 
-        $response = \Requests::delete($uri, $headers, $options);
+        $response = $this->guzzle_client->request('DELETE', $uri, array_merge($options, ['headers' => $headers]));
         $this->checkErrors($response);
-        return $response->body;
+        return (string) $response->getBody();
     }
 
     protected function post($uri, $timeout, $body) {
-        $options = array_merge(array('timeout' => $timeout), $this->getOptionalRequestOptions());
+        $options = array_merge(array('timeout' => $timeout), $this->getRequestOptions());
         $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
-        $response = \Requests::post($uri, $headers, $body, $options);
+
+        $response = $this->guzzle_client->request('POST', $uri, array_merge($options, ['body' => $body, 'headers' => $headers]));
         $this->checkErrors($response);
 
-        $json = json_decode($response->body, true);
+        $json = json_decode($response->getBody(), true);
         if($json !== null && json_last_error() == JSON_ERROR_NONE)
             return $json;
         else
-            return $response->body;
+            return (string) $response->getBody();
     }
 
     protected function checkErrors($response) {
-        $status_code = $response->status_code;
+        $status_code = $response->getStatusCode();
         if($status_code == 200 || $status_code == 201) return;
-        throw new ResponseException($this->request, $status_code, $response->body);
+        throw new ResponseException($this->request, $status_code, $response->getBody());
     }
 
     protected function sendMultipartBatch($request) {

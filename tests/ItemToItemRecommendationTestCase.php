@@ -9,7 +9,7 @@ namespace Recombee\RecommApi\Tests;
 use Recombee\RecommApi\Exceptions as Exc;
 use Recombee\RecommApi\Requests as Reqs;
 
-abstract class ItemToItemRecommendationTestCase extends RecombeeTestCase {
+abstract class ItemToItemRecommendationTestCase extends RecommendationDataTestCase {
 
     abstract protected function createRequest($item_id,$target_user_id,$count,$optional=array());
 

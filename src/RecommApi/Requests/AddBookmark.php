@@ -35,7 +35,7 @@ class AddBookmark extends Request {
      */
     protected $recomm_id;
     /**
-     * @var  $additional_data A dictionary of additional data for the interaction.
+     * @var array $additional_data A dictionary of additional data for the interaction.
      */
     protected $additional_data;
     /**
@@ -59,7 +59,7 @@ class AddBookmark extends Request {
      *         - Type: string
      *         - Description: If this bookmark is based on a recommendation request, `recommId` is the id of the clicked recommendation.
      *     - *additionalData*
-     *         - Type: 
+     *         - Type: array
      *         - Description: A dictionary of additional data for the interaction.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */

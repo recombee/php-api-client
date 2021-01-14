@@ -7,7 +7,7 @@ use Recombee\RecommApi\Requests as Reqs;
 
 class InteractionsTestCase extends RecombeeTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');

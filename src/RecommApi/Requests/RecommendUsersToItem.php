@@ -56,7 +56,8 @@ class RecommendUsersToItem extends Request {
      *             "sex": "M"
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      */
@@ -81,7 +82,8 @@ class RecommendUsersToItem extends Request {
      *             "country": "CAN"
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      */
@@ -97,7 +99,7 @@ class RecommendUsersToItem extends Request {
      */
     protected $booster;
     /**
-     * @var string| $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
+     * @var string|array $logic Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can be also set to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
@@ -108,7 +110,7 @@ class RecommendUsersToItem extends Request {
      */
     protected $diversity;
     /**
-     * @var  $expert_settings Dictionary of custom options.
+     * @var array $expert_settings Dictionary of custom options.
      */
     protected $expert_settings;
     /**
@@ -157,7 +159,8 @@ class RecommendUsersToItem extends Request {
      *             "sex": "M"
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      *     - *includedProperties*
@@ -181,7 +184,8 @@ class RecommendUsersToItem extends Request {
      *             "country": "CAN"
      *           }
      *         }
-     *       ]
+     *       ],
+     *     "numberNextRecommsCalls": 0
      *   }
      * ```
      *     - *filter*
@@ -193,7 +197,7 @@ class RecommendUsersToItem extends Request {
      *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql.html) expression which allows you to boost recommendation rate of some items based on the values of their attributes.
      * Boosters can be also assigned to a [scenario](https://docs.recombee.com/scenarios.html) in the [Admin UI](https://admin.recombee.com).
      *     - *logic*
-     *         - Type: string|
+     *         - Type: string|array
      *         - Description: Logic specifies particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
      * See [this section](https://docs.recombee.com/recommendation_logics.html) for list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
@@ -202,7 +206,7 @@ class RecommendUsersToItem extends Request {
      *         - Type: float
      *         - Description: **Expert option** Real number from [0.0, 1.0] which determines how much mutually dissimilar should the recommended items be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      *     - *expertSettings*
-     *         - Type: 
+     *         - Type: array
      *         - Description: Dictionary of custom options.
      *     - *returnAbGroup*
      *         - Type: bool
