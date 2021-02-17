@@ -58,7 +58,7 @@ class Client{
     }
 
     protected function getUserAgent() {
-        $user_agent = 'recombee-php-api-client/3.1.0';
+        $user_agent = 'recombee-php-api-client/3.2.0';
         if (isset($this->options['serviceName']))
             $user_agent .= ' '.($this->options['serviceName']);
         return $user_agent;
