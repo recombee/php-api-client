@@ -15,7 +15,7 @@ use Recombee\RecommApi\Util\Util;
  * Client for easy usage of Recombee recommendation API
 */
 class Client{
-    
+
     protected $account;
     protected $token;
     protected $request;
@@ -72,7 +72,7 @@ class Client{
      * @throws Exceptions\ApiTimeoutException ApiTimeoutException if the request takes too long
      */
     public function send(Requests\Request $request) {
-        
+
         if($request instanceof Requests\Batch && count($request->requests) > Client::BATCH_MAX_SIZE)
             return $this->sendMultipartBatch($request);
 
@@ -108,12 +108,12 @@ class Client{
         }
         catch(\GuzzleHttp\Exception\ConnectException $e)
         {
-            throw new ApiTimeoutException($request);
+            throw new ApiTimeoutException($request, $e);
         }
         catch(\GuzzleHttp\Exception\GuzzleException $e)
         {
-            if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request);
-            if(strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request);
+            if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request, $e);
+            if(strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request, $e);
 
             throw $e;
         }
@@ -129,7 +129,7 @@ class Client{
     }
 
     protected function getHttpHeaders() {
-        return array_merge(array('User-Agent' => $this->user_agent), $this->getOptionalHttpHeaders()); 
+        return array_merge(array('User-Agent' => $this->user_agent), $this->getOptionalHttpHeaders());
     }
 
     protected function getRequestOptions() {

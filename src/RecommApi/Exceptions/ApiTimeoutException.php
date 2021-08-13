@@ -17,7 +17,7 @@ class ApiTimeoutException extends ApiException{
       */
     public $request;
 
-    public function __construct($request, Exception $previous = null) {
+    public function __construct($request, \Exception $previous = null) {
         $this->request = $request;
         $description = "Client did not get response within #{$request->getTimeout()} ms";
         parent::__construct($description, 28, $previous);
