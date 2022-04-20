@@ -26,9 +26,9 @@ class BatchTest extends RecombeeTestCase {
                     new Reqs\ListItems(['filter' => "'num' >= 99"]),
                     new Reqs\AddCartAddition('user', 'item2',  ['timestamp' => '2013-10-29T09:38:41.341Z']),
                     new Reqs\AddCartAddition('user', 'item2', ['cascadeCreate' => true]),
-                    new Reqs\ItemBasedRecommendation('item2', 30),
-                    new Reqs\UserBasedRecommendation('user_id', 25, ['filter' => "'num'==68",
-                                                                        'allowNonexistent' => true])
+                    new Reqs\RecommendItemsToItem('item2', 'user', 30),
+                    new Reqs\RecommendItemsToUser('user_id', 25, ['filter' => "'num'==68",
+                                                                     'cascadeCreate' => true])
                 ];
 
         $repl = $this->client->send(new Reqs\Batch($reqs, ['distinctRecomms' => true]));

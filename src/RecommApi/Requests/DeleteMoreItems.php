@@ -4,29 +4,28 @@
 */
 
 /**
- * DeleteItem request
+ * DeleteMoreItems request
  */
 namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes an item of given `itemId` from the catalog.
- * If there are any *purchases*, *ratings*, *bookmarks*, *cart additions* or *detail views* of the item present in the database, they will be deleted in cascade as well. Also, if the item is present in some *series*, it will be removed from all the *series* where present.
- * If an item becomes obsolete/no longer available, it is meaningful to keep it in the catalog (along with all the interaction data, which are very useful), and **only exclude the item from recommendations**. In such a case, use [ReQL filter](https://docs.recombee.com/reql.html) instead of deleting the item completely.
+ * Delete all the items that pass the filter.
+ * If an item becomes obsolete/no longer available, it is meaningful to **keep it in the catalog** (along with all the interaction data, which are very useful), and **only exclude the item from recommendations**. In such a case, use [ReQL filter](https://docs.recombee.com/reql.html) instead of deleting the item completely.
  */
-class DeleteItem extends Request {
+class DeleteMoreItems extends Request {
 
     /**
-     * @var string $item_id ID of the item to be deleted.
+     * @var string $filter A [ReQL](https://docs.recombee.com/reql.html) expression, which return `true` for the items that shall be updated.
      */
-    protected $item_id;
+    protected $filter;
 
     /**
      * Construct the request
-     * @param string $item_id ID of the item to be deleted.
+     * @param string $filter A [ReQL](https://docs.recombee.com/reql.html) expression, which return `true` for the items that shall be updated.
      */
-    public function __construct($item_id) {
-        $this->item_id = $item_id;
+    public function __construct($filter) {
+        $this->filter = $filter;
         $this->timeout = 1000;
         $this->ensure_https = false;
     }
@@ -44,7 +43,7 @@ class DeleteItem extends Request {
      * @return string URI to the endpoint
      */
     public function getPath() {
-        return "/{databaseId}/items/{$this->item_id}";
+        return "/{databaseId}/more-items/";
     }
 
     /**
@@ -62,6 +61,7 @@ class DeleteItem extends Request {
      */
     public function getBodyParameters() {
         $p = array();
+        $p['filter'] = $this->filter;
         return $p;
     }
 

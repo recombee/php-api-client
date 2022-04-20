@@ -13,9 +13,9 @@ namespace Recombee\RecommApi\Exceptions;
  */
 class UnknownOptionalParameterException extends \InvalidArgumentException {
 
-	/**
-	 * @var string $parameter Given invalid name
-	 */
+    /**
+     * @var string $parameter Given invalid name
+     */
     public $parameter;
 
     public function __construct($par, \Exception $previous = null) {

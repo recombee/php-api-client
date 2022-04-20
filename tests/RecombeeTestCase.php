@@ -11,8 +11,18 @@ class RecombeeTestCase extends \PHPUnit\Framework\TestCase
     protected $client;
 
     protected function setUp(): void {
-        
-        $this->client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
+
+        $dbId = getenv('DB_ID');
+        if ($dbId === false) {
+            throw new \Exception('DB_ID env var must be specified');
+        }
+
+        $token = getenv('PRIVATE_TOKEN');
+        if ($token === false) {
+            throw new \Exception('PRIVATE_TOKEN env var must be specified');
+        }
+
+        $this->client = new Client($dbId, $token, ['region' => 'eu-west']);
 
         $this->client->send(new Reqs\ResetDatabase());
         while (true) {

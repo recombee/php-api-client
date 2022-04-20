@@ -16,13 +16,13 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class DeleteUser extends Request {
 
     /**
-     * @var string $user_id ID of the user to be added.
+     * @var string $user_id ID of the user to be deleted.
      */
     protected $user_id;
 
     /**
      * Construct the request
-     * @param string $user_id ID of the user to be added.
+     * @param string $user_id ID of the user to be deleted.
      */
     public function __construct($user_id) {
         $this->user_id = $user_id;

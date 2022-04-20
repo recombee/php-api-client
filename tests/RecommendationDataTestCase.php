@@ -29,15 +29,13 @@ abstract class RecommendationDataTestCase extends RecombeeTestCase {
             }
         }
 
-        $client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
-
         $user_requests = array_map(function($userId) {return new Reqs\AddUser($userId);}, $my_user_ids);
-        $client->send(new Reqs\Batch($user_requests));
-        $client->send(new Reqs\Batch([new Reqs\AddItemProperty('answer', 'int'), new Reqs\AddItemProperty('id2', 'string'), new Reqs\AddItemProperty('empty', 'string')]));
+        $this->client->send(new Reqs\Batch($user_requests));
+        $this->client->send(new Reqs\Batch([new Reqs\AddItemProperty('answer', 'int'), new Reqs\AddItemProperty('id2', 'string'), new Reqs\AddItemProperty('empty', 'string')]));
 
         $item_requests = array_map(function($itemId) {return new Reqs\SetItemValues($itemId, ['answer' => 42, 'id2' => $itemId, '!cascadeCreate' => true]);}, $my_item_ids);
-        $client->send(new Reqs\Batch($item_requests));
-        $client->send(new Reqs\Batch($my_purchases));
+        $this->client->send(new Reqs\Batch($item_requests));
+        $this->client->send(new Reqs\Batch($my_purchases));
     }
 }
 ?>

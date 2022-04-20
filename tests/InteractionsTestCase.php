@@ -10,7 +10,6 @@ class InteractionsTestCase extends RecombeeTestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $client = new Client('client-test', 'jGGQ6ZKa8rQ1zTAyxTc0EMn55YPF7FJLUtaMLhbsGxmvwxgTwXYqmUk5xVZFw98L');
         $requests = new Reqs\Batch([
             new Reqs\AddUser('user'),
             new Reqs\AddItem('item'),
@@ -22,7 +21,7 @@ class InteractionsTestCase extends RecombeeTestCase {
             new Reqs\SetViewPortion('user', 'item', 1, ['timestamp' => 0])
         ]);
 
-        $client->send($requests);
+        $this->client->send($requests);
     }
 }
 

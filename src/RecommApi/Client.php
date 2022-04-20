@@ -27,38 +27,60 @@ class Client{
     /**
      * @ignore
      */
-    const BASE_URI = 'rapi.recombee.com';
-
-    /**
-     * @ignore
-     */
     const BATCH_MAX_SIZE = 10000; //Maximal number of requests within one batch request
 
     /**
      * Create the client
      * @param string $account Name of your account at Recombee
      * @param string $token Secret token
-     * @param string $protocol Default protocol for sending requests. Possible values: 'http', 'https'.
      * @param array  $options Other custom options
      */
-    public function __construct($account, $token, $protocol = 'https', $options= array()) {
+    public function __construct($account, $token, $options = array()) {
         $this->account = $account;
         $this->token = $token;
-        $this->protocol = $protocol;
-        $this->base_uri = Client::BASE_URI;
+
+        if (!is_array($options)) throw new \InvalidArgumentException("options must be given as an array. $options given instead.");
         $this->options = $options;
 
-        if(getenv('RAPI_URI') !== false)
-            $this->base_uri = getenv('RAPI_URI');
-        else if (isset($this->options['baseUri']))
-            $this->base_uri = $this->options['baseUri'];
+        $this->protocol = (isset($this->options['protocol'])) ? $this->options['protocol'] : 'https';
+        $this->base_uri = $this->getBaseUri();
         $this->user_agent = $this->getUserAgent();
 
         $this->guzzle_client = new \GuzzleHttp\Client();
     }
 
+    protected function getRegionalBaseUri($region) {
+        $uriPerRegion = [
+            'ap-se' => 'rapi-ap-se.recombee.com',
+            'ca-east' => 'rapi-ca-east.recombee.com',
+            'eu-west' => 'rapi-eu-west.recombee.com',
+            'us-west' => 'rapi-us-west.recombee.com'
+          ];
+        $uri = $uriPerRegion[strtolower(strval($region))];
+        if (!isset($uri)) {
+            throw new \InvalidArgumentException("Region $region is unknown. You may need to update the version of the SDK.");
+        }
+        return $uri;
+    }
+
+    protected function getBaseUri() {
+        $base_uri = null;
+        if(getenv('RAPI_URI') !== false)
+            $base_uri = getenv('RAPI_URI');
+        else if (isset($this->options['baseUri']))
+            $base_uri = $this->options['baseUri'];
+
+        if (isset($this->options['region'])) {
+            if (isset($base_uri)) {
+                throw new \InvalidArgumentException('baseUri and region cannot be specified at the same time');
+            }
+            $base_uri = $this->getRegionalBaseUri($this->options['region']);
+        }
+        return (isset($base_uri)) ? $base_uri : 'rapi.recombee.com';
+    }
+
     protected function getUserAgent() {
-        $user_agent = 'recombee-php-api-client/3.2.0';
+        $user_agent = 'recombee-php-api-client/4.0.0';
         if (isset($this->options['serviceName']))
             $user_agent .= ' '.($this->options['serviceName']);
         return $user_agent;
@@ -84,6 +106,7 @@ class Client{
         $uri = $protocol . '://' . $this->base_uri . $signed_url;
         $timeout = $request->getTimeout() / 1000;
         $result = null;
+        $json = json_encode($request->getBodyParameters(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         try {
             switch ($request->getMethod()) {
@@ -92,16 +115,14 @@ class Client{
                     break;
 
                 case Requests\Request::HTTP_PUT:
-                    $json = json_encode($request->getBodyParameters(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                     $result = $this->put($uri, $timeout, $json);
                     break;
 
                 case Requests\Request::HTTP_DELETE:
-                    $result = $this->delete($uri, $timeout);
+                    $result = $this->delete($uri, $timeout, $json);
                     break;
 
                 case Requests\Request::HTTP_POST:
-                    $json = json_encode($request->getBodyParameters(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                     $result = $this->post($uri, $timeout, $json);
                     break;
             }
@@ -145,7 +166,7 @@ class Client{
         $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
         $response = $this->guzzle_client->request('PUT', $uri, array_merge($options, ['body' => $body, 'headers' => $headers]));
         $this->checkErrors($response);
-        return (string) $response->getBody();
+        return $this->formatResult($response);
     }
 
     protected function get($uri, $timeout) {
@@ -154,16 +175,16 @@ class Client{
 
         $response = $this->guzzle_client->request('GET', $uri, array_merge($options, ['headers' => $headers]));
         $this->checkErrors($response);
-        return json_decode($response->getBody(), true);
+        return $this->formatResult($response);
     }
 
-    protected function delete($uri, $timeout) {
+    protected function delete($uri, $timeout, $body) {
         $options = array_merge(array('timeout' => $timeout), $this->getRequestOptions());
-        $headers = $this->getHttpHeaders();
+        $headers = array_merge(array('Content-Type' => 'application/json'), $this->getHttpHeaders());
 
-        $response = $this->guzzle_client->request('DELETE', $uri, array_merge($options, ['headers' => $headers]));
+        $response = $this->guzzle_client->request('DELETE', $uri, array_merge($options, ['body' => $body, 'headers' => $headers]));
         $this->checkErrors($response);
-        return (string) $response->getBody();
+        return $this->formatResult($response);
     }
 
     protected function post($uri, $timeout, $body) {
@@ -172,7 +193,10 @@ class Client{
 
         $response = $this->guzzle_client->request('POST', $uri, array_merge($options, ['body' => $body, 'headers' => $headers]));
         $this->checkErrors($response);
+        return $this->formatResult($response);
+    }
 
+    protected function formatResult($response) {
         $json = json_decode($response->getBody(), true);
         if($json !== null && json_last_error() == JSON_ERROR_NONE)
             return $json;
