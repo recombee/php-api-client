@@ -33,9 +33,10 @@ class Client{
      * Create the client
      * @param string $account Name of your account at Recombee
      * @param string $token Secret token
-     * @param array  $options Other custom options
+     * @param array $options Other custom options
+     * @param \GuzzleHttp\Client|null $guzzle_client GuzzleHttp\Client instance
      */
-    public function __construct($account, $token, $options = array()) {
+    public function __construct($account, $token, $options = array(), \GuzzleHttp\Client $guzzle_client = null) {
         $this->account = $account;
         $this->token = $token;
 
@@ -46,7 +47,10 @@ class Client{
         $this->base_uri = $this->getBaseUri();
         $this->user_agent = $this->getUserAgent();
 
-        $this->guzzle_client = new \GuzzleHttp\Client();
+        if ($guzzle_client === null)
+            $this->guzzle_client = new \GuzzleHttp\Client();
+        else
+            $this->guzzle_client = $guzzle_client;
     }
 
     protected function getRegionalBaseUri($region) {
