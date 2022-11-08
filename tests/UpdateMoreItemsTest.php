@@ -8,4 +8,3 @@ class UpdateMoreItemsTest extends UpdateMoreItemsTestCase {
         return new UpdateMoreItems($filter, $changes);
     }
 }
-?>

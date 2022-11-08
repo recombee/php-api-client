@@ -23,5 +23,3 @@ abstract class DeleteMoreItemsTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

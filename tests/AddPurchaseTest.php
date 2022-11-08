@@ -8,4 +8,3 @@ class AddPurchaseTest extends AddInteractionTestCase {
         return new AddPurchase($user_id, $item_id, $optional);
     }
 }
-?>

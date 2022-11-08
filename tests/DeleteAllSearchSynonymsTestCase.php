@@ -21,5 +21,3 @@ abstract class DeleteAllSearchSynonymsTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

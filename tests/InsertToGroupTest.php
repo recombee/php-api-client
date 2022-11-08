@@ -8,4 +8,3 @@ class InsertToGroupTest extends InsertToGroupTestCase {
         return new InsertToGroup($group_id, $item_type, $item_id, $optional);
     }
 }
-?>

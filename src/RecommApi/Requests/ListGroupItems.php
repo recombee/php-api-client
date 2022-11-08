@@ -64,4 +64,3 @@ class ListGroupItems extends Request {
     }
 
 }
-?>

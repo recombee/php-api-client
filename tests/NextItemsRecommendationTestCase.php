@@ -27,5 +27,3 @@ abstract class NextItemsRecommendationTestCase extends RecommendationDataTestCas
 
     }
 }
-
-?>

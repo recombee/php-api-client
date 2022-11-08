@@ -64,4 +64,3 @@ class DeleteUserProperty extends Request {
     }
 
 }
-?>

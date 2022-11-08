@@ -96,4 +96,3 @@ class DeletePurchase extends Request {
     }
 
 }
-?>

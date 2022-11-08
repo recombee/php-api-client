@@ -42,5 +42,3 @@ abstract class InsertToGroupTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

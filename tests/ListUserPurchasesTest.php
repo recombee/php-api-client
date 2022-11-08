@@ -8,4 +8,3 @@ class ListUserPurchasesTest extends ListUserInteractionsTestCase {
         return new ListUserPurchases($user_id);
     }
 }
-?>

@@ -8,4 +8,3 @@ class ListUserViewPortionsTest extends ListUserInteractionsTestCase {
         return new ListUserViewPortions($user_id);
     }
 }
-?>

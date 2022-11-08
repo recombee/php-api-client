@@ -58,4 +58,3 @@ class ListSeries extends Request {
     }
 
 }
-?>

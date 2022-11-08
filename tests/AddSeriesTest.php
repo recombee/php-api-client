@@ -8,4 +8,3 @@ class AddSeriesTest extends AddEntityTestCase {
         return new AddSeries($series_id);
     }
 }
-?>

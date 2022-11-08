@@ -29,5 +29,3 @@ abstract class ItemToItemRecommendationTestCase extends RecommendationDataTestCa
 
     }
 }
-
-?>

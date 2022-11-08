@@ -23,5 +23,3 @@ abstract class UpdateMoreItemsTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

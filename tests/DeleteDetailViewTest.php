@@ -8,4 +8,3 @@ class DeleteDetailViewTest extends DeleteInteractionTestCase {
         return new DeleteDetailView($user_id, $item_id, $optional);
     }
 }
-?>

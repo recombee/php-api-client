@@ -64,4 +64,3 @@ class GetItemPropertyInfo extends Request {
     }
 
 }
-?>

@@ -307,4 +307,3 @@ class SearchItems extends Request {
     }
 
 }
-?>

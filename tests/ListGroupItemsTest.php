@@ -8,4 +8,3 @@ class ListGroupItemsTest extends ListSetItemsTestCase {
         return new ListGroupItems($group_id);
     }
 }
-?>

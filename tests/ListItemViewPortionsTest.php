@@ -8,4 +8,3 @@ class ListItemViewPortionsTest extends ListItemInteractionsTestCase {
         return new ListItemViewPortions($item_id);
     }
 }
-?>

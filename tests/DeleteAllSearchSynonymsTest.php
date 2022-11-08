@@ -8,4 +8,3 @@ class DeleteAllSearchSynonymsTest extends DeleteAllSearchSynonymsTestCase {
         return new DeleteAllSearchSynonyms();
     }
 }
-?>

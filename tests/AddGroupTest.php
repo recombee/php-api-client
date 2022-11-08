@@ -8,4 +8,3 @@ class AddGroupTest extends AddEntityTestCase {
         return new AddGroup($group_id);
     }
 }
-?>

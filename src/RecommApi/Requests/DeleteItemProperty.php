@@ -64,4 +64,3 @@ class DeleteItemProperty extends Request {
     }
 
 }
-?>

@@ -8,4 +8,3 @@ class AddUserPropertyTest extends AddPropertyTestCase {
         return new AddUserProperty($property_name, $type);
     }
 }
-?>

@@ -8,4 +8,3 @@ class ListSearchSynonymsTest extends ListSearchSynonymsTestCase {
         return new ListSearchSynonyms($optional);
     }
 }
-?>

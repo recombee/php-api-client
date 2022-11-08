@@ -8,4 +8,3 @@ class SetViewPortionTest extends SetViewPortionTestCase {
         return new SetViewPortion($user_id, $item_id, $portion, $optional);
     }
 }
-?>

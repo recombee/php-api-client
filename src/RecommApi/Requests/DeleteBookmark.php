@@ -96,4 +96,3 @@ class DeleteBookmark extends Request {
     }
 
 }
-?>

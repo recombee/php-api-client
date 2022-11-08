@@ -8,4 +8,3 @@ class DeletePurchaseTest extends DeleteInteractionTestCase {
         return new DeletePurchase($user_id, $item_id, $optional);
     }
 }
-?>

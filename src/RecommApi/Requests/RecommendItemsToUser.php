@@ -339,4 +339,3 @@ class RecommendItemsToUser extends Request {
     }
 
 }
-?>

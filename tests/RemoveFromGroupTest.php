@@ -8,4 +8,3 @@ class RemoveFromGroupTest extends RemoveFromGroupTestCase {
         return new RemoveFromGroup($group_id, $item_type, $item_id);
     }
 }
-?>

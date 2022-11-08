@@ -8,4 +8,3 @@ class SetItemValuesTest extends SetValuesTestCase {
         return new SetItemValues($item_id, $values, $optional);
     }
 }
-?>

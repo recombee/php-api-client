@@ -64,4 +64,3 @@ class ListItemViewPortions extends Request {
     }
 
 }
-?>

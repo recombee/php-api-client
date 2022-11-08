@@ -8,4 +8,3 @@ class DeleteUserPropertyTest extends DeletePropertyTestCase {
         return new DeleteUserProperty($property_name);
     }
 }
-?>

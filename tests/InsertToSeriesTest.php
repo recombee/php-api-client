@@ -8,4 +8,3 @@ class InsertToSeriesTest extends InsertToSeriesTestCase {
         return new InsertToSeries($series_id, $item_type, $item_id, $time, $optional);
     }
 }
-?>

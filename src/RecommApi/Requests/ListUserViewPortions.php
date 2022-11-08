@@ -64,4 +64,3 @@ class ListUserViewPortions extends Request {
     }
 
 }
-?>

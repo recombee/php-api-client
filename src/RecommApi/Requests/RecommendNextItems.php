@@ -81,4 +81,3 @@ class RecommendNextItems extends Request {
     }
 
 }
-?>

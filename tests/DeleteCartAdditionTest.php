@@ -8,4 +8,3 @@ class DeleteCartAdditionTest extends DeleteInteractionTestCase {
         return new DeleteCartAddition($user_id, $item_id, $optional);
     }
 }
-?>

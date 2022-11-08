@@ -57,6 +57,3 @@ class RecombeeTestCase extends \PHPUnit\Framework\TestCase
         $this->client->send($requests);
     }
  }
-
-
-?>

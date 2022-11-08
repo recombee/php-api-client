@@ -8,4 +8,3 @@ class AddRatingTest extends AddRatingTestCase {
         return new AddRating($user_id, $item_id, $rating, $optional);
     }
 }
-?>

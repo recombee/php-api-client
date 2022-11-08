@@ -64,4 +64,3 @@ class AddUser extends Request {
     }
 
 }
-?>

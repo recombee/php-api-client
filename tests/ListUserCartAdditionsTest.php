@@ -8,4 +8,3 @@ class ListUserCartAdditionsTest extends ListUserInteractionsTestCase {
         return new ListUserCartAdditions($user_id);
     }
 }
-?>

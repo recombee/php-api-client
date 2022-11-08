@@ -8,4 +8,3 @@ class RemoveFromSeriesTest extends RemoveFromSeriesTestCase {
         return new RemoveFromSeries($series_id, $item_type, $item_id, $time);
     }
 }
-?>

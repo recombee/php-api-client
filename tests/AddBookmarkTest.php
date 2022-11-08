@@ -8,4 +8,3 @@ class AddBookmarkTest extends AddInteractionTestCase {
         return new AddBookmark($user_id, $item_id, $optional);
     }
 }
-?>

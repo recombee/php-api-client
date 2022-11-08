@@ -58,4 +58,3 @@ class ResetDatabase extends Request {
     }
 
 }
-?>

@@ -8,4 +8,3 @@ class AddUserTest extends AddEntityTestCase {
         return new AddUser($user_id);
     }
 }
-?>

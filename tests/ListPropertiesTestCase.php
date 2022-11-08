@@ -22,5 +22,3 @@ abstract class ListPropertiesTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

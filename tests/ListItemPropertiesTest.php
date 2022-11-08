@@ -8,4 +8,3 @@ class ListItemPropertiesTest extends ListPropertiesTestCase {
         return new ListItemProperties();
     }
 }
-?>

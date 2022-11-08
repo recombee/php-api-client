@@ -64,4 +64,3 @@ class ListSeriesItems extends Request {
     }
 
 }
-?>

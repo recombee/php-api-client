@@ -8,4 +8,3 @@ class ListUserPropertiesTest extends ListPropertiesTestCase {
         return new ListUserProperties();
     }
 }
-?>

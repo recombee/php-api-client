@@ -8,4 +8,3 @@ class DeleteRatingTest extends DeleteInteractionTestCase {
         return new DeleteRating($user_id, $item_id, $optional);
     }
 }
-?>

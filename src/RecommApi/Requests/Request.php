@@ -97,5 +97,3 @@ abstract class Request {
         $this->ensure_https = $ensure_https;
     }
 }
-
-?>

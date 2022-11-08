@@ -8,4 +8,3 @@ class ListItemDetailViewsTest extends ListItemInteractionsTestCase {
         return new ListItemDetailViews($item_id);
     }
 }
-?>

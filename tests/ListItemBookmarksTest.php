@@ -8,4 +8,3 @@ class ListItemBookmarksTest extends ListItemInteractionsTestCase {
         return new ListItemBookmarks($item_id);
     }
 }
-?>

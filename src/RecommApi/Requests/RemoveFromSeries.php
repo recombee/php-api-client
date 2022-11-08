@@ -85,4 +85,3 @@ class RemoveFromSeries extends Request {
     }
 
 }
-?>

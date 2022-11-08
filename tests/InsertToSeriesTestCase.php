@@ -42,5 +42,3 @@ abstract class InsertToSeriesTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

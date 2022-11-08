@@ -8,4 +8,3 @@ class ListItemCartAdditionsTest extends ListItemInteractionsTestCase {
         return new ListItemCartAdditions($item_id);
     }
 }
-?>

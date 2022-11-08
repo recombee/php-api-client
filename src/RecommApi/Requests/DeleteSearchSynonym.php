@@ -64,4 +64,3 @@ class DeleteSearchSynonym extends Request {
     }
 
 }
-?>

@@ -54,5 +54,3 @@ abstract class DeleteEntityTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

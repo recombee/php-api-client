@@ -31,5 +31,3 @@ abstract class DeleteViewPortionTestCase extends InteractionsTestCase {
 
     }
 }
-
-?>

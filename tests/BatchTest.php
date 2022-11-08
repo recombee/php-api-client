@@ -65,5 +65,3 @@ class BatchTest extends RecombeeTestCase {
             $this->assertEquals(201, $r['code']);
     }
 }
-
-?>

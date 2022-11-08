@@ -8,4 +8,3 @@ class ListGroupsTest extends ListEntitiesTestCase {
         return new ListGroups();
     }
 }
-?>

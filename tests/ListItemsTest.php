@@ -8,4 +8,3 @@ class ListItemsTest extends ListEntitiesWithPropertiesTestCase {
         return new ListItems($optional);
     }
 }
-?>

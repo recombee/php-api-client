@@ -8,4 +8,3 @@ class GetItemValuesTest extends GetValuesTestCase {
         return new GetItemValues($item_id);
     }
 }
-?>

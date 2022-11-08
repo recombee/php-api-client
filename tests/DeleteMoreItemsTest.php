@@ -8,4 +8,3 @@ class DeleteMoreItemsTest extends DeleteMoreItemsTestCase {
         return new DeleteMoreItems($filter);
     }
 }
-?>
