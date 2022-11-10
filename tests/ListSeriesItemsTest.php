@@ -8,4 +8,3 @@ class ListSeriesItemsTest extends ListSetItemsTestCase {
         return new ListSeriesItems($series_id);
     }
 }
-?>

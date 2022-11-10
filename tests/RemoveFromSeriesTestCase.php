@@ -45,5 +45,3 @@ abstract class RemoveFromSeriesTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

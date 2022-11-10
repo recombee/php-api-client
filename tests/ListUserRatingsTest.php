@@ -8,4 +8,3 @@ class ListUserRatingsTest extends ListUserInteractionsTestCase {
         return new ListUserRatings($user_id);
     }
 }
-?>

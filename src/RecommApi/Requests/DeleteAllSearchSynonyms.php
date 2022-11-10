@@ -58,4 +58,3 @@ class DeleteAllSearchSynonyms extends Request {
     }
 
 }
-?>

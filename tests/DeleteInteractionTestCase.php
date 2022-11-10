@@ -31,5 +31,3 @@ abstract class DeleteInteractionTestCase extends InteractionsTestCase {
 
     }
 }
-
-?>

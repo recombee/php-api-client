@@ -8,4 +8,3 @@ class DeleteViewPortionTest extends DeleteViewPortionTestCase {
         return new DeleteViewPortion($user_id, $item_id, $optional);
     }
 }
-?>

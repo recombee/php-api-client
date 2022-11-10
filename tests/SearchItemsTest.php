@@ -8,4 +8,3 @@ class SearchItemsTest extends SearchTestCase {
         return new SearchItems($user_id, $search_query, $count, $optional);
     }
 }
-?>

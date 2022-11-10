@@ -8,4 +8,3 @@ class ListUsersTest extends ListEntitiesWithPropertiesTestCase {
         return new ListUsers($optional);
     }
 }
-?>

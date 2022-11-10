@@ -8,4 +8,3 @@ class DeleteItemTest extends DeleteEntityTestCase {
         return new DeleteItem($item_id);
     }
 }
-?>

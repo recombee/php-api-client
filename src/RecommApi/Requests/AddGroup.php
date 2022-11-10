@@ -64,4 +64,3 @@ class AddGroup extends Request {
     }
 
 }
-?>

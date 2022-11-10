@@ -8,4 +8,3 @@ class DeleteBookmarkTest extends DeleteInteractionTestCase {
         return new DeleteBookmark($user_id, $item_id, $optional);
     }
 }
-?>

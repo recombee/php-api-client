@@ -85,5 +85,3 @@ abstract class SetViewPortionTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

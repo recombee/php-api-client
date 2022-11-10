@@ -8,4 +8,3 @@ class ListItemRatingsTest extends ListItemInteractionsTestCase {
         return new ListItemRatings($item_id);
     }
 }
-?>

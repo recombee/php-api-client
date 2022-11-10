@@ -8,4 +8,3 @@ class MergeUsersTest extends MergeUsersTestCase {
         return new MergeUsers($target_user_id, $source_user_id, $optional);
     }
 }
-?>

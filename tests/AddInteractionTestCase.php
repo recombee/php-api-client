@@ -78,5 +78,3 @@ abstract class AddInteractionTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

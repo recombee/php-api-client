@@ -8,4 +8,3 @@ class ListUserBookmarksTest extends ListUserInteractionsTestCase {
         return new ListUserBookmarks($user_id);
     }
 }
-?>

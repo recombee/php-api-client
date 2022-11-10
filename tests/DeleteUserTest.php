@@ -8,4 +8,3 @@ class DeleteUserTest extends DeleteEntityTestCase {
         return new DeleteUser($user_id);
     }
 }
-?>

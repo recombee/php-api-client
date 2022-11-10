@@ -95,4 +95,3 @@ class MergeUsers extends Request {
     }
 
 }
-?>

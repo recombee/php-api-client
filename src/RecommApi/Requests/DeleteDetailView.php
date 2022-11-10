@@ -96,4 +96,3 @@ class DeleteDetailView extends Request {
     }
 
 }
-?>

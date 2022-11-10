@@ -8,4 +8,3 @@ class AddDetailViewTest extends AddInteractionTestCase {
         return new AddDetailView($user_id, $item_id, $optional);
     }
 }
-?>

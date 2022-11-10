@@ -22,5 +22,3 @@ abstract class ListEntitiesTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

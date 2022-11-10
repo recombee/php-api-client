@@ -24,5 +24,3 @@ abstract class ListSetItemsTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

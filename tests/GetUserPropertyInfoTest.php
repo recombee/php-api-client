@@ -8,4 +8,3 @@ class GetUserPropertyInfoTest extends GetPropertyInfoTestCase {
         return new GetUserPropertyInfo($property_name);
     }
 }
-?>

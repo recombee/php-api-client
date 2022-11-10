@@ -64,4 +64,3 @@ class ListItemDetailViews extends Request {
     }
 
 }
-?>

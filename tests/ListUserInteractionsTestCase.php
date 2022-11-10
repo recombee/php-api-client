@@ -24,5 +24,3 @@ abstract class ListUserInteractionsTestCase extends InteractionsTestCase {
 
     }
 }
-
-?>

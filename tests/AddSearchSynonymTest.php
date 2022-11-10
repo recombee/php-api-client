@@ -8,4 +8,3 @@ class AddSearchSynonymTest extends AddSearchSynonymTestCase {
         return new AddSearchSynonym($term, $synonym, $optional);
     }
 }
-?>

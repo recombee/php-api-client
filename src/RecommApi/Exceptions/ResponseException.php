@@ -32,4 +32,3 @@ class ResponseException extends ApiException{
         parent::__construct($description, $status_code, $previous);
     }
 }
-?>

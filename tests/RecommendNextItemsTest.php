@@ -8,4 +8,3 @@ class RecommendNextItemsTest extends NextItemsRecommendationTestCase {
         return new RecommendNextItems($recomm_id, $count);
     }
 }
-?>

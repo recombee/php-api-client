@@ -92,4 +92,3 @@ class ListSearchSynonyms extends Request {
     }
 
 }
-?>

@@ -33,5 +33,3 @@ abstract class AddSearchSynonymTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

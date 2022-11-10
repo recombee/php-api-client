@@ -24,5 +24,3 @@ abstract class ListItemInteractionsTestCase extends InteractionsTestCase {
 
     }
 }
-
-?>

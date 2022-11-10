@@ -8,4 +8,3 @@ class RecommendItemsToItemTest extends ItemToItemRecommendationTestCase {
         return new RecommendItemsToItem($item_id, $target_user_id, $count, $optional);
     }
 }
-?>

@@ -27,5 +27,3 @@ abstract class ListEntitiesWithPropertiesTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

@@ -8,4 +8,3 @@ class AddItemTest extends AddEntityTestCase {
         return new AddItem($item_id);
     }
 }
-?>

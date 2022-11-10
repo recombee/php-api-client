@@ -8,4 +8,3 @@ class GetItemPropertyInfoTest extends GetPropertyInfoTestCase {
         return new GetItemPropertyInfo($property_name);
     }
 }
-?>

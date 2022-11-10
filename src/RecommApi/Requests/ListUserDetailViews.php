@@ -64,4 +64,3 @@ class ListUserDetailViews extends Request {
     }
 
 }
-?>

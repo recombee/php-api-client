@@ -8,4 +8,3 @@ class SetUserValuesTest extends SetValuesTestCase {
         return new SetUserValues($user_id, $values, $optional);
     }
 }
-?>

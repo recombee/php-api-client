@@ -118,4 +118,3 @@ class Batch extends Request {
         return $bh;
     } 
 }
-?>

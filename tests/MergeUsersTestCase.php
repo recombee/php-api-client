@@ -35,5 +35,3 @@ abstract class MergeUsersTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

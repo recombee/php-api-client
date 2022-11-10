@@ -136,4 +136,3 @@ class AddDetailView extends Request {
     }
 
 }
-?>

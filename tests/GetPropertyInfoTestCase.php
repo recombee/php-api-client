@@ -25,5 +25,3 @@ abstract class GetPropertyInfoTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

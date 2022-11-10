@@ -8,4 +8,3 @@ class GetUserValuesTest extends GetValuesTestCase {
         return new GetUserValues($user_id);
     }
 }
-?>

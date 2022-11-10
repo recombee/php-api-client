@@ -38,4 +38,3 @@ abstract class RecommendationDataTestCase extends RecombeeTestCase {
         $this->client->send(new Reqs\Batch($my_purchases));
     }
 }
-?>

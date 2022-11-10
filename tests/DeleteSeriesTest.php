@@ -8,4 +8,3 @@ class DeleteSeriesTest extends DeleteEntityTestCase {
         return new DeleteSeries($series_id);
     }
 }
-?>

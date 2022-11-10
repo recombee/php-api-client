@@ -46,5 +46,3 @@ abstract class AddEntityTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

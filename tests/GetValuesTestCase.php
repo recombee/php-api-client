@@ -23,5 +23,3 @@ abstract class GetValuesTestCase extends RecombeeTestCase {
 
     }
 }
-
-?>

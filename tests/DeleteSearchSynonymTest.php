@@ -8,4 +8,3 @@ class DeleteSearchSynonymTest extends DeleteSearchSynonymTestCase {
         return new DeleteSearchSynonym($id);
     }
 }
-?>

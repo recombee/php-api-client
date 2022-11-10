@@ -8,4 +8,3 @@ class DeleteGroupTest extends DeleteEntityTestCase {
         return new DeleteGroup($group_id);
     }
 }
-?>

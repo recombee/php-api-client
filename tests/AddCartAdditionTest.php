@@ -8,4 +8,3 @@ class AddCartAdditionTest extends AddInteractionTestCase {
         return new AddCartAddition($user_id, $item_id, $optional);
     }
 }
-?>

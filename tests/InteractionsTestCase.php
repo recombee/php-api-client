@@ -24,5 +24,3 @@ class InteractionsTestCase extends RecombeeTestCase {
         $this->client->send($requests);
     }
 }
-
-?>

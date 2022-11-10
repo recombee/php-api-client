@@ -64,4 +64,3 @@ class ListUserCartAdditions extends Request {
     }
 
 }
-?>

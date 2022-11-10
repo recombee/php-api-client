@@ -78,4 +78,3 @@ class RemoveFromGroup extends Request {
     }
 
 }
-?>

@@ -64,4 +64,3 @@ class GetItemValues extends Request {
     }
 
 }
-?>

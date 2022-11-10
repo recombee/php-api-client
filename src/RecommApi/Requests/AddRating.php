@@ -133,4 +133,3 @@ class AddRating extends Request {
     }
 
 }
-?>
