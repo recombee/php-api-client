@@ -46,7 +46,12 @@ class Client{
         $this->base_uri = $this->getBaseUri();
         $this->user_agent = $this->getUserAgent();
 
-        $this->guzzle_client = new \GuzzleHttp\Client();
+        if (isset($options['guzzleClient'])) {
+            if (!($options['guzzleClient'] instanceof \GuzzleHttp\ClientInterface)) throw new \InvalidArgumentException("option guzzleClient must be instance of \GuzzleHttp\ClientInterface.");
+            $this->guzzle_client = $options['guzzleClient'];
+        } else {
+            $this->guzzle_client = new \GuzzleHttp\Client();
+        }
     }
 
     protected function getRegionalBaseUri($region) {
