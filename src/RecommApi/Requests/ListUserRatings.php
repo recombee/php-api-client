@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the ratings ever submitted by a given user.
+ * Lists all the ratings ever submitted by the given user.
  */
 class ListUserRatings extends Request {
 

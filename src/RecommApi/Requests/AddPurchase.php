@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adds a purchase of a given item made by a given user.
+ * Adds a purchase of the given item made by the given user.
  */
 class AddPurchase extends Request {
 
@@ -31,15 +31,15 @@ class AddPurchase extends Request {
      */
     protected $cascade_create;
     /**
-     * @var float $amount Amount (number) of purchased items. The default is 1. For example if `user-x` purchases two `item-y` during a single order (session...), the `amount` should equal to 2.
+     * @var float $amount Amount (number) of purchased items. The default is 1. For example, if `user-x` purchases two `item-y` during a single order (session...), the `amount` should equal 2.
      */
     protected $amount;
     /**
-     * @var float $price Price paid by the user for the item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     * @var float $price Price paid by the user for the item. If `amount` is greater than 1, the sum of prices of all the items should be given.
      */
     protected $price;
     /**
-     * @var float $profit Your profit from the purchased item. The profit is natural in e-commerce domain (for example if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30), but is applicable also in other domains (for example at a news company it may be income from displayed advertisement on article page). If `amount` is greater than 1, sum of profit of all the items should be given.
+     * @var float $profit Your profit from the purchased item. The profit is natural in the e-commerce domain (for example, if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30) but is also applicable in other domains (for example, at a news company it may be income from a displayed advertisement on article page). If `amount` is greater than 1, the sum of profit of all the items should be given.
      */
     protected $profit;
     /**
@@ -69,13 +69,13 @@ class AddPurchase extends Request {
      *         - Description: Sets whether the given user/item should be created if not present in the database.
      *     - *amount*
      *         - Type: float
-     *         - Description: Amount (number) of purchased items. The default is 1. For example if `user-x` purchases two `item-y` during a single order (session...), the `amount` should equal to 2.
+     *         - Description: Amount (number) of purchased items. The default is 1. For example, if `user-x` purchases two `item-y` during a single order (session...), the `amount` should equal 2.
      *     - *price*
      *         - Type: float
-     *         - Description: Price paid by the user for the item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     *         - Description: Price paid by the user for the item. If `amount` is greater than 1, the sum of prices of all the items should be given.
      *     - *profit*
      *         - Type: float
-     *         - Description: Your profit from the purchased item. The profit is natural in e-commerce domain (for example if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30), but is applicable also in other domains (for example at a news company it may be income from displayed advertisement on article page). If `amount` is greater than 1, sum of profit of all the items should be given.
+     *         - Description: Your profit from the purchased item. The profit is natural in the e-commerce domain (for example, if `user-x` purchases `item-y` for $100 and the gross margin is 30 %, then the profit is $30) but is also applicable in other domains (for example, at a news company it may be income from a displayed advertisement on article page). If `amount` is greater than 1, the sum of profit of all the items should be given.
      *     - *recommId*
      *         - Type: string
      *         - Description: If this purchase is based on a recommendation request, `recommId` is the id of the clicked recommendation.

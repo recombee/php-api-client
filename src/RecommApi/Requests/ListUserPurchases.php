@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the purchases ever made by a given user.
+ * Lists all the purchases ever made by the given user.
  */
 class ListUserPurchases extends Request {
 

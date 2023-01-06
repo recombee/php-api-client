@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deleting an user property is roughly equivalent to removing a column from the table of users.
+ * Deleting a user property is roughly equivalent to removing a column from the table of users.
  */
 class DeleteUserProperty extends Request {
 

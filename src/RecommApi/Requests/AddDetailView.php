@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adds a detail view of a given item made by a given user.
+ * Adds a detail view of the given item made by the given user.
  */
 class AddDetailView extends Request {
 

@@ -10,8 +10,8 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adds new item of given `itemId` to the items catalog.
- * All the item properties for the newly created items are set null.
+ * Adds new item of the given `itemId` to the items catalog.
+ * All the item properties for the newly created items are set to null.
  */
 class AddItem extends Request {
 

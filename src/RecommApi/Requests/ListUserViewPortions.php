@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the view portions ever submitted by a given user.
+ * Lists all the view portions ever submitted by the given user.
  */
 class ListUserViewPortions extends Request {
 

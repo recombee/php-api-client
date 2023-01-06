@@ -10,18 +10,18 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the ever-made cart addition of a given item.
+ * Lists all the ever-made cart additions of the given item.
  */
 class ListItemCartAdditions extends Request {
 
     /**
-     * @var string $item_id ID of the item of which the cart addition are to be listed.
+     * @var string $item_id ID of the item whose cart additions are to be listed.
      */
     protected $item_id;
 
     /**
      * Construct the request
-     * @param string $item_id ID of the item of which the cart addition are to be listed.
+     * @param string $item_id ID of the item whose cart additions are to be listed.
      */
     public function __construct($item_id) {
         $this->item_id = $item_id;

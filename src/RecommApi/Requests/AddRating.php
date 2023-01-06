@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adds a rating of given item made by a given user.
+ * Adds a rating of the given item made by the given user.
  */
 class AddRating extends Request {
 

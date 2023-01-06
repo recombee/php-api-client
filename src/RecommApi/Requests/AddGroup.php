@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Creates new group in the database.
+ * Creates a new group in the database.
  */
 class AddGroup extends Request {
 

@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Inserts an existing item/series into series of given seriesId at position determined by time.
+ * Inserts an existing item/series into a series of the given seriesId at a position determined by time.
  */
 class InsertToSeries extends Request {
 
@@ -31,7 +31,7 @@ class InsertToSeries extends Request {
      */
     protected $time;
     /**
-     * @var bool $cascade_create Indicates that any non-existing entity specified within the request should be created (as is corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set true, the behavior also depends on the `itemType`. Either item or series may be created if not present in the database.
+     * @var bool $cascade_create Indicates that any non-existing entity specified within the request should be created (as if corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set to true, the behavior also depends on the `itemType`. Either item or series may be created if not present in the database.
      */
     protected $cascade_create;
     /**
@@ -49,7 +49,7 @@ class InsertToSeries extends Request {
      * - Allowed parameters:
      *     - *cascadeCreate*
      *         - Type: bool
-     *         - Description: Indicates that any non-existing entity specified within the request should be created (as is corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set true, the behavior also depends on the `itemType`. Either item or series may be created if not present in the database.
+     *         - Description: Indicates that any non-existing entity specified within the request should be created (as if corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set to true, the behavior also depends on the `itemType`. Either item or series may be created if not present in the database.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($series_id, $item_type, $item_id, $time, $optional = array()) {

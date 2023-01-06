@@ -10,18 +10,18 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Get all the current property values of a given item.
+ * Gets all the current property values of the given item.
  */
 class GetItemValues extends Request {
 
     /**
-     * @var string $item_id ID of the item properties of which are to be obtained.
+     * @var string $item_id ID of the item whose properties are to be obtained.
      */
     protected $item_id;
 
     /**
      * Construct the request
-     * @param string $item_id ID of the item properties of which are to be obtained.
+     * @param string $item_id ID of the item whose properties are to be obtained.
      */
     public function __construct($item_id) {
         $this->item_id = $item_id;

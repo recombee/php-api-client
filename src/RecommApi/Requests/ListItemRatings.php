@@ -10,18 +10,18 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the ratings of an item ever submitted by different users.
+ * Lists all the ratings of an item ever submitted by different users.
  */
 class ListItemRatings extends Request {
 
     /**
-     * @var string $item_id ID of the item of which the ratings are to be listed.
+     * @var string $item_id ID of the item whose ratings are to be listed.
      */
     protected $item_id;
 
     /**
      * Construct the request
-     * @param string $item_id ID of the item of which the ratings are to be listed.
+     * @param string $item_id ID of the item whose ratings are to be listed.
      */
     public function __construct($item_id) {
         $this->item_id = $item_id;

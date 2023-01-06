@@ -10,18 +10,18 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the items present in the given series, sorted according to their time index values.
+ * Lists all the items present in the given series, sorted according to their time index values.
  */
 class ListSeriesItems extends Request {
 
     /**
-     * @var string $series_id ID of the series items of which are to be listed.
+     * @var string $series_id ID of the series whose items are to be listed.
      */
     protected $series_id;
 
     /**
      * Construct the request
-     * @param string $series_id ID of the series items of which are to be listed.
+     * @param string $series_id ID of the series whose items are to be listed.
      */
     public function __construct($series_id) {
         $this->series_id = $series_id;

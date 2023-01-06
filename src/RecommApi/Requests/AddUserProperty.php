@@ -10,12 +10,12 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adding an user property is somehow equivalent to adding a column to the table of users. The users may be characterized by various properties of different types.
+ * Adding a user property is somehow equivalent to adding a column to the table of users. The users may be characterized by various properties of different types.
  */
 class AddUserProperty extends Request {
 
     /**
-     * @var string $property_name Name of the user property to be created. Currently, the following names are reserved:`id`, `userid`, case insensitively. Also, the length of the property name must not exceed 63 characters.
+     * @var string $property_name Name of the user property to be created. Currently, the following names are reserved: `id`, `userid`, case-insensitively. Also, the length of the property name must not exceed 63 characters.
      */
     protected $property_name;
     /**
@@ -31,7 +31,7 @@ class AddUserProperty extends Request {
 
     /**
      * Construct the request
-     * @param string $property_name Name of the user property to be created. Currently, the following names are reserved:`id`, `userid`, case insensitively. Also, the length of the property name must not exceed 63 characters.
+     * @param string $property_name Name of the user property to be created. Currently, the following names are reserved: `id`, `userid`, case-insensitively. Also, the length of the property name must not exceed 63 characters.
      * @param string $type Value type of the user property to be created. One of: `int`, `double`, `string`, `boolean`, `timestamp`, `set`.
      * * `int` - Signed integer number.
      * * `double` - Floating point number. It uses 64-bit base-2 format (IEEE 754 standard).

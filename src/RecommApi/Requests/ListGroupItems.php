@@ -15,13 +15,13 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class ListGroupItems extends Request {
 
     /**
-     * @var string $group_id ID of the group items of which are to be listed.
+     * @var string $group_id ID of the group whose items are to be listed.
      */
     protected $group_id;
 
     /**
      * Construct the request
-     * @param string $group_id ID of the group items of which are to be listed.
+     * @param string $group_id ID of the group whose items are to be listed.
      */
     public function __construct($group_id) {
         $this->group_id = $group_id;

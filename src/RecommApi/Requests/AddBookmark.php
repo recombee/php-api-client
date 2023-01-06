@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adds a bookmark of a given item made by a given user.
+ * Adds a bookmark of the given item made by the given user.
  */
 class AddBookmark extends Request {
 

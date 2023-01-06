@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adds a cart addition of a given item made by a given user.
+ * Adds a cart addition of the given item made by the given user.
  */
 class AddCartAddition extends Request {
 
@@ -31,11 +31,11 @@ class AddCartAddition extends Request {
      */
     protected $cascade_create;
     /**
-     * @var float $amount Amount (number) added to cart. The default is 1. For example if `user-x` adds two `item-y` during a single order (session...), the `amount` should equal to 2.
+     * @var float $amount Amount (number) added to cart. The default is 1. For example, if `user-x` adds two `item-y` during a single order (session...), the `amount` should equal 2.
      */
     protected $amount;
     /**
-     * @var float $price Price of the added item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     * @var float $price Price of the added item. If `amount` is greater than 1, the sum of prices of all the items should be given.
      */
     protected $price;
     /**
@@ -65,10 +65,10 @@ class AddCartAddition extends Request {
      *         - Description: Sets whether the given user/item should be created if not present in the database.
      *     - *amount*
      *         - Type: float
-     *         - Description: Amount (number) added to cart. The default is 1. For example if `user-x` adds two `item-y` during a single order (session...), the `amount` should equal to 2.
+     *         - Description: Amount (number) added to cart. The default is 1. For example, if `user-x` adds two `item-y` during a single order (session...), the `amount` should equal 2.
      *     - *price*
      *         - Type: float
-     *         - Description: Price of the added item. If `amount` is greater than 1, sum of prices of all the items should be given.
+     *         - Description: Price of the added item. If `amount` is greater than 1, the sum of prices of all the items should be given.
      *     - *recommId*
      *         - Type: string
      *         - Description: If this cart addition is based on a recommendation request, `recommId` is the id of the clicked recommendation.

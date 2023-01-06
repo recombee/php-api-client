@@ -10,18 +10,18 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * List all the ever-made bookmarks of a given item.
+ * Lists all the ever-made bookmarks of the given item.
  */
 class ListItemBookmarks extends Request {
 
     /**
-     * @var string $item_id ID of the item of which the bookmarks are to be listed.
+     * @var string $item_id ID of the item whose bookmarks are to be listed.
      */
     protected $item_id;
 
     /**
      * Construct the request
-     * @param string $item_id ID of the item of which the bookmarks are to be listed.
+     * @param string $item_id ID of the item whose bookmarks are to be listed.
      */
     public function __construct($item_id) {
         $this->item_id = $item_id;

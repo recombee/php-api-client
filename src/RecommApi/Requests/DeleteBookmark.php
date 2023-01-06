@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes a bookmark uniquely specified by `userId`, `itemId`, and `timestamp` or all the bookmarks with given `userId` and `itemId` if `timestamp` is omitted.
+ * Deletes a bookmark uniquely specified by `userId`, `itemId`, and `timestamp` or all the bookmarks with the given `userId` and `itemId` if `timestamp` is omitted.
  */
 class DeleteBookmark extends Request {
 
@@ -19,11 +19,11 @@ class DeleteBookmark extends Request {
      */
     protected $user_id;
     /**
-     * @var string $item_id ID of the item of which was bookmarked.
+     * @var string $item_id ID of the item which was bookmarked.
      */
     protected $item_id;
     /**
-     * @var float $timestamp Unix timestamp of the bookmark. If the `timestamp` is omitted, then all the bookmarks with given `userId` and `itemId` are deleted.
+     * @var float $timestamp Unix timestamp of the bookmark. If the `timestamp` is omitted, then all the bookmarks with the given `userId` and `itemId` are deleted.
      */
     protected $timestamp;
     /**
@@ -34,12 +34,12 @@ class DeleteBookmark extends Request {
     /**
      * Construct the request
      * @param string $user_id ID of the user who made the bookmark.
-     * @param string $item_id ID of the item of which was bookmarked.
+     * @param string $item_id ID of the item which was bookmarked.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
      *     - *timestamp*
      *         - Type: float
-     *         - Description: Unix timestamp of the bookmark. If the `timestamp` is omitted, then all the bookmarks with given `userId` and `itemId` are deleted.
+     *         - Description: Unix timestamp of the bookmark. If the `timestamp` is omitted, then all the bookmarks with the given `userId` and `itemId` are deleted.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {

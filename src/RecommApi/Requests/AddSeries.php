@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Creates new series in the database.
+ * Creates a new series in the database.
  */
 class AddSeries extends Request {
 

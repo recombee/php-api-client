@@ -10,18 +10,18 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Get all the current property values of a given user.
+ * Gets all the current property values of the given user.
  */
 class GetUserValues extends Request {
 
     /**
-     * @var string $user_id ID of the user properties of which are to be obtained.
+     * @var string $user_id ID of the user whose properties are to be obtained.
      */
     protected $user_id;
 
     /**
      * Construct the request
-     * @param string $user_id ID of the user properties of which are to be obtained.
+     * @param string $user_id ID of the user whose properties are to be obtained.
      */
     public function __construct($user_id) {
         $this->user_id = $user_id;

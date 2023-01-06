@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes an existing purchase uniquely specified by `userId`, `itemId`, and `timestamp` or all the purchases with given `userId` and `itemId` if `timestamp` is omitted.
+ * Deletes an existing purchase uniquely specified by `userId`, `itemId`, and `timestamp` or all the purchases with the given `userId` and `itemId` if `timestamp` is omitted.
  */
 class DeletePurchase extends Request {
 
@@ -19,11 +19,11 @@ class DeletePurchase extends Request {
      */
     protected $user_id;
     /**
-     * @var string $item_id ID of the item of which was purchased.
+     * @var string $item_id ID of the item which was purchased.
      */
     protected $item_id;
     /**
-     * @var float $timestamp Unix timestamp of the purchase. If the `timestamp` is omitted, then all the purchases with given `userId` and `itemId` are deleted.
+     * @var float $timestamp Unix timestamp of the purchase. If the `timestamp` is omitted, then all the purchases with the given `userId` and `itemId` are deleted.
      */
     protected $timestamp;
     /**
@@ -34,12 +34,12 @@ class DeletePurchase extends Request {
     /**
      * Construct the request
      * @param string $user_id ID of the user who made the purchase.
-     * @param string $item_id ID of the item of which was purchased.
+     * @param string $item_id ID of the item which was purchased.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
      *     - *timestamp*
      *         - Type: float
-     *         - Description: Unix timestamp of the purchase. If the `timestamp` is omitted, then all the purchases with given `userId` and `itemId` are deleted.
+     *         - Description: Unix timestamp of the purchase. If the `timestamp` is omitted, then all the purchases with the given `userId` and `itemId` are deleted.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
