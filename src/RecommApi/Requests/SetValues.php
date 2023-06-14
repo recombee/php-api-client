@@ -25,6 +25,7 @@ abstract class SetValues extends Request {
      */
     protected $values;
 
+    protected $optional;
 
     /**
      * @var bool $cascade_create Sets whether the given user/item should be created if not present in the database.
