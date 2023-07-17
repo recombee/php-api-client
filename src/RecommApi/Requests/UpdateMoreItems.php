@@ -38,7 +38,7 @@ class UpdateMoreItems extends Request {
     public function __construct($filter, $changes) {
         $this->filter = $filter;
         $this->changes = $changes;
-        $this->timeout = 1000;
+        $this->timeout = 100000;
         $this->ensure_https = false;
     }
 

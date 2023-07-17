@@ -25,6 +25,9 @@ abstract class SetValues extends Request {
      */
     protected $values;
 
+    /**
+     * @var array $optional Optional parameters of the request. An array containing pairs name of the parameter => value.
+     */
     protected $optional;
 
     /**

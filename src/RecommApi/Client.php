@@ -22,6 +22,7 @@ class Client{
     protected $protocol;
     protected $base_uri;
     protected $options;
+    protected $user_agent;
     protected $guzzle_client;
 
     /**
@@ -85,7 +86,7 @@ class Client{
     }
 
     protected function getUserAgent() {
-        $user_agent = 'recombee-php-api-client/4.1.0';
+        $user_agent = 'recombee-php-api-client/4.1.1';
         if (isset($this->options['serviceName']))
             $user_agent .= ' '.($this->options['serviceName']);
         return $user_agent;
