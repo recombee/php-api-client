@@ -25,6 +25,11 @@ class Batch extends Request {
     public $requests;
 
     /**
+     * @var array Array containing values of optional parameters
+     */
+    protected $optional;
+
+    /**
      * Construct the Batch request
      * @param Request[] $requests Array of Requests.
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
