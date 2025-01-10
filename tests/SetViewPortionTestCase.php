@@ -47,18 +47,6 @@ abstract class SetViewPortionTestCase extends RecombeeTestCase {
             $this->assertEquals(404, $e->status_code);
          }
 
-         //it fails with invalid time
-         $req = $this->createRequest('entity_id','entity_id',0,['timestamp' => -15]);
-         try {
-
-             $this->client->send($req);
-             throw new \Exception('Exception was not thrown');
-         }
-         catch(Exc\ResponseException $e)
-         {
-            $this->assertEquals(400, $e->status_code);
-         }
-
          //it fails with invalid portion
          $req = $this->createRequest('entity_id','entity_id',-2);
          try {

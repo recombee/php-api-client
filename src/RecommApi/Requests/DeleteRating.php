@@ -53,7 +53,7 @@ class DeleteRating extends Request {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
-        $this->timeout = 1000;
+        $this->timeout = 3000;
         $this->ensure_https = false;
     }
 

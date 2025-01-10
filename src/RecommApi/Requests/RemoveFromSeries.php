@@ -26,24 +26,18 @@ class RemoveFromSeries extends Request {
      * @var string $item_id ID of the item iff `itemType` is `item`. ID of the series iff `itemType` is `series`.
      */
     protected $item_id;
-    /**
-     * @var float $time Time index of the item to be removed.
-     */
-    protected $time;
 
     /**
      * Construct the request
      * @param string $series_id ID of the series from which a series item is to be removed.
      * @param string $item_type Type of the item to be removed.
      * @param string $item_id ID of the item iff `itemType` is `item`. ID of the series iff `itemType` is `series`.
-     * @param float $time Time index of the item to be removed.
      */
-    public function __construct($series_id, $item_type, $item_id, $time) {
+    public function __construct($series_id, $item_type, $item_id) {
         $this->series_id = $series_id;
         $this->item_type = $item_type;
         $this->item_id = $item_id;
-        $this->time = $time;
-        $this->timeout = 1000;
+        $this->timeout = 3000;
         $this->ensure_https = false;
     }
 
@@ -69,9 +63,6 @@ class RemoveFromSeries extends Request {
      */
     public function getQueryParameters() {
         $params = array();
-        $params['itemType'] = $this->item_type;
-        $params['itemId'] = $this->item_id;
-        $params['time'] = $this->time;
         return $params;
     }
 
@@ -81,6 +72,8 @@ class RemoveFromSeries extends Request {
      */
     public function getBodyParameters() {
         $p = array();
+        $p['itemType'] = $this->item_type;
+        $p['itemId'] = $this->item_id;
         return $p;
     }
 

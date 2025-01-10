@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Adding an item property is somehow equivalent to adding a column to the table of items. The items may be characterized by various properties of different types.
+ * Adding an item property is somewhat equivalent to adding a column to the table of items. The items may be characterized by various properties of different types.
  */
 class AddItemProperty extends Request {
 

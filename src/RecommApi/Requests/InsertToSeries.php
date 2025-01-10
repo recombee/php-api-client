@@ -31,7 +31,7 @@ class InsertToSeries extends Request {
      */
     protected $time;
     /**
-     * @var bool $cascade_create Indicates that any non-existing entity specified within the request should be created (as if corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set to true, the behavior also depends on the `itemType`. Either item or series may be created if not present in the database.
+     * @var bool $cascade_create Indicates that any non-existing entity specified within the request should be created (as if corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set to true, the behavior also depends on the `itemType`. In case of `item`, an item is created, in case of `series` a series + corresponding item with the same ID is created.
      */
     protected $cascade_create;
     /**
@@ -49,7 +49,7 @@ class InsertToSeries extends Request {
      * - Allowed parameters:
      *     - *cascadeCreate*
      *         - Type: bool
-     *         - Description: Indicates that any non-existing entity specified within the request should be created (as if corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set to true, the behavior also depends on the `itemType`. Either item or series may be created if not present in the database.
+     *         - Description: Indicates that any non-existing entity specified within the request should be created (as if corresponding PUT requests were invoked). This concerns both the `seriesId` and the `itemId`. If `cascadeCreate` is set to true, the behavior also depends on the `itemType`. In case of `item`, an item is created, in case of `series` a series + corresponding item with the same ID is created.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($series_id, $item_type, $item_id, $time, $optional = array()) {
@@ -65,7 +65,7 @@ class InsertToSeries extends Request {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
          }
-        $this->timeout = 1000;
+        $this->timeout = 3000;
         $this->ensure_https = false;
     }
 

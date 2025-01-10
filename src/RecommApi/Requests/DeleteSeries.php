@@ -19,14 +19,36 @@ class DeleteSeries extends Request {
      * @var string $series_id ID of the series to be deleted.
      */
     protected $series_id;
+    /**
+     * @var bool $cascade_delete If set to `true`, item with the same ID as seriesId will be also deleted. Default is `false`.
+     */
+    protected $cascade_delete;
+    /**
+     * @var array Array containing values of optional parameters
+     */
+   protected $optional;
 
     /**
      * Construct the request
      * @param string $series_id ID of the series to be deleted.
+     * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
+     * - Allowed parameters:
+     *     - *cascadeDelete*
+     *         - Type: bool
+     *         - Description: If set to `true`, item with the same ID as seriesId will be also deleted. Default is `false`.
+     * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
-    public function __construct($series_id) {
+    public function __construct($series_id, $optional = array()) {
         $this->series_id = $series_id;
-        $this->timeout = 1000;
+        $this->cascade_delete = isset($optional['cascadeDelete']) ? $optional['cascadeDelete'] : null;
+        $this->optional = $optional;
+
+        $existing_optional = array('cascadeDelete');
+        foreach ($this->optional as $key => $value) {
+            if (!in_array($key, $existing_optional))
+                 throw new UnknownOptionalParameterException($key);
+         }
+        $this->timeout = 3000;
         $this->ensure_https = false;
     }
 
@@ -61,6 +83,8 @@ class DeleteSeries extends Request {
      */
     public function getBodyParameters() {
         $p = array();
+        if (isset($this->optional['cascadeDelete']))
+             $p['cascadeDelete'] = $this-> optional['cascadeDelete'];
         return $p;
     }
 

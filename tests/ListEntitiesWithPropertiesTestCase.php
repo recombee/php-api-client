@@ -21,7 +21,7 @@ abstract class ListEntitiesWithPropertiesTestCase extends RecombeeTestCase {
          $this->assertEquals(['entity_id'],$resp);
 
          //it return properties
-         $req = $this->createRequest();
+         $req = $this->createRequest(['returnProperties' => true]);
          $resp = $this->client->send($req);
          $this->assertCount(1, $resp);
 

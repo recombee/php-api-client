@@ -25,7 +25,7 @@ class ResponseException extends ApiException{
      */
     public $description;
 
-    public function __construct($request, $status_code, $description, \Exception $previous = null) {
+    public function __construct($request, $status_code, $description, ?\Exception $previous = null) {
         $this->request = $request;
         $this->status_code = $status_code;
         $this->description = $description;

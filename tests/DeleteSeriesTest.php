@@ -4,7 +4,7 @@ use Recombee\RecommApi\Requests\DeleteSeries;
 
 class DeleteSeriesTest extends DeleteEntityTestCase {
 
-    protected function createRequest($series_id) {
-        return new DeleteSeries($series_id);
+    protected function createRequest($series_id, $optional=array()) {
+        return new DeleteSeries($series_id, $optional);
     }
 }

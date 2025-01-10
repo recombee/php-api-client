@@ -11,28 +11,16 @@ use Recombee\RecommApi\Requests as Reqs;
 
 abstract class RemoveFromSeriesTestCase extends RecombeeTestCase {
 
-    abstract protected function createRequest($series_id,$item_type,$item_id,$time);
+    abstract protected function createRequest($series_id,$item_type,$item_id);
 
     public function testRemoveFromSeries() {
 
-         //it fails when removing item which have different time
-         $req = $this->createRequest('entity_id','item','entity_id',0);
-         try {
-
-             $this->client->send($req);
-             throw new \Exception('Exception was not thrown');
-         }
-         catch(Exc\ResponseException $e)
-         {
-            $this->assertEquals(404, $e->status_code);
-         }
-
          //it does not fail when removing item that is contained in the set
-         $req = $this->createRequest('entity_id','item','entity_id',1);
+         $req = $this->createRequest('entity_id','item','entity_id');
          $resp = $this->client->send($req);
 
          //it fails when removing item that is not contained in the set
-         $req = $this->createRequest('entity_id','item','not_contained',1);
+         $req = $this->createRequest('entity_id','item','not_contained');
          try {
 
              $this->client->send($req);

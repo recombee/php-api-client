@@ -42,8 +42,6 @@ class RecombeeTestCase extends \PHPUnit\Framework\TestCase
             new Reqs\AddItem('entity_id'),
             new Reqs\AddUser('entity_id'),
             new Reqs\AddSeries('entity_id'),
-            new Reqs\AddGroup('entity_id'),
-            new Reqs\InsertToGroup('entity_id', 'item', 'entity_id'),
             new Reqs\InsertToSeries('entity_id', 'item', 'entity_id', 1),
             new Reqs\AddItemProperty('int_property', 'int'),
             new Reqs\AddItemProperty('str_property', 'string'),
