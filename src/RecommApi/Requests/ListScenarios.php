@@ -4,27 +4,21 @@
 */
 
 /**
- * DeleteSearchSynonym request
+ * ListScenarios request
  */
 namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Deletes synonym of the given `id`. This synonym is no longer taken into account in the [Search items](https://docs.recombee.com/api#search-items).
+ * Get all [Scenarios](https://docs.recombee.com/scenarios) of the given database.
  */
-class DeleteSearchSynonym extends Request {
+class ListScenarios extends Request {
 
-    /**
-     * @var string $id ID of the synonym that should be deleted.
-     */
-    protected $id;
 
     /**
      * Construct the request
-     * @param string $id ID of the synonym that should be deleted.
      */
-    public function __construct($id) {
-        $this->id = $id;
+    public function __construct() {
         $this->timeout = 10000;
         $this->ensure_https = false;
     }
@@ -34,7 +28,7 @@ class DeleteSearchSynonym extends Request {
      * @return static Used HTTP method
      */
     public function getMethod() {
-        return Request::HTTP_DELETE;
+        return Request::HTTP_GET;
     }
 
     /**
@@ -42,7 +36,7 @@ class DeleteSearchSynonym extends Request {
      * @return string URI to the endpoint
      */
     public function getPath() {
-        return "/{databaseId}/synonyms/items/{$this->id}";
+        return "/{databaseId}/scenarios/";
     }
 
     /**

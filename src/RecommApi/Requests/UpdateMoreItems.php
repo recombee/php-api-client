@@ -12,7 +12,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 /**
  * Updates (some) property values of all the items that pass the filter.
  * Example: *Setting all the items that are older than a week as unavailable*
- *   ```
+ *   ```json
  *     {
  *       "filter": "'releaseDate' < now() - 7*24*3600",
  *       "changes": {"available": false}
@@ -22,7 +22,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class UpdateMoreItems extends Request {
 
     /**
-     * @var string $filter A [ReQL](https://docs.recombee.com/reql.html) expression, which returns `true` for the items that shall be updated.
+     * @var string $filter A [ReQL](https://docs.recombee.com/reql) expression, which returns `true` for the items that shall be updated.
      */
     protected $filter;
     /**
@@ -32,7 +32,7 @@ class UpdateMoreItems extends Request {
 
     /**
      * Construct the request
-     * @param string $filter A [ReQL](https://docs.recombee.com/reql.html) expression, which returns `true` for the items that shall be updated.
+     * @param string $filter A [ReQL](https://docs.recombee.com/reql) expression, which returns `true` for the items that shall be updated.
      * @param array $changes A dictionary where the keys are properties that shall be updated.
      */
     public function __construct($filter, $changes) {

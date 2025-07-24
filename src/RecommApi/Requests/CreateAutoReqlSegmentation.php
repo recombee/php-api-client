@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Segment the items using a [ReQL](https://docs.recombee.com/reql.html) expression.
+ * Segment the items using a [ReQL](https://docs.recombee.com/reql) expression.
  * For each item, the expression should return a set that contains IDs of segments to which the item belongs to.
  */
 class CreateAutoReqlSegmentation extends Request {

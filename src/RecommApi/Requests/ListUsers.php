@@ -15,7 +15,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class ListUsers extends Request {
 
     /**
-     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression, which allows you to filter users to be listed. Only the users for which the expression is *true* will be returned.
+     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter users to be listed. Only the users for which the expression is *true* will be returned.
      */
     protected $filter;
     /**
@@ -29,7 +29,7 @@ class ListUsers extends Request {
     /**
      * @var bool $return_properties With `returnProperties=true`, property values of the listed users are returned along with their IDs in a JSON dictionary. 
      * Example response:
-     * ```
+     * ```json
      *   [
      *     {
      *       "userId": "user-81",
@@ -48,7 +48,7 @@ class ListUsers extends Request {
     /**
      * @var array $included_properties Allows specifying which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list.
      * Example response for `includedProperties=country`:
-     * ```
+     * ```json
      *   [
      *     {
      *       "userId": "user-81",
@@ -73,7 +73,7 @@ class ListUsers extends Request {
      * - Allowed parameters:
      *     - *filter*
      *         - Type: string
-     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression, which allows you to filter users to be listed. Only the users for which the expression is *true* will be returned.
+     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter users to be listed. Only the users for which the expression is *true* will be returned.
      *     - *count*
      *         - Type: int
      *         - Description: The number of users to be listed.
@@ -84,7 +84,7 @@ class ListUsers extends Request {
      *         - Type: bool
      *         - Description: With `returnProperties=true`, property values of the listed users are returned along with their IDs in a JSON dictionary. 
      * Example response:
-     * ```
+     * ```json
      *   [
      *     {
      *       "userId": "user-81",
@@ -102,7 +102,7 @@ class ListUsers extends Request {
      *         - Type: array
      *         - Description: Allows specifying which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list.
      * Example response for `includedProperties=country`:
-     * ```
+     * ```json
      *   [
      *     {
      *       "userId": "user-81",

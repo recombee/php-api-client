@@ -32,7 +32,7 @@ class SetViewPortion extends Request {
      */
     protected $session_id;
     /**
-     * @var string|float $timestamp UTC timestamp of the rating as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
+     * @var string|float $timestamp UTC timestamp of the view portion as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
      */
     protected $timestamp;
     /**
@@ -64,7 +64,7 @@ class SetViewPortion extends Request {
      *         - Description: ID of the session in which the user viewed the item. Default is `null` (`None`, `nil`, `NULL` etc., depending on the language).
      *     - *timestamp*
      *         - Type: string|float
-     *         - Description: UTC timestamp of the rating as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
+     *         - Description: UTC timestamp of the view portion as ISO8601-1 pattern or UTC epoch time. The default value is the current time.
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: Sets whether the given user/item should be created if not present in the database.

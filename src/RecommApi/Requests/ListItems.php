@@ -15,7 +15,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 class ListItems extends Request {
 
     /**
-     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression, which allows you to filter items to be listed. Only the items for which the expression is *true* will be returned.
+     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter items to be listed. Only the items for which the expression is *true* will be returned.
      */
     protected $filter;
     /**
@@ -29,7 +29,7 @@ class ListItems extends Request {
     /**
      * @var bool $return_properties With `returnProperties=true`, property values of the listed items are returned along with their IDs in a JSON dictionary. 
      * Example response:
-     * ```
+     * ```json
      *   [
      *     {
      *       "itemId": "tv-178",
@@ -52,7 +52,7 @@ class ListItems extends Request {
     /**
      * @var array $included_properties Allows specifying which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list.
      * Example response for `includedProperties=description,price`:
-     * ```
+     * ```json
      *   [
      *     {
      *       "itemId": "tv-178",
@@ -79,7 +79,7 @@ class ListItems extends Request {
      * - Allowed parameters:
      *     - *filter*
      *         - Type: string
-     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql.html) expression, which allows you to filter items to be listed. Only the items for which the expression is *true* will be returned.
+     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter items to be listed. Only the items for which the expression is *true* will be returned.
      *     - *count*
      *         - Type: int
      *         - Description: The number of items to be listed.
@@ -90,7 +90,7 @@ class ListItems extends Request {
      *         - Type: bool
      *         - Description: With `returnProperties=true`, property values of the listed items are returned along with their IDs in a JSON dictionary. 
      * Example response:
-     * ```
+     * ```json
      *   [
      *     {
      *       "itemId": "tv-178",
@@ -112,7 +112,7 @@ class ListItems extends Request {
      *         - Type: array
      *         - Description: Allows specifying which properties should be returned when `returnProperties=true` is set. The properties are given as a comma-separated list.
      * Example response for `includedProperties=description,price`:
-     * ```
+     * ```json
      *   [
      *     {
      *       "itemId": "tv-178",
