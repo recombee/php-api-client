@@ -10,6 +10,7 @@ use Recombee\RecommApi\Requests\Request;
 use Recombee\RecommApi\Exceptions\ResponseException;
 use Recombee\RecommApi\Exceptions\ApiTimeoutException;
 use Recombee\RecommApi\Util\Util;
+use SensitiveParameter;
 
 /**
  * Client for easy usage of Recombee recommendation API
@@ -36,7 +37,12 @@ class Client{
      * @param string $token Secret token
      * @param array  $options Other custom options
      */
-    public function __construct($account, $token, $options = array()) {
+    public function __construct(
+        $account,
+        #[SensitiveParameter]
+        $token,
+        $options = array()
+    ) {
         $this->account = $account;
         $this->token = $token;
 
@@ -240,7 +246,11 @@ class Client{
         return $res;
     }
 
-    protected function hmacSign($uri, $timeStr) {
+    protected function hmacSign(
+        $uri,
+        #[SensitiveParameter]
+        $timeStr
+    ) {
         $url = $uri . $timeStr;
         return hash_hmac('sha1', $url, $this->token);
     }
