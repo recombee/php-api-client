@@ -246,11 +246,7 @@ class Client{
         return $res;
     }
 
-    protected function hmacSign(
-        $uri,
-        #[SensitiveParameter]
-        $timeStr
-    ) {
+    protected function hmacSign($uri, $timeStr) {
         $url = $uri . $timeStr;
         return hash_hmac('sha1', $url, $this->token);
     }
