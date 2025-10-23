@@ -48,6 +48,14 @@ class SetViewPortion extends Request {
      */
     protected $additional_data;
     /**
+     * @var bool $auto_presented Indicates whether the item was automatically presented to the user (e.g., in a swiping feed) or explicitly requested by the user (e.g., by clicking on a link). Defaults to `false`.
+     */
+    protected $auto_presented;
+    /**
+     * @var float $time_spent The duration (in seconds) that the user viewed the item. In update requests, this value may only increase and is required only if it has changed.
+     */
+    protected $time_spent;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -74,6 +82,12 @@ class SetViewPortion extends Request {
      *     - *additionalData*
      *         - Type: array
      *         - Description: A dictionary of additional data for the interaction.
+     *     - *autoPresented*
+     *         - Type: bool
+     *         - Description: Indicates whether the item was automatically presented to the user (e.g., in a swiping feed) or explicitly requested by the user (e.g., by clicking on a link). Defaults to `false`.
+     *     - *timeSpent*
+     *         - Type: float
+     *         - Description: The duration (in seconds) that the user viewed the item. In update requests, this value may only increase and is required only if it has changed.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $portion, $optional = array()) {
@@ -85,9 +99,11 @@ class SetViewPortion extends Request {
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->recomm_id = isset($optional['recommId']) ? $optional['recommId'] : null;
         $this->additional_data = isset($optional['additionalData']) ? $optional['additionalData'] : null;
+        $this->auto_presented = isset($optional['autoPresented']) ? $optional['autoPresented'] : null;
+        $this->time_spent = isset($optional['timeSpent']) ? $optional['timeSpent'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('sessionId','timestamp','cascadeCreate','recommId','additionalData');
+        $existing_optional = array('sessionId','timestamp','cascadeCreate','recommId','additionalData','autoPresented','timeSpent');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -140,6 +156,10 @@ class SetViewPortion extends Request {
              $p['recommId'] = $this-> optional['recommId'];
         if (isset($this->optional['additionalData']))
              $p['additionalData'] = $this-> optional['additionalData'];
+        if (isset($this->optional['autoPresented']))
+             $p['autoPresented'] = $this-> optional['autoPresented'];
+        if (isset($this->optional['timeSpent']))
+             $p['timeSpent'] = $this-> optional['timeSpent'];
         return $p;
     }
 

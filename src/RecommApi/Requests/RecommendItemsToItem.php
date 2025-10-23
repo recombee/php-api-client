@@ -131,6 +131,48 @@ class RecommendItemsToItem extends Request {
      */
     protected $logic;
     /**
+     * @var array $reql_expressions A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended item.
+     * This can be used to compute additional properties of the recommended items that are not stored in the database.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "isInUsersCity": "context_user[\"city\"] in 'cities'",
+     *     "distanceToUser": "earth_distance('location', context_user[\"location\"])",
+     *     "isFromSameCompany": "'company' == context_item[\"company\"]"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "restaurant-178",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": true,
+     *           "distanceToUser": 5200.2,
+     *           "isFromSameCompany": false
+     *         }
+     *       },
+     *       {
+     *         "id": "bar-42",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": false,
+     *           "distanceToUser": 2516.0,
+     *           "isFromSameCompany": true
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
+     */
+    protected $reql_expressions;
+    /**
      * @var float $user_impact **Expert option:** If *targetUserId* parameter is present, the recommendations are biased towards the given user. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get a user-based recommendation. The default value is `0`.
      */
     protected $user_impact;
@@ -262,6 +304,47 @@ class RecommendItemsToItem extends Request {
      * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
+     *     - *reqlExpressions*
+     *         - Type: array
+     *         - Description: A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended item.
+     * This can be used to compute additional properties of the recommended items that are not stored in the database.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "isInUsersCity": "context_user[\"city\"] in 'cities'",
+     *     "distanceToUser": "earth_distance('location', context_user[\"location\"])",
+     *     "isFromSameCompany": "'company' == context_item[\"company\"]"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "restaurant-178",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": true,
+     *           "distanceToUser": 5200.2,
+     *           "isFromSameCompany": false
+     *         }
+     *       },
+     *       {
+     *         "id": "bar-42",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": false,
+     *           "distanceToUser": 2516.0,
+     *           "isFromSameCompany": true
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
      *     - *userImpact*
      *         - Type: float
      *         - Description: **Expert option:** If *targetUserId* parameter is present, the recommendations are biased towards the given user. Using *userImpact*, you may control this bias. For an extreme case of `userImpact=0.0`, the interactions made by the user are not taken into account at all (with the exception of history-based blacklisting), for `userImpact=1.0`, you'll get a user-based recommendation. The default value is `0`.
@@ -296,6 +379,7 @@ class RecommendItemsToItem extends Request {
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
+        $this->reql_expressions = isset($optional['reqlExpressions']) ? $optional['reqlExpressions'] : null;
         $this->user_impact = isset($optional['userImpact']) ? $optional['userImpact'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
@@ -305,7 +389,7 @@ class RecommendItemsToItem extends Request {
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','userImpact','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
+        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','reqlExpressions','userImpact','diversity','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -361,6 +445,8 @@ class RecommendItemsToItem extends Request {
              $p['booster'] = $this-> optional['booster'];
         if (isset($this->optional['logic']))
              $p['logic'] = $this-> optional['logic'];
+        if (isset($this->optional['reqlExpressions']))
+             $p['reqlExpressions'] = $this-> optional['reqlExpressions'];
         if (isset($this->optional['userImpact']))
              $p['userImpact'] = $this-> optional['userImpact'];
         if (isset($this->optional['diversity']))

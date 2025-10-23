@@ -133,6 +133,45 @@ class RecommendItemsToItemSegment extends Request {
      */
     protected $logic;
     /**
+     * @var array $reql_expressions A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended item.
+     * This can be used to compute additional properties of the recommended items that are not stored in the database.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "isInUsersCity": "context_user[\"city\"] in 'cities'",
+     *     "distanceToUser": "earth_distance('location', context_user[\"location\"])"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "restaurant-178",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": true,
+     *           "distanceToUser": 5200.2
+     *         }
+     *       },
+     *       {
+     *         "id": "bar-42",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": false,
+     *           "distanceToUser": 2516.0
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
+     */
+    protected $reql_expressions;
+    /**
      * @var string $min_relevance **Expert option:** If the *targetUserId* is provided:  Specifies the threshold of how relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend a number of items equal to *count* at any cost. If there is not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations being appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevance and may return less than *count* items when there is not enough data to fulfill it.
      */
     protected $min_relevance;
@@ -256,6 +295,44 @@ class RecommendItemsToItemSegment extends Request {
      * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
+     *     - *reqlExpressions*
+     *         - Type: array
+     *         - Description: A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended item.
+     * This can be used to compute additional properties of the recommended items that are not stored in the database.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "isInUsersCity": "context_user[\"city\"] in 'cities'",
+     *     "distanceToUser": "earth_distance('location', context_user[\"location\"])"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "restaurant-178",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": true,
+     *           "distanceToUser": 5200.2
+     *         }
+     *       },
+     *       {
+     *         "id": "bar-42",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": false,
+     *           "distanceToUser": 2516.0
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
      *     - *minRelevance*
      *         - Type: string
      *         - Description: **Expert option:** If the *targetUserId* is provided:  Specifies the threshold of how relevant must the recommended items be to the user. Possible values one of: "low", "medium", "high". The default value is "low", meaning that the system attempts to recommend a number of items equal to *count* at any cost. If there is not enough data (such as interactions or item properties), this may even lead to bestseller-based recommendations being appended to reach the full *count*. This behavior may be suppressed by using "medium" or "high" values. In such case, the system only recommends items of at least the requested relevance and may return less than *count* items when there is not enough data to fulfill it.
@@ -284,6 +361,7 @@ class RecommendItemsToItemSegment extends Request {
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
+        $this->reql_expressions = isset($optional['reqlExpressions']) ? $optional['reqlExpressions'] : null;
         $this->min_relevance = isset($optional['minRelevance']) ? $optional['minRelevance'] : null;
         $this->rotation_rate = isset($optional['rotationRate']) ? $optional['rotationRate'] : null;
         $this->rotation_time = isset($optional['rotationTime']) ? $optional['rotationTime'] : null;
@@ -291,7 +369,7 @@ class RecommendItemsToItemSegment extends Request {
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
+        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','reqlExpressions','minRelevance','rotationRate','rotationTime','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -348,6 +426,8 @@ class RecommendItemsToItemSegment extends Request {
              $p['booster'] = $this-> optional['booster'];
         if (isset($this->optional['logic']))
              $p['logic'] = $this-> optional['logic'];
+        if (isset($this->optional['reqlExpressions']))
+             $p['reqlExpressions'] = $this-> optional['reqlExpressions'];
         if (isset($this->optional['minRelevance']))
              $p['minRelevance'] = $this-> optional['minRelevance'];
         if (isset($this->optional['rotationRate']))

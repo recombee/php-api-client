@@ -27,5 +27,9 @@ abstract class RecommendationTestCase extends RecommendationDataTestCase {
          $req = $this->createRequest('nonexisting2',9,['cascadeCreate' => true,'expertSettings' => new \stdclass()]);
          $resp = $this->client->send($req);
 
+         //it recommends with reql expressions
+         $req = $this->createRequest('nonexisting2',9,['cascadeCreate' => true,'reqlExpressions' => ['boolean' => 'true','number' => 'if (\'answer\' > 0) then 1 else 2','string' => '"test"']]);
+         $resp = $this->client->send($req);
+
     }
 }

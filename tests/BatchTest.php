@@ -26,7 +26,10 @@ class BatchTest extends RecombeeTestCase {
                     new Reqs\ListItems(['filter' => "'num' >= 99"]),
                     new Reqs\AddCartAddition('user', 'item2',  ['timestamp' => '2013-10-29T09:38:41.341Z']),
                     new Reqs\AddCartAddition('user', 'item2', ['cascadeCreate' => true]),
-                    new Reqs\RecommendItemsToItem('item2', 'user', 30),
+                    new Reqs\RecommendItemsToItem('item2', 'user', 30, ['reqlExpressions' => [
+                        'boolean' => 'true',
+                        'string' => 'string(1)',
+                    ]]),
                     new Reqs\RecommendItemsToUser('user_id', 25, ['filter' => "'num'==68",
                                                                      'cascadeCreate' => true])
                 ];
@@ -40,13 +43,13 @@ class BatchTest extends RecombeeTestCase {
 
         $this->assertEquals([201, 201, 200, 409, 200, 200, 200, 200, 200, 404, 200, 200, 200], $codes);
         sort($repl[5]['json']);
-        $this->assertEquals(['item1', 'item2'], $repl[6]['json']);
+        $this->assertEquals(['entity_id', 'item1', 'item2'], $repl[5]['json']);
         sort($repl[6]['json']);
-        $this->assertEquals(['item2'], $repl[7]['json']);
+        $this->assertEquals(['item2'], $repl[6]['json']);
         sort($repl[8]['json']);
-        $this->assertEquals(array(), $repl[9]['json']);
-        $this->assertEquals(['item2'], $repl[13]['json']);
-
+        $this->assertEquals(array(), $repl[8]['json']);
+        $this->assertEquals(['boolean' => true, 'string' => '1'], $repl[11]['json']['recomms'][0]['reqlEvaluations']);
+        $this->assertEquals([['id' => 'item2']], $repl[12]['json']['recomms']);
     }
 
 

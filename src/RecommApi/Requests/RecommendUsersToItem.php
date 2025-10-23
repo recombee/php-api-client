@@ -21,7 +21,7 @@ class RecommendUsersToItem extends Request {
      */
     protected $item_id;
     /**
-     * @var int $count Number of items to be recommended (N for the top-N recommendation).
+     * @var int $count Number of users to be recommended (N for the top-N recommendation).
      */
     protected $count;
     /**
@@ -89,12 +89,12 @@ class RecommendUsersToItem extends Request {
      */
     protected $included_properties;
     /**
-     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter recommended items based on the values of their attributes.
+     * @var string $filter Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter recommended users based on the values of their attributes.
      * Filters can also be assigned to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
     protected $filter;
     /**
-     * @var string $booster Number-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to boost the recommendation rate of some items based on the values of their attributes.
+     * @var string $booster Number-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to boost the recommendation rate of some users based on the values of their attributes.
      * Boosters can also be assigned to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
     protected $booster;
@@ -106,7 +106,49 @@ class RecommendUsersToItem extends Request {
      */
     protected $logic;
     /**
-     * @var float $diversity **Expert option:** Real number from [0.0, 1.0], which determines how mutually dissimilar the recommended items should be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
+     * @var array $reql_expressions A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended user.
+     * This can be used to compute additional properties of the recommended users that are not stored in the database.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "isInUsersCity": "context_user[\"city\"] in 'cities'",
+     *     "distanceToUser": "earth_distance('location', context_user[\"location\"])",
+     *     "isFromSameCompany": "'company' == context_item[\"company\"]"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "restaurant-178",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": true,
+     *           "distanceToUser": 5200.2,
+     *           "isFromSameCompany": false
+     *         }
+     *       },
+     *       {
+     *         "id": "bar-42",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": false,
+     *           "distanceToUser": 2516.0,
+     *           "isFromSameCompany": true
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
+     */
+    protected $reql_expressions;
+    /**
+     * @var float $diversity **Expert option:** Real number from [0.0, 1.0], which determines how mutually dissimilar the recommended users should be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      */
     protected $diversity;
     /**
@@ -125,7 +167,7 @@ class RecommendUsersToItem extends Request {
     /**
      * Construct the request
      * @param string $item_id ID of the item for which the recommendations are to be generated.
-     * @param int $count Number of items to be recommended (N for the top-N recommendation).
+     * @param int $count Number of users to be recommended (N for the top-N recommendation).
      * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
      * - Allowed parameters:
      *     - *scenario*
@@ -190,11 +232,11 @@ class RecommendUsersToItem extends Request {
      * ```
      *     - *filter*
      *         - Type: string
-     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter recommended items based on the values of their attributes.
+     *         - Description: Boolean-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to filter recommended users based on the values of their attributes.
      * Filters can also be assigned to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *booster*
      *         - Type: string
-     *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to boost the recommendation rate of some items based on the values of their attributes.
+     *         - Description: Number-returning [ReQL](https://docs.recombee.com/reql) expression, which allows you to boost the recommendation rate of some users based on the values of their attributes.
      * Boosters can also be assigned to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *logic*
      *         - Type: string|array
@@ -202,9 +244,50 @@ class RecommendUsersToItem extends Request {
      * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
+     *     - *reqlExpressions*
+     *         - Type: array
+     *         - Description: A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended user.
+     * This can be used to compute additional properties of the recommended users that are not stored in the database.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "isInUsersCity": "context_user[\"city\"] in 'cities'",
+     *     "distanceToUser": "earth_distance('location', context_user[\"location\"])",
+     *     "isFromSameCompany": "'company' == context_item[\"company\"]"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "ce52ada4-e4d9-4885-943c-407db2dee837",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "restaurant-178",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": true,
+     *           "distanceToUser": 5200.2,
+     *           "isFromSameCompany": false
+     *         }
+     *       },
+     *       {
+     *         "id": "bar-42",
+     *         "reqlEvaluations": {
+     *           "isInUsersCity": false,
+     *           "distanceToUser": 2516.0,
+     *           "isFromSameCompany": true
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
      *     - *diversity*
      *         - Type: float
-     *         - Description: **Expert option:** Real number from [0.0, 1.0], which determines how mutually dissimilar the recommended items should be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
+     *         - Description: **Expert option:** Real number from [0.0, 1.0], which determines how mutually dissimilar the recommended users should be. The default value is 0.0, i.e., no diversification. Value 1.0 means maximal diversification.
      *     - *expertSettings*
      *         - Type: array
      *         - Description: Dictionary of custom options.
@@ -223,12 +306,13 @@ class RecommendUsersToItem extends Request {
         $this->filter = isset($optional['filter']) ? $optional['filter'] : null;
         $this->booster = isset($optional['booster']) ? $optional['booster'] : null;
         $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
+        $this->reql_expressions = isset($optional['reqlExpressions']) ? $optional['reqlExpressions'] : null;
         $this->diversity = isset($optional['diversity']) ? $optional['diversity'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','diversity','expertSettings','returnAbGroup');
+        $existing_optional = array('scenario','cascadeCreate','returnProperties','includedProperties','filter','booster','logic','reqlExpressions','diversity','expertSettings','returnAbGroup');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -283,6 +367,8 @@ class RecommendUsersToItem extends Request {
              $p['booster'] = $this-> optional['booster'];
         if (isset($this->optional['logic']))
              $p['logic'] = $this-> optional['logic'];
+        if (isset($this->optional['reqlExpressions']))
+             $p['reqlExpressions'] = $this-> optional['reqlExpressions'];
         if (isset($this->optional['diversity']))
              $p['diversity'] = $this-> optional['diversity'];
         if (isset($this->optional['expertSettings']))

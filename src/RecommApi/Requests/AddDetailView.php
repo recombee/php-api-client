@@ -43,6 +43,10 @@ class AddDetailView extends Request {
      */
     protected $additional_data;
     /**
+     * @var bool $auto_presented Indicates whether the item was automatically presented to the user (e.g., in a swiping feed) or explicitly requested by the user (e.g., by clicking on a link). Defaults to `false`.
+     */
+    protected $auto_presented;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -68,6 +72,9 @@ class AddDetailView extends Request {
      *     - *additionalData*
      *         - Type: array
      *         - Description: A dictionary of additional data for the interaction.
+     *     - *autoPresented*
+     *         - Type: bool
+     *         - Description: Indicates whether the item was automatically presented to the user (e.g., in a swiping feed) or explicitly requested by the user (e.g., by clicking on a link). Defaults to `false`.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
@@ -78,9 +85,10 @@ class AddDetailView extends Request {
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->recomm_id = isset($optional['recommId']) ? $optional['recommId'] : null;
         $this->additional_data = isset($optional['additionalData']) ? $optional['additionalData'] : null;
+        $this->auto_presented = isset($optional['autoPresented']) ? $optional['autoPresented'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('timestamp','duration','cascadeCreate','recommId','additionalData');
+        $existing_optional = array('timestamp','duration','cascadeCreate','recommId','additionalData','autoPresented');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -132,6 +140,8 @@ class AddDetailView extends Request {
              $p['recommId'] = $this-> optional['recommId'];
         if (isset($this->optional['additionalData']))
              $p['additionalData'] = $this-> optional['additionalData'];
+        if (isset($this->optional['autoPresented']))
+             $p['autoPresented'] = $this-> optional['autoPresented'];
         return $p;
     }
 
