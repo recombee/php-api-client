@@ -64,6 +64,42 @@ class RecommendItemSegmentsToUser extends Request {
      */
     protected $return_ab_group;
     /**
+     * @var array $reql_expressions A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended Item Segment.
+     * This can be used to compute additional properties of the recommended Item Segments.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "countItems": "size(segment_items(\"categories\", 'segmentId'))"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "a7ac55a4-8d6e-4f19-addc-abac4164d8a8",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "category-fantasy-books",
+     *         "reqlEvaluations": {
+     *           "countItems": 486
+     *         }
+     *       },
+     *       {
+     *         "id": "category-sci-fi-costumes",
+     *         "reqlEvaluations": {
+     *           "countItems": 19
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
+     */
+    protected $reql_expressions;
+    /**
      * @var array Array containing values of optional parameters
      */
    protected $optional;
@@ -100,6 +136,41 @@ class RecommendItemSegmentsToUser extends Request {
      *     - *returnAbGroup*
      *         - Type: bool
      *         - Description: If there is a custom AB-testing running, return the name of the group to which the request belongs.
+     *     - *reqlExpressions*
+     *         - Type: array
+     *         - Description: A dictionary of [ReQL](https://docs.recombee.com/reql) expressions that will be executed for each recommended Item Segment.
+     * This can be used to compute additional properties of the recommended Item Segments.
+     * The keys are the names of the expressions, and the values are the actual ReQL expressions.
+     * Example request:
+     * ```json
+     * {
+     *   "reqlExpressions": {
+     *     "countItems": "size(segment_items(\"categories\", 'segmentId'))"
+     *   }
+     * }
+     * ```
+     * Example response:
+     * ```json
+     * {
+     *   "recommId": "a7ac55a4-8d6e-4f19-addc-abac4164d8a8",
+     *   "recomms": 
+     *     [
+     *       {
+     *         "id": "category-fantasy-books",
+     *         "reqlEvaluations": {
+     *           "countItems": 486
+     *         }
+     *       },
+     *       {
+     *         "id": "category-sci-fi-costumes",
+     *         "reqlEvaluations": {
+     *           "countItems": 19
+     *         }
+     *       }
+     *     ],
+     *    "numberNextRecommsCalls": 0
+     * }
+     * ```
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $count, $optional = array()) {
@@ -112,9 +183,10 @@ class RecommendItemSegmentsToUser extends Request {
         $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->return_ab_group = isset($optional['returnAbGroup']) ? $optional['returnAbGroup'] : null;
+        $this->reql_expressions = isset($optional['reqlExpressions']) ? $optional['reqlExpressions'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('scenario','cascadeCreate','filter','booster','logic','expertSettings','returnAbGroup');
+        $existing_optional = array('scenario','cascadeCreate','filter','booster','logic','expertSettings','returnAbGroup','reqlExpressions');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -169,6 +241,8 @@ class RecommendItemSegmentsToUser extends Request {
              $p['expertSettings'] = $this-> optional['expertSettings'];
         if (isset($this->optional['returnAbGroup']))
              $p['returnAbGroup'] = $this-> optional['returnAbGroup'];
+        if (isset($this->optional['reqlExpressions']))
+             $p['reqlExpressions'] = $this-> optional['reqlExpressions'];
         return $p;
     }
 

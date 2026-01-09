@@ -17,7 +17,7 @@ or
 ```
 {
     "require": {
-        "recombee/php-api-client": "^6.0.0"
+        "recombee/php-api-client": "^6.1.0"
     }
 }
 ```
