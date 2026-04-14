@@ -10,7 +10,7 @@ namespace Recombee\RecommApi\Requests;
 use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
- * Composite Recommendation returns both a *source entity* (e.g., an Item or [Item Segment](https://docs.recombee.com/segmentations.html)) and a list of related recommendations in a single response.
+ * Composite Recommendation returns both a *source entity* (e.g., an Item or [Item Segment](https://docs.recombee.com/segmentations)) and a list of related recommendations in a single response.
  * It is ideal for use cases such as personalized homepage sections (*Articles from <category>*), *Because You Watched <movie>*, or *Artists Related to Your Favorite Artist <artist>*.
  * See detailed **examples and configuration guidance** in the [Composite Scenarios documentation](https://docs.recombee.com/scenarios#composite-recommendations).
  * **Structure**
@@ -61,6 +61,10 @@ class CompositeRecommendation extends Request {
      */
     protected $segment_id;
     /**
+     * @var string $search_query Search query provided by the user. It is used for the full-text search. Only applicable if the *scenario* corresponds to a search scenario.
+     */
+    protected $search_query;
+    /**
      * @var bool $cascade_create If the entity for the source recommendation does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows, for example, rotations in the following recommendations for that entity, as the entity will be already known to the system.
      */
     protected $cascade_create;
@@ -104,6 +108,9 @@ class CompositeRecommendation extends Request {
      *     - *segmentId*
      *         - Type: string
      *         - Description: ID of the segment from `contextSegmentationId` for which the recommendations are to be generated.
+     *     - *searchQuery*
+     *         - Type: string
+     *         - Description: Search query provided by the user. It is used for the full-text search. Only applicable if the *scenario* corresponds to a search scenario.
      *     - *cascadeCreate*
      *         - Type: bool
      *         - Description: If the entity for the source recommendation does not exist in the database, returns a list of non-personalized recommendations and creates the user in the database. This allows, for example, rotations in the following recommendations for that entity, as the entity will be already known to the system.
@@ -125,13 +132,14 @@ class CompositeRecommendation extends Request {
         $this->user_id = isset($optional['userId']) ? $optional['userId'] : null;
         $this->logic = isset($optional['logic']) ? $optional['logic'] : null;
         $this->segment_id = isset($optional['segmentId']) ? $optional['segmentId'] : null;
+        $this->search_query = isset($optional['searchQuery']) ? $optional['searchQuery'] : null;
         $this->cascade_create = isset($optional['cascadeCreate']) ? $optional['cascadeCreate'] : null;
         $this->source_settings = isset($optional['sourceSettings']) ? $optional['sourceSettings'] : null;
         $this->result_settings = isset($optional['resultSettings']) ? $optional['resultSettings'] : null;
         $this->expert_settings = isset($optional['expertSettings']) ? $optional['expertSettings'] : null;
         $this->optional = $optional;
 
-        $existing_optional = array('itemId','userId','logic','segmentId','cascadeCreate','sourceSettings','resultSettings','expertSettings');
+        $existing_optional = array('itemId','userId','logic','segmentId','searchQuery','cascadeCreate','sourceSettings','resultSettings','expertSettings');
         foreach ($this->optional as $key => $value) {
             if (!in_array($key, $existing_optional))
                  throw new UnknownOptionalParameterException($key);
@@ -181,6 +189,8 @@ class CompositeRecommendation extends Request {
              $p['logic'] = $this-> optional['logic'];
         if (isset($this->optional['segmentId']))
              $p['segmentId'] = $this-> optional['segmentId'];
+        if (isset($this->optional['searchQuery']))
+             $p['searchQuery'] = $this-> optional['searchQuery'];
         if (isset($this->optional['cascadeCreate']))
              $p['cascadeCreate'] = $this-> optional['cascadeCreate'];
         if (isset($this->optional['sourceSettings']))
