@@ -24,10 +24,22 @@ class AddUserProperty extends Request {
      * * `double` - Floating point number. It uses 64-bit base-2 format (IEEE 754 standard).
      * * `string` - UTF-8 string.
      * * `boolean` - *true* / *false*
-     * * `timestamp` - Value representing date and time.
+     * * `timestamp` - Value representing date and time. ISO8601-1 pattern (string) or UTC epoch time (number).
      * * `set` - Set of strings.
      */
     protected $type;
+    /**
+     * @var string|array $role [Role](https://docs.recombee.com/api/property_roles_metadata#roles) to assign to the property.
+     */
+    protected $role;
+    /**
+     * @var array $metadata List of [metadata](https://docs.recombee.com/api/property_roles_metadata#metadata) entries to assign to the property.
+     */
+    protected $metadata;
+    /**
+     * @var array Array containing values of optional parameters
+     */
+   protected $optional;
 
     /**
      * Construct the request
@@ -37,12 +49,30 @@ class AddUserProperty extends Request {
      * * `double` - Floating point number. It uses 64-bit base-2 format (IEEE 754 standard).
      * * `string` - UTF-8 string.
      * * `boolean` - *true* / *false*
-     * * `timestamp` - Value representing date and time.
+     * * `timestamp` - Value representing date and time. ISO8601-1 pattern (string) or UTC epoch time (number).
      * * `set` - Set of strings.
+     * @param array $optional Optional parameters given as an array containing pairs name of the parameter => value
+     * - Allowed parameters:
+     *     - *role*
+     *         - Type: string|array
+     *         - Description: [Role](https://docs.recombee.com/api/property_roles_metadata#roles) to assign to the property.
+     *     - *metadata*
+     *         - Type: array
+     *         - Description: List of [metadata](https://docs.recombee.com/api/property_roles_metadata#metadata) entries to assign to the property.
+     * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
-    public function __construct($property_name, $type) {
+    public function __construct($property_name, $type, $optional = array()) {
         $this->property_name = $property_name;
         $this->type = $type;
+        $this->role = isset($optional['role']) ? $optional['role'] : null;
+        $this->metadata = isset($optional['metadata']) ? $optional['metadata'] : null;
+        $this->optional = $optional;
+
+        $existing_optional = array('role','metadata');
+        foreach ($this->optional as $key => $value) {
+            if (!in_array($key, $existing_optional))
+                 throw new UnknownOptionalParameterException($key);
+         }
         $this->timeout = 100000;
         $this->ensure_https = false;
     }
@@ -69,7 +99,6 @@ class AddUserProperty extends Request {
      */
     public function getQueryParameters() {
         $params = array();
-        $params['type'] = $this->type;
         return $params;
     }
 
@@ -79,6 +108,11 @@ class AddUserProperty extends Request {
      */
     public function getBodyParameters() {
         $p = array();
+        $p['type'] = $this->type;
+        if (isset($this->optional['role']))
+             $p['role'] = $this-> optional['role'];
+        if (isset($this->optional['metadata']))
+             $p['metadata'] = $this-> optional['metadata'];
         return $p;
     }
 
