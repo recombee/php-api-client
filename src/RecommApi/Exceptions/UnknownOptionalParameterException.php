@@ -18,7 +18,7 @@ class UnknownOptionalParameterException extends \InvalidArgumentException {
      */
     public $parameter;
 
-    public function __construct($par, \Exception $previous = null) {
+    public function __construct($par, ?\Exception $previous = null) {
         $this->parameter = $par;
         parent::__construct("Unknown parameter {$this->parameter} was given to the request", 0, $previous);
     }
