@@ -139,19 +139,31 @@ class Client{
                     break;
             }
         }
-        catch(\GuzzleHttp\Exception\ConnectException $e)
-        {
-            throw new ApiTimeoutException($request, $e);
-        }
         catch(\GuzzleHttp\Exception\GuzzleException $e)
         {
-            if(strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request, $e);
-            if(strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request, $e);
+            if ($this->isGuzzle8OrNewer()) {
+                if ($e instanceof \GuzzleHttp\Exception\ConnectTimeoutException
+                    || $e instanceof \GuzzleHttp\Exception\NetworkTimeoutException
+                    || $e instanceof \GuzzleHttp\Exception\ResponseTimeoutException
+                ) throw new ApiTimeoutException($request, $e);
+                // Guzzle 8 reclassified cURL errors, keep identical behavior to Guzzle 7
+                if (preg_match('/^cURL error (6|7|35|52):/', $e->getMessage())) throw new ApiTimeoutException($request, $e);
+                if (strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request, $e);
+            } else {
+                if ($e instanceof \GuzzleHttp\Exception\ConnectException) throw new ApiTimeoutException($request, $e);
+                if (strpos($e->getMessage(), 'cURL error 28') !== false) throw new ApiTimeoutException($request, $e);
+                if (strpos($e->getMessage(), 'timed out') !== false) throw new ApiTimeoutException($request, $e);
+            }
 
             throw $e;
         }
 
         return $result;
+    }
+
+    protected function isGuzzle8OrNewer() {
+        // Guzzle 6 has no MAJOR_VERSION constant
+        return defined('GuzzleHttp\ClientInterface::MAJOR_VERSION') && \GuzzleHttp\ClientInterface::MAJOR_VERSION >= 8;
     }
 
     /* ----------------------- Send requests -----------------------  */
