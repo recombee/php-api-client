@@ -12,22 +12,22 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 /**
  * Composite Recommendation returns both a *source entity* (e.g., an Item or [Item Segment](https://docs.recombee.com/segmentations)) and a list of related recommendations in a single response.
  * It is ideal for use cases such as personalized homepage sections (*Articles from <category>*), *Because You Watched <movie>*, or *Artists Related to Your Favorite Artist <artist>*.
- * See detailed **examples and configuration guidance** in the [Composite Scenarios documentation](https://docs.recombee.com/scenarios#composite-recommendations).
+ * See detailed **examples and configuration guidance** in the [Composite Scenarios documentation](https://docs.recombee.com/scenarios/composite-recommendations).
  * **Structure**
  * The endpoint operates in two stages:
  * 1. Recommends the *source* (e.g., an Item Segment or item) to the user.
  * 2. Recommends *results* (items or Item Segments) related to that *source*.
  * For example, *Articles from <category>* can be decomposed into:
- *   - [Recommend Item Segments To User](https://docs.recombee.com/api#recommend-item-segments-to-user) to find the category.
- *   - [Recommend Items To Item Segment](https://docs.recombee.com/api#recommend-items-to-item-segment) to recommend articles from that category.
- * Since the first step uses [Recommend Item Segments To User](https://docs.recombee.com/api#recommend-items-to-user), you must include the `userId` parameter in the *Composite Recommendation* request.
+ *   - [Recommend Item Segments To User](https://docs.recombee.com/api/recommendations#recommend-item-segments-to-user) to find the category.
+ *   - [Recommend Items To Item Segment](https://docs.recombee.com/api/recommendations#recommend-items-to-item-segment) to recommend articles from that category.
+ * Since the first step uses [Recommend Item Segments To User](https://docs.recombee.com/api/recommendations#recommend-items-to-user), you must include the `userId` parameter in the *Composite Recommendation* request.
  * Each *Composite Recommendation* counts as a single recommendation API request for billing.
  * **Stage-specific Parameters**
- * Additional parameters can be supplied via [sourceSettings](https://docs.recombee.com/api#composite-recommendation-param-sourceSettings) and [resultSettings](https://docs.recombee.com/api#composite-recommendation-param-resultSettings).
+ * Additional parameters can be supplied via [sourceSettings](https://docs.recombee.com/api/recommendations#composite-recommendation-param-sourceSettings) and [resultSettings](https://docs.recombee.com/api/recommendations#composite-recommendation-param-resultSettings).
  * In the example above:
- *   - `sourceSettings` may include any parameter valid for [Recommend Item Segments To User](https://docs.recombee.com/api#recommend-items-to-user) (e.g., `filter`, `booster`).
- *   - `resultSettings` may include any parameter valid for [Recommend Items To Item Segment](https://docs.recombee.com/api#recommend-items-to-item-segment).
- * See [this example](https://docs.recombee.com/api#composite-recommendation-example-setting-parameters-for-individual-stages) for more details.
+ *   - `sourceSettings` may include any parameter valid for [Recommend Item Segments To User](https://docs.recombee.com/api/recommendations#recommend-items-to-user) (e.g., `filter`, `booster`).
+ *   - `resultSettings` may include any parameter valid for [Recommend Items To Item Segment](https://docs.recombee.com/api/recommendations#recommend-items-to-item-segment).
+ * See [this example](https://docs.recombee.com/api/recommendations#composite-recommendation-example-setting-parameters-for-individual-stages) for more details.
  */
 class CompositeRecommendation extends Request {
 
@@ -51,7 +51,7 @@ class CompositeRecommendation extends Request {
     protected $user_id;
     /**
      * @var string|array $logic Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
@@ -102,7 +102,7 @@ class CompositeRecommendation extends Request {
      *     - *logic*
      *         - Type: string|array
      *         - Description: Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *segmentId*

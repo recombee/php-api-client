@@ -11,7 +11,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
  * Recommends users that are likely to be interested in the given item.
- * It is also possible to use POST HTTP method (for example in the case of a very long ReQL filter) - query parameters then become body parameters.
+ * It is also possible to use GET HTTP method - body parameters then become query parameters.
  * The returned users are sorted by predicted interest in the item (the first user being the most interested).
  */
 class RecommendUsersToItem extends Request {
@@ -35,7 +35,7 @@ class RecommendUsersToItem extends Request {
      */
     protected $cascade_create;
     /**
-     * @var bool $return_properties With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used to easily display the recommended users. 
+     * @var bool $return_properties With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used to easily display the recommended users.
      * Example response:
      * ```json
      *   {
@@ -100,7 +100,7 @@ class RecommendUsersToItem extends Request {
     protected $booster;
     /**
      * @var string|array $logic Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
@@ -180,7 +180,7 @@ class RecommendUsersToItem extends Request {
      *         - Description: If an item of the given *itemId* doesn't exist in the database, it creates the missing item.
      *     - *returnProperties*
      *         - Type: bool
-     *         - Description: With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used to easily display the recommended users. 
+     *         - Description: With `returnProperties=true`, property values of the recommended users are returned along with their IDs in a JSON dictionary. The acquired property values can be used to easily display the recommended users.
      * Example response:
      * ```json
      *   {
@@ -241,7 +241,7 @@ class RecommendUsersToItem extends Request {
      *     - *logic*
      *         - Type: string|array
      *         - Description: Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *reqlExpressions*

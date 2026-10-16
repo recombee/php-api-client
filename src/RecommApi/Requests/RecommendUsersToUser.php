@@ -11,7 +11,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
 
 /**
  * Gets users similar to the given user, based on the user's past interactions (purchases, ratings, etc.) and values of properties.
- * It is also possible to use POST HTTP method (for example in the case of a very long ReQL filter) - query parameters then become body parameters.
+ * It is also possible to use GET HTTP method - body parameters then become query parameters.
  * The returned users are sorted by similarity (the first user being the most similar).
  */
 class RecommendUsersToUser extends Request {
@@ -40,7 +40,7 @@ class RecommendUsersToUser extends Request {
      * ```json
      *   {
      *     "recommId": "9cb9c55d-50ba-4478-84fd-ab456136156e",
-     *     "recomms": 
+     *     "recomms":
      *       [
      *         {
      *           "id": "user-17",
@@ -100,7 +100,7 @@ class RecommendUsersToUser extends Request {
     protected $booster;
     /**
      * @var string|array $logic Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
@@ -194,7 +194,7 @@ class RecommendUsersToUser extends Request {
      * ```json
      *   {
      *     "recommId": "9cb9c55d-50ba-4478-84fd-ab456136156e",
-     *     "recomms": 
+     *     "recomms":
      *       [
      *         {
      *           "id": "user-17",
@@ -250,7 +250,7 @@ class RecommendUsersToUser extends Request {
      *     - *logic*
      *         - Type: string|array
      *         - Description: Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *reqlExpressions*

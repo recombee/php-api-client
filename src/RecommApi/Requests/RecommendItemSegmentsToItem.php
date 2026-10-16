@@ -18,7 +18,7 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
  *   - Recommending the related artists
  * You need to set the used Segmentation the Admin UI in the [Scenario settings](https://docs.recombee.com/scenarios) prior to using this endpoint.
  * The returned segments are sorted by relevance (first segment being the most relevant).
- * It is also possible to use POST HTTP method (for example in case of very long ReQL filter) - query parameters then become body parameters.
+ * It is also possible to use GET HTTP method - body parameters then become query parameters.
  */
 class RecommendItemSegmentsToItem extends Request {
 
@@ -66,7 +66,7 @@ class RecommendItemSegmentsToItem extends Request {
     protected $booster;
     /**
      * @var string|array $logic Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
@@ -156,7 +156,7 @@ class RecommendItemSegmentsToItem extends Request {
      *     - *logic*
      *         - Type: string|array
      *         - Description: Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *expertSettings*

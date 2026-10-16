@@ -14,8 +14,8 @@ use Recombee\RecommApi\Exceptions\UnknownOptionalParameterException;
  * The returned items are sorted by relevance (the first item being the most relevant).
  * Besides the recommended items, also a unique `recommId` is returned in the response. It can be used to:
  * - Let Recombee know that this recommendation was successful (e.g., user clicked one of the recommended items). See [Reported metrics](https://docs.recombee.com/admin_ui#reported-metrics).
- * - Get subsequent recommended items when the user scrolls down (*infinite scroll*) or goes to the next page. See [Recommend Next Items](https://docs.recombee.com/api#recommend-next-items).
- * It is also possible to use POST HTTP method (for example in the case of a very long ReQL filter) - query parameters then become body parameters.
+ * - Get subsequent recommended items when the user scrolls down (*infinite scroll*) or goes to the next page. See [Recommend Next Items](https://docs.recombee.com/api/recommendations#recommend-next-items).
+ * It is also possible to use GET HTTP method - body parameters then become query parameters.
  */
 class RecommendItemsToItem extends Request {
 
@@ -91,7 +91,7 @@ class RecommendItemsToItem extends Request {
      * ```json
      *   {
      *     "recommId": "6842c725-a79f-4537-a02c-f34d668a3f80",
-     *     "recomms": 
+     *     "recomms":
      *       [
      *         {
      *           "id": "tv-178",
@@ -125,7 +125,7 @@ class RecommendItemsToItem extends Request {
     protected $booster;
     /**
      * @var string|array $logic Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      */
@@ -270,7 +270,7 @@ class RecommendItemsToItem extends Request {
      * ```json
      *   {
      *     "recommId": "6842c725-a79f-4537-a02c-f34d668a3f80",
-     *     "recomms": 
+     *     "recomms":
      *       [
      *         {
      *           "id": "tv-178",
@@ -301,7 +301,7 @@ class RecommendItemsToItem extends Request {
      *     - *logic*
      *         - Type: string|array
      *         - Description: Logic specifies the particular behavior of the recommendation models. You can pick tailored logic for your domain and use case.
-     * See [this section](https://docs.recombee.com/recommendation_logics) for a list of available logics and other details.
+     * See [this section](https://docs.recombee.com/logics) for a list of available logics and other details.
      * The difference between `logic` and `scenario` is that `logic` specifies mainly behavior, while `scenario` specifies the place where recommendations are shown to the users.
      * Logic can also be set to a [scenario](https://docs.recombee.com/scenarios) in the [Admin UI](https://admin.recombee.com).
      *     - *reqlExpressions*

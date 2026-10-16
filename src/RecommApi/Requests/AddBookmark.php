@@ -35,7 +35,7 @@ class AddBookmark extends Request {
      */
     protected $recomm_id;
     /**
-     * @var array $additional_data A dictionary of additional data for the interaction.
+     * @var array $additional_data Additional data associated with the interaction. The expected structure is defined for specific use cases and will be provided by the Recombee Support team when applicable.
      */
     protected $additional_data;
     /**
@@ -60,7 +60,7 @@ class AddBookmark extends Request {
      *         - Description: If this bookmark is based on a recommendation request, `recommId` is the id of the clicked recommendation.
      *     - *additionalData*
      *         - Type: array
-     *         - Description: A dictionary of additional data for the interaction.
+     *         - Description: Additional data associated with the interaction. The expected structure is defined for specific use cases and will be provided by the Recombee Support team when applicable.
      * @throws Exceptions\UnknownOptionalParameterException UnknownOptionalParameterException if an unknown optional parameter is given in $optional
      */
     public function __construct($user_id, $item_id, $optional = array()) {
